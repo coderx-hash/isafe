@@ -576,6 +576,12 @@
             <div class="grid-2">
                 <div class="card">
                     <h3 style="margin-bottom: 20px;">📋 New Transaction</h3>
+                    
+                    <div class="form-group">
+                        <label>Transaction Date (Can be backdated):</label>
+                        <input type="date" id="transDate">
+                    </div>
+
                     <div class="form-group">
                         <label>Patient Category:</label>
                         <select id="transCategory">
@@ -642,8 +648,13 @@
         <div id="tab-expenses" class="tab-pane admin-only hidden">
             <div class="card">
                 <h3 style="margin-bottom: 20px;">💸 Log Expense</h3>
-                <div class="grid-4">
-                    <div class="form-group">
+                
+                <div class="grid-2" style="margin-bottom: 16px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label>Expense Date (Can be backdated)</label>
+                        <input type="date" id="expDate">
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
                         <label>Category</label>
                         <select id="expCategory">
                             <option>Salary</option>
@@ -652,17 +663,18 @@
                             <option>Miscellaneous</option>
                         </select>
                     </div>
-                    <div class="form-group">
+                </div>
+                
+                <div class="grid-3" style="align-items: flex-end;">
+                    <div class="form-group" style="margin-bottom: 0;">
                         <label>Note</label>
                         <input type="text" id="expNote" placeholder="e.g. Internet">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="margin-bottom: 0;">
                         <label>Amount</label>
                         <input type="number" id="expAmount" placeholder="0.00">
                     </div>
-                    <div style="display: flex; align-items: flex-end; padding-bottom: 16px;">
-                        <button class="btn btn-danger" onclick="addExpense()">➖ Deduct</button>
-                    </div>
+                    <button class="btn btn-danger" onclick="addExpense()">➖ Deduct</button>
                 </div>
             </div>
             
@@ -1046,10 +1058,11 @@
                 else el.classList.add('hidden'); 
             });
             
-            // Set Default Date in Dashboard Filter upon successful login
-            if (!document.getElementById('dashDateFilter').value) {
-                document.getElementById('dashDateFilter').value = getLocalISODate().split('T')[0];
-            }
+            // Set Default Dates upon successful login
+            let todayDate = getLocalISODate().split('T')[0];
+            if (!document.getElementById('dashDateFilter').value) document.getElementById('dashDateFilter').value = todayDate;
+            if (!document.getElementById('transDate').value) document.getElementById('transDate').value = todayDate;
+            if (!document.getElementById('expDate').value) document.getElementById('expDate').value = todayDate;
             
             if(currentUser.role === 'admin') switchTab('tab-dashboard'); 
             else switchTab('tab-transact');
@@ -1287,6 +1300,7 @@
         }
 
         function processTransaction() {
+            let rawDate = document.getElementById('transDate').value;
             let pId = parseInt(document.getElementById('transProduct').value);
             let qty = parseInt(document.getElementById('transQty').value);
             let method = document.getElementById('transMethod').value;
@@ -1303,9 +1317,13 @@
             let amt = (p.price * qty) * (1 - disc); 
             finance[method] += amt;
             
+            // Determine final Date (combining user selected date + current exact time)
+            let timePart = getLocalISODate().split('T')[1] || "12:00:00";
+            let finalDate = rawDate ? (rawDate + "T" + timePart) : getLocalISODate();
+            
             let tx = { 
                 id: Date.now(), 
-                date: getLocalISODate(), 
+                date: finalDate, 
                 category: cat, 
                 item: p.name, 
                 qty: qty, 
@@ -1318,7 +1336,10 @@
             txHistory.push(tx); 
             updateUI();
             
-            document.getElementById('rcptDate').innerText = new Date().toLocaleString(); 
+            // Format receipt date to show the backdated date properly
+            let receiptDateObj = new Date(finalDate);
+            document.getElementById('rcptDate').innerText = receiptDateObj.toLocaleString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }); 
+            
             document.getElementById('rcptCategory').innerText = tx.category; 
             document.getElementById('rcptItem').innerText = tx.item; 
             document.getElementById('rcptQty').innerText = tx.qty;
@@ -1334,15 +1355,19 @@
         }
 
         function addExpense() {
+            let rawDate = document.getElementById('expDate').value;
             let cat = document.getElementById('expCategory').value;
             let note = document.getElementById('expNote').value;
             let amt = parseFloat(document.getElementById('expAmount').value);
             
             if(isNaN(amt) || amt <= 0) return alert('Valid amount needed.');
             
+            let timePart = getLocalISODate().split('T')[1] || "12:00:00";
+            let finalDate = rawDate ? (rawDate + "T" + timePart) : getLocalISODate();
+            
             expHistory.push({
                 id: Date.now(), 
-                date: getLocalISODate(), 
+                date: finalDate, 
                 category: cat, 
                 note: note || 'N/A', 
                 amount: amt, 
@@ -1358,7 +1383,10 @@
             let txb = document.querySelector('#historyTable tbody'); 
             txb.innerHTML = '';
             
-            [...txHistory].reverse().forEach(t => {
+            // Sort tx by Date (Newest first)
+            let sortedTx = [...txHistory].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            sortedTx.forEach(t => {
                 txb.innerHTML += `<tr>
                     <td>${t.date.split('T')[0]}</td>
                     <td><span class="badge" style="background:#E0E7FF;color:#4338CA;">${t.category}</span></td>
@@ -1374,7 +1402,10 @@
             let exb = document.querySelector('#expenseTable tbody'); 
             exb.innerHTML = '';
             
-            [...expHistory].reverse().forEach(e => {
+            // Sort exp by Date (Newest first)
+            let sortedExp = [...expHistory].sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            sortedExp.forEach(e => {
                 exb.innerHTML += `<tr>
                     <td>${e.date.split('T')[0]}</td>
                     <td>${e.category}</td>
