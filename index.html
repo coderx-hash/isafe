@@ -4,101 +4,180 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clinic Management & Inventory System</title>
+    <!-- Chart.js for Bar Graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        /* Base Styling & White Background */
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #10b981;
+            --success-hover: #059669;
+            --danger: #ef4444;
+            --danger-hover: #dc2626;
+            --warning: #f59e0b;
+            --info: #0ea5e9;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        /* Base Styling */
         body { 
-            background-color: #ffffff; 
-            color: #333; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
             margin: 0; 
             padding: 0; 
         }
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 15px; }
+        
+        /* Cards */
         .card { 
-            background: #ffffff; 
-            border: 1px solid #e0e0e0; 
-            border-radius: 8px; 
+            background: var(--card-bg); 
+            border-radius: 12px; 
             padding: 20px; 
             margin-bottom: 20px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03); 
         }
-        h1, h2, h3, h4 { color: #2c3e50; margin-top: 0; }
+        h1, h2, h3, h4 { color: #111827; margin-top: 0; }
         
         /* Buttons */
         .btn { 
-            padding: 10px 15px; 
+            padding: 10px 16px; 
             border: none; 
-            border-radius: 5px; 
+            border-radius: 6px; 
             cursor: pointer; 
             color: white; 
-            font-weight: bold;
-            transition: background 0.3s;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
         }
-        .btn-primary { background-color: #007bff; }
-        .btn-primary:hover { background-color: #0056b3; }
-        .btn-success { background-color: #28a745; width: 100%; margin-top: 10px;}
-        .btn-success:hover { background-color: #218838; }
-        .btn-danger { background-color: #dc3545; }
-        .btn-warning { background-color: #ffc107; color: #333; }
-        .btn-info { background-color: #17a2b8; }
+        .btn-primary { background-color: var(--primary); }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-success { background-color: var(--success); width: 100%; margin-top: 10px;}
+        .btn-success:hover { background-color: var(--success-hover); }
+        .btn-danger { background-color: var(--danger); }
+        .btn-danger:hover { background-color: var(--danger-hover); }
+        .btn-warning { background-color: var(--warning); color: #fff; }
+        .btn-info { background-color: var(--info); }
+        .btn-sm { padding: 6px 10px; font-size: 12px; margin-right: 4px; margin-bottom: 4px; }
         
         /* Inputs & Tables */
         input, select { 
-            padding: 10px; 
+            padding: 10px 12px; 
             width: 100%; 
             box-sizing: border-box; 
-            margin-top: 5px; 
+            margin-top: 4px; 
             margin-bottom: 15px; 
-            border: 1px solid #ccc; 
-            border-radius: 4px; 
+            border: 1px solid var(--border); 
+            border-radius: 6px; 
+            background-color: #f9fafb;
+            font-size: 14px;
         }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
-        th { background-color: #f8f9fa; }
+        input:focus, select:focus { outline: 2px solid var(--primary); outline-offset: -1px; }
+        
+        /* Responsive Table */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 14px; 
+            min-width: 700px; 
+        }
+        th, td { border-bottom: 1px solid var(--border); padding: 12px 15px; text-align: left; white-space: nowrap; }
+        th { background-color: #f9fafb; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 12px; }
+        tbody tr:hover { background-color: #f9fafb; }
         .text-right { text-align: right; }
         .text-center { text-align: center; }
         
-        /* Utilities */
+        /* Layout Utilities */
         .hidden { display: none !important; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
         
-        /* Header & Footer */
+        /* Header Bar */
         .header-bar { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            border-bottom: 2px solid #f0f0f0; 
-            padding-bottom: 15px; 
-            margin-bottom: 20px; 
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
-        .live-clock {
-            font-size: 16px;
-            font-weight: bold;
-            color: #e74c3c;
-            margin-top: 5px;
-        }
+        .header-bar h2 { margin: 0; color: var(--primary); }
+        .live-clock { font-size: 14px; font-weight: 600; color: var(--text-muted); margin-top: 4px; }
         .badge { 
-            background-color: #17a2b8; 
+            background-color: var(--info); 
             color: white; 
-            padding: 5px 10px; 
-            border-radius: 15px; 
-            font-size: 14px;
+            padding: 4px 10px; 
+            border-radius: 20px; 
+            font-size: 12px;
+            font-weight: bold;
             display: inline-block;
-            margin-bottom: 5px;
+            margin-right: 5px;
         }
-        .footer { text-align: center; margin-top: 40px; font-size: 13px; color: #7f8c8d; border-top: 1px solid #eee; padding-top: 20px; }
-        
+
+        /* Modern Tab Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            background: var(--card-bg);
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            -webkit-overflow-scrolling: touch;
+        }
+        .nav-btn {
+            flex: 1;
+            padding: 12px 15px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            white-space: nowrap;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            min-width: 120px;
+        }
+        .nav-btn:hover { background: var(--bg-color); color: var(--text-main); }
+        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 2px 4px rgba(37,99,235,0.3); }
+        .tab-pane { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-pane.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
         /* Dashboard Stats */
         .stat-box {
-            background: #f8f9fa;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 15px;
-            text-align: center;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 20px;
         }
-        .stat-box h4 { margin: 0; color: #666; font-size: 14px; }
-        .stat-box p { margin: 10px 0 0 0; font-size: 20px; font-weight: bold; color: #28a745; }
+        .stat-box h4 { margin: 0; color: var(--text-muted); font-size: 13px; text-transform: uppercase; }
+        .stat-box p.main-stat { margin: 10px 0 5px 0; font-size: 24px; font-weight: 800; color: var(--text-main); }
+        .profit-text { color: var(--success) !important; font-size: 16px !important; font-weight: bold; margin: 0;}
+        .expense-text { color: var(--danger) !important; font-size: 14px !important; font-weight: bold; margin: 5px 0 0 0;}
+        .patient-text { color: var(--warning) !important; font-size: 14px !important; font-weight: bold; margin: 5px 0 0 0;}
+
+        .chart-container { position: relative; height: 320px; width: 100%; margin-top: 20px; padding: 15px; background: #fff; border: 1px solid var(--border); border-radius: 8px;}
 
         /* Receipt Modal */
         #receiptModalOverlay {
@@ -106,24 +185,31 @@
             background: rgba(0,0,0,0.6);
             display: flex; justify-content: center; align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(3px);
         }
         .receipt-box {
-            background: white; width: 320px; padding: 20px; border-radius: 5px;
+            background: white; width: 340px; padding: 25px; border-radius: 8px;
             font-family: 'Courier New', Courier, monospace;
+            max-height: 90vh; overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
-        .receipt-box hr { border: 1px dashed #ccc; }
+        .receipt-box hr { border: 1px dashed #ccc; margin: 15px 0; }
+
+        .footer { text-align: center; margin-top: 40px; font-size: 13px; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 20px; padding-bottom: 20px;}
 
         @media (max-width: 768px) {
-            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
             .header-bar { flex-direction: column; text-align: center; gap: 10px; }
+            .nav-tabs { justify-content: flex-start; padding: 10px; }
+            .nav-btn { flex: 0 0 auto; }
+            .stat-box { padding: 15px; }
         }
 
-        /* Print Media Query */
         @media print {
             body * { visibility: hidden; }
             #receiptModalOverlay, #receiptModalOverlay * { visibility: visible; }
-            #receiptModalOverlay { position: absolute; left: 0; top: 0; background: none; justify-content: flex-start; align-items: flex-start; }
-            .receipt-box { box-shadow: none; width: 100%; border: none; margin: 0; padding: 0; }
+            #receiptModalOverlay { position: absolute; left: 0; top: 0; background: none; justify-content: flex-start; align-items: flex-start; backdrop-filter: none;}
+            .receipt-box { box-shadow: none; width: 100%; border: none; margin: 0; padding: 0; max-height: none; overflow: visible; }
             .no-print { display: none !important; }
         }
     </style>
@@ -132,132 +218,268 @@
 
     <!-- Login Screen -->
     <div id="loginSection" class="container">
-        <div class="card" style="max-width: 400px; margin: 80px auto;">
-            <h2 style="text-align:center; color: #007bff;">Secure Login</h2>
-            <p style="text-align:center; color:#666; font-size:14px;">Please enter your details to continue</p>
+        <div class="card" style="max-width: 420px; margin: 10vh auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h2 style="color: var(--primary); margin-bottom: 5px;">Clinic System</h2>
+                <p style="color: var(--text-muted); font-size: 14px; margin: 0;">Secure Login Portal</p>
+            </div>
             
             <label>Your Name (e.g. Ivy):</label>
-            <input type="text" id="loginName" placeholder="Enter your name" required>
+            <input type="text" id="loginName" placeholder="Enter your full name" required>
 
-            <label>Role:</label>
+            <label>Select Role:</label>
             <select id="loginRole">
                 <option value="staff">Staff</option>
-                <option value="admin">Admin</option>
+                <option value="admin">Administrator</option>
             </select>
 
             <label>Password:</label>
             <input type="password" id="loginPassword" placeholder="Enter password">
             
-            <button class="btn btn-primary" style="width:100%; margin-top: 10px;" onclick="login()">Login</button>
+            <button class="btn btn-primary" style="width:100%; margin-top: 15px; padding: 12px;" onclick="login()">Access System</button>
         </div>
     </div>
 
     <!-- Main Application -->
     <div id="mainApp" class="container hidden">
+        <!-- App Header -->
         <div class="header-bar">
             <div>
-                <h2>Clinic Inventory & Finance</h2>
+                <h2>🏥 Clinic Management Hub</h2>
                 <div class="live-clock" id="liveClock">Loading Date & Time...</div>
-                <div style="margin-top: 10px;">
-                    <span class="badge" id="currentUserRole"></span>
-                    <span class="badge" id="currentUserName" style="background-color: #28a745;"></span>
-                </div>
             </div>
-            <button class="btn btn-danger" onclick="logout()">Logout</button>
+            <div style="text-align: right;">
+                <span class="badge" id="currentUserRole" style="background-color: var(--warning);"></span>
+                <span class="badge" id="currentUserName" style="background-color: var(--success);"></span>
+                <button class="btn btn-danger btn-sm" style="margin-top: 5px;" onclick="logout()">Logout</button>
+            </div>
         </div>
 
-        <!-- Admin Reports Dashboard -->
-        <div class="card admin-only hidden">
-            <h3>📊 Sales & Finance Reports</h3>
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs" id="mainNav">
+            <button class="nav-btn active admin-only hidden" onclick="switchTab('tab-dashboard')">📊 Dashboard</button>
+            <button class="nav-btn" onclick="switchTab('tab-transact')">📋 Transact</button>
+            <button class="nav-btn admin-only hidden" onclick="switchTab('tab-expenses')">💸 Expenses</button>
+            <button class="nav-btn" onclick="switchTab('tab-inventory')">📦 Inventory</button>
+            <button class="nav-btn admin-only hidden" onclick="switchTab('tab-history')">📝 History</button>
+        </div>
+
+        <!-- TAB 1: DASHBOARD (Admin Only) -->
+        <div id="tab-dashboard" class="tab-pane active admin-only hidden">
             <div class="grid-3">
                 <div class="stat-box">
-                    <h4>Today's Sales</h4>
-                    <p id="reportDaily">₱0.00</p>
+                    <h4>Today's Overview</h4>
+                    <p class="main-stat" id="reportDaily">₱0.00</p>
+                    <p class="expense-text" id="expDaily">Expenses: ₱0.00</p>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 8px 0;">
+                    <p class="profit-text" id="profitDaily">True Profit: ₱0.00</p>
+                    <p class="patient-text" id="patientDaily">Patients: 0</p>
                 </div>
                 <div class="stat-box">
-                    <h4>This Month's Sales</h4>
-                    <p id="reportMonthly">₱0.00</p>
+                    <h4>This Month</h4>
+                    <p class="main-stat" id="reportMonthly">₱0.00</p>
+                    <p class="expense-text" id="expMonthly">Expenses: ₱0.00</p>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 8px 0;">
+                    <p class="profit-text" id="profitMonthly">True Profit: ₱0.00</p>
+                    <p class="patient-text" id="patientMonthly">Patients: 0</p>
                 </div>
                 <div class="stat-box">
-                    <h4>This Year's Sales</h4>
-                    <p id="reportYearly">₱0.00</p>
+                    <h4>This Year</h4>
+                    <p class="main-stat" id="reportYearly">₱0.00</p>
+                    <p class="expense-text" id="expYearly">Expenses: ₱0.00</p>
+                    <hr style="border: 0; border-top: 1px solid #eee; margin: 8px 0;">
+                    <p class="profit-text" id="profitYearly">True Profit: ₱0.00</p>
+                    <p class="patient-text" id="patientYearly">Patients: 0</p>
                 </div>
             </div>
-            <div style="margin-top: 15px;">
-                <button class="btn btn-warning" id="exportBtn" style="width:100%;" onclick="prepareExport()">Generate Full System Report (CSV)</button>
+
+            <!-- Bar Graph Canvas -->
+            <div class="chart-container">
+                <canvas id="monthlyChart"></canvas>
+            </div>
+            
+            <div class="card" style="margin-top: 20px;">
+                <button class="btn btn-warning" id="exportBtn" style="width:100%; padding: 15px; font-size: 16px;" onclick="prepareExport()">⬇️ Generate Full System Report (CSV)</button>
             </div>
         </div>
 
-        <div class="grid-2">
-            <!-- Transaction Panel -->
-            <div class="card">
-                <h3>📋 Process Transaction</h3>
-                <label>Select Product / Vaccine:</label>
-                <select id="transProduct"></select>
-                
-                <div class="grid-2" style="gap: 10px;">
-                    <div>
-                        <label>Quantity:</label>
-                        <input type="number" id="transQty" value="1" min="1">
+        <!-- TAB 2: TRANSACT (Staff & Admin) -->
+        <div id="tab-transact" class="tab-pane">
+            <div class="grid-2">
+                <!-- Transaction Panel -->
+                <div class="card">
+                    <h3>📋 New Patient Transaction</h3>
+                    <label>Select Product / Vaccine / Service:</label>
+                    <select id="transProduct"></select>
+                    
+                    <div class="grid-2" style="gap: 10px;">
+                        <div>
+                            <label>Quantity:</label>
+                            <input type="number" id="transQty" value="1" min="1">
+                        </div>
+                        <div>
+                            <label>Discount Type:</label>
+                            <select id="transDiscount">
+                                <option value="0">None (Regular)</option>
+                                <option value="0.20">Senior/PWD (20%)</option>
+                                <option value="1">Free (100%)</option>
+                            </select>
+                        </div>
                     </div>
+
+                    <label>Payment Method:</label>
+                    <select id="transMethod">
+                        <option value="CASH">CASH</option>
+                        <option value="GCASH">GCASH</option>
+                        <option value="MariBANK">MariBANK</option>
+                        <option value="BANK_Transfer">BANK Transfer</option>
+                    </select>
+                    
+                    <button class="btn btn-success" style="padding: 12px; font-size: 16px;" onclick="processTransaction()">✅ Process & Generate Receipt</button>
+                </div>
+
+                <!-- Financial Summary Panel -->
+                <div class="card">
+                    <h3>💰 Payment Till Summary</h3>
+                    <p style="color: var(--text-muted); font-size: 13px; margin-top: -10px;">Current cash & digital footprint.</p>
+                    <div class="table-responsive">
+                        <table id="financeTable">
+                            <tr><td>💵 CASH</td><td class="text-right" id="fin-CASH">₱0.00</td></tr>
+                            <tr><td>📱 GCASH</td><td class="text-right" id="fin-GCASH">₱0.00</td></tr>
+                            <tr><td>🏦 MariBANK</td><td class="text-right" id="fin-MariBANK">₱0.00</td></tr>
+                            <tr><td>💻 BANK Transfer</td><td class="text-right" id="fin-BANK_Transfer">₱0.00</td></tr>
+                            <tr style="font-weight:bold; background-color:#f8f9fa;">
+                                <td>TOTAL REVENUE TILL</td><td class="text-right" id="fin-TOTAL" style="color: var(--primary); font-size: 16px;">₱0.00</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: EXPENSES (Admin Only) -->
+        <div id="tab-expenses" class="tab-pane admin-only hidden">
+            <div class="card">
+                <h3>💸 Miscellaneous & Operational Expenses</h3>
+                <p style="color: var(--text-muted); font-size: 13px; margin-top: -10px;">Log expenses here to see accurate True Net Profit.</p>
+                
+                <div class="grid-4" style="gap: 10px; align-items: end;">
                     <div>
-                        <label>Discount Type:</label>
-                        <select id="transDiscount">
-                            <option value="0">None (Regular)</option>
-                            <option value="0.20">Senior/PWD (20%)</option>
-                            <option value="1">Free (100%)</option>
+                        <label>Category:</label>
+                        <select id="expCategory">
+                            <option value="Salary">Salary</option>
+                            <option value="Electric Bill">Electric Bill</option>
+                            <option value="Water Bill">Water Bill</option>
+                            <option value="Clinic Supply">Clinic Supply</option>
+                            <option value="Miscellaneous">Miscellaneous (Others)</option>
                         </select>
                     </div>
+                    <div>
+                        <label>Note / Description:</label>
+                        <input type="text" id="expNote" placeholder="e.g. Internet, Repair...">
+                    </div>
+                    <div>
+                        <label>Amount (₱):</label>
+                        <input type="number" id="expAmount" placeholder="0.00" min="0">
+                    </div>
+                    <div>
+                        <button class="btn btn-danger" style="width: 100%; margin-bottom: 15px;" onclick="addExpense()">➖ Deduct Expense</button>
+                    </div>
                 </div>
-
-                <label>Payment Method:</label>
-                <select id="transMethod">
-                    <option value="CASH">CASH</option>
-                    <option value="GCASH">GCASH</option>
-                    <option value="MariBANK">MariBANK</option>
-                    <option value="BANK_Transfer">BANK Transfer</option>
-                </select>
-                
-                <button class="btn btn-success" onclick="processTransaction()">Submit Transaction</button>
             </div>
 
-            <!-- Financial Summary Panel -->
             <div class="card">
-                <h3>💰 Till Summary (Overall)</h3>
-                <table id="financeTable">
-                    <tr><td>CASH</td><td class="text-right" id="fin-CASH">₱0.00</td></tr>
-                    <tr><td>GCASH</td><td class="text-right" id="fin-GCASH">₱0.00</td></tr>
-                    <tr><td>MariBANK</td><td class="text-right" id="fin-MariBANK">₱0.00</td></tr>
-                    <tr><td>BANK Transfer</td><td class="text-right" id="fin-BANK_Transfer">₱0.00</td></tr>
-                    <tr style="font-weight:bold; background-color:#f8f9fa;">
-                        <td>TOTAL REVENUE</td><td class="text-right" id="fin-TOTAL">₱0.00</td>
-                    </tr>
-                </table>
+                <h3>🧾 Expense History</h3>
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                    <table id="expenseTable">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Category</th>
+                                <th>Note</th>
+                                <th>Logged By</th>
+                                <th class="text-right">Amount</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- Inventory List -->
-        <div class="card">
-            <h3>📦 Inventory Report</h3>
-            <table id="inventoryTable">
-                <thead>
-                    <tr>
-                        <th>Product Name</th>
-                        <th>Price</th>
-                        <th>Current Stock</th>
-                        <th class="admin-only hidden">Actions</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            
-            <div class="admin-only hidden" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
-                <h4>➕ Add New Product</h4>
-                <div class="grid-2" style="gap:10px;">
-                    <input type="text" id="newProdName" placeholder="Product Name">
-                    <input type="number" id="newProdPrice" placeholder="Price (₱)">
-                    <input type="number" id="newProdStock" placeholder="Initial Stock">
-                    <button class="btn btn-primary" onclick="addProduct()">Save New Product</button>
+        <!-- TAB 4: INVENTORY (Staff & Admin) -->
+        <div id="tab-inventory" class="tab-pane">
+            <div class="card">
+                <h3>📦 Inventory & Pricing Tracker</h3>
+                <div class="table-responsive">
+                    <table id="inventoryTable">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th class="admin-only hidden" style="background-color: #fef3c7;">Cost Price</th>
+                                <th style="background-color: #e0f2fe;">SRP</th>
+                                <th class="admin-only hidden" style="background-color: #d1fae5;">Profit/Item</th>
+                                <th>Stock Left</th>
+                                <th class="admin-only hidden">Last Restocked</th>
+                                <th class="admin-only hidden text-center" style="min-width: 180px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                
+                <div class="admin-only hidden" style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
+                    <h4>➕ Register New Product/Service</h4>
+                    <div class="grid-4" style="gap:10px;">
+                        <input type="text" id="newProdName" placeholder="Product Name">
+                        <input type="number" id="newProdCost" placeholder="Cost Price (₱)">
+                        <input type="number" id="newProdPrice" placeholder="SRP (₱)">
+                        <input type="number" id="newProdStock" placeholder="Initial Stock (999=Service)">
+                    </div>
+                    <button class="btn btn-primary" style="width: 100%;" onclick="addProduct()">Save Item to Database</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: HISTORY (Admin Only) -->
+        <div id="tab-history" class="tab-pane admin-only hidden">
+            <!-- Product Sales Summary -->
+            <div class="card">
+                <h3>📈 Product Sales Tracker (Units Sold)</h3>
+                <div class="table-responsive">
+                    <table id="productStatsTable">
+                        <thead>
+                            <tr>
+                                <th>Product Name</th>
+                                <th style="background-color: #e8f5e9;">Sold Today</th>
+                                <th style="background-color: #e3f2fd;">Sold This Month</th>
+                                <th style="background-color: #fff3e0;">Sold This Year</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Transaction History -->
+            <div class="card">
+                <h3>📝 Patient Transaction Logs</h3>
+                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                    <table id="historyTable">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Item</th>
+                                <th>Qty</th>
+                                <th>Method</th>
+                                <th>Revenue</th>
+                                <th>Staff</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -290,11 +512,11 @@
                 <strong>Processed By:</strong> <span id="rcptUser"></span>
             </div>
             <div class="text-center" style="margin-top: 20px; font-size: 12px; color: #666;">
-                Thank you!
+                Thank you for your trust!
             </div>
             <div class="grid-2 no-print" style="margin-top: 20px;">
-                <button class="btn btn-info" onclick="window.print()">Print</button>
-                <button class="btn btn-danger" onclick="closeReceipt()">Close</button>
+                <button class="btn btn-info" onclick="window.print()">🖨️ Print</button>
+                <button class="btn btn-danger" onclick="closeReceipt()">✖ Close</button>
             </div>
         </div>
     </div>
@@ -309,28 +531,59 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Initial Data Structure (Stored in LocalStorage)
-        let inventory = JSON.parse(localStorage.getItem('clinic_inventory')) || [
-            { id: 1, name: 'Abhayrab', price: 590, stock: 3 },
-            { id: 2, name: 'Speeda', price: 590, stock: 0 },
-            { id: 3, name: 'Tetanus Toxoid', price: 200, stock: 1 },
-            { id: 4, name: 'Equirab', price: 1950, stock: 2 },
-            { id: 5, name: 'Vinrab', price: 590, stock: 0 },
-            { id: 6, name: 'Regular ID', price: 590, stock: 999 },
-            { id: 7, name: 'Regular IM', price: 1450, stock: 999 },
-            { id: 8, name: 'ERIG', price: 1950, stock: 999 }
+        // Safe Date Generator (Layout only, keeps original ISO structures)
+        function getLocalISODate() {
+            let todayObj = new Date();
+            let offset = todayObj.getTimezoneOffset() * 60000;
+            return (new Date(todayObj - offset)).toISOString().slice(0, -1);
+        }
+
+        function formatDisplayDate(isoString) {
+            if(!isoString) return "N/A";
+            let d = new Date(isoString);
+            return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+        }
+
+        // --- DATA STRUCTURES (LocalStorage) ---
+        let inventory = JSON.parse(localStorage.getItem('clinic_inventory_v4')) || [
+            { id: 1, name: 'Abhayrab', cost: 450, price: 590, stock: 3, lastStockDate: getLocalISODate() },
+            { id: 2, name: 'Speeda', cost: 450, price: 590, stock: 0, lastStockDate: getLocalISODate() },
+            { id: 3, name: 'Tetanus Toxoid', cost: 150, price: 200, stock: 1, lastStockDate: getLocalISODate() },
+            { id: 4, name: 'Equirab', cost: 1500, price: 1950, stock: 2, lastStockDate: getLocalISODate() },
+            { id: 5, name: 'Vinrab', cost: 450, price: 590, stock: 0, lastStockDate: getLocalISODate() },
+            { id: 6, name: 'Regular ID', cost: 100, price: 590, stock: 999, lastStockDate: getLocalISODate() },
+            { id: 7, name: 'Regular IM', cost: 300, price: 1450, stock: 999, lastStockDate: getLocalISODate() },
+            { id: 8, name: 'ERIG', cost: 1500, price: 1950, stock: 999, lastStockDate: getLocalISODate() }
         ];
 
-        let finance = JSON.parse(localStorage.getItem('clinic_finance')) || {
+        let finance = JSON.parse(localStorage.getItem('clinic_finance_v4')) || {
             CASH: 0, GCASH: 0, MariBANK: 590, BANK_Transfer: 0 
         };
 
-        // Transaction History for Reports
-        let txHistory = JSON.parse(localStorage.getItem('clinic_tx_history')) || [];
+        let txHistory = JSON.parse(localStorage.getItem('clinic_tx_history_v4')) || [];
+        let expHistory = JSON.parse(localStorage.getItem('clinic_exp_history_v4')) || [];
 
         let currentRole = '';
         let currentName = '';
+        let myChart = null;
 
+        // --- TAB NAVIGATION ---
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-pane').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Highlight button
+            event.currentTarget.classList.add('active');
+            
+            // Always refresh UI when switching tabs to ensure data is synced
+            updateUI(); 
+        }
+
+        // --- AUTHENTICATION ---
         function login() {
             let nameInput = document.getElementById('loginName').value.trim();
             let role = document.getElementById('loginRole').value;
@@ -341,7 +594,6 @@
                 return;
             }
 
-            // Secure Auth Check
             if (role === 'admin' && pass === 'admin123') {
                 currentRole = 'admin';
                 currentName = nameInput;
@@ -351,7 +603,7 @@
                 currentName = nameInput;
                 enterApp();
             } else {
-                alert('Mali ang password! Please try again.');
+                alert('Invalid Password! Please try again.');
             }
         }
 
@@ -361,12 +613,18 @@
             document.getElementById('currentUserRole').innerText = "Role: " + currentRole.toUpperCase();
             document.getElementById('currentUserName').innerText = "User: " + currentName;
             
-            // Toggle Admin Only Elements
             let adminEls = document.querySelectorAll('.admin-only');
             adminEls.forEach(el => {
                 if (currentRole === 'admin') el.classList.remove('hidden');
                 else el.classList.add('hidden');
             });
+
+            // Default Tab handling
+            if (currentRole === 'admin') {
+                document.querySelector('.nav-tabs').children[0].click(); // Dashboard
+            } else {
+                document.querySelector('.nav-tabs').children[1].click(); // Transact
+            }
 
             updateUI();
         }
@@ -379,35 +637,44 @@
             document.getElementById('loginSection').classList.remove('hidden');
         }
 
+        // --- CORE UI UPDATER ---
         function updateUI() {
-            // Update Transaction Dropdown
+            // 1. Transaction Dropdown
             let productSelect = document.getElementById('transProduct');
             productSelect.innerHTML = '';
             inventory.forEach(item => {
                 let opt = document.createElement('option');
                 opt.value = item.id;
-                opt.text = `${item.name} - ₱${item.price} (Stock: ${item.stock === 999 ? 'Unlimited' : item.stock})`;
+                opt.text = `${item.name} - SRP: ₱${item.price} (Stock: ${item.stock === 999 ? 'Unlimited' : item.stock})`;
                 if (item.stock <= 0 && item.stock !== 999) opt.disabled = true;
                 productSelect.appendChild(opt);
             });
 
-            // Update Inventory Table
-            let tbody = document.querySelector('#inventoryTable tbody');
-            tbody.innerHTML = '';
+            // 2. Inventory Table
+            let invTbody = document.querySelector('#inventoryTable tbody');
+            invTbody.innerHTML = '';
             inventory.forEach(item => {
-                let stockDisplay = item.stock === 999 ? 'Service/Unlimited' : item.stock;
+                let stockDisplay = item.stock === 999 ? 'Unlimited' : item.stock;
+                let costVal = item.cost || 0;
+                let profitPerItem = item.price - costVal;
+                
                 let tr = `<tr>
-                    <td>${item.name}</td>
-                    <td>₱${item.price}</td>
+                    <td><strong>${item.name}</strong></td>
+                    <td class="admin-only ${currentRole === 'admin' ? '' : 'hidden'}" style="color: var(--danger);">₱${costVal.toFixed(2)}</td>
+                    <td style="color: var(--primary); font-weight: bold;">₱${item.price.toFixed(2)}</td>
+                    <td class="admin-only ${currentRole === 'admin' ? '' : 'hidden'}" style="color: var(--success); font-weight: bold;">₱${profitPerItem.toFixed(2)}</td>
                     <td style="color: ${item.stock <= 0 ? 'red' : 'green'}; font-weight:bold;">${stockDisplay}</td>
-                    <td class="admin-only ${currentRole === 'admin' ? '' : 'hidden'}">
-                        <button class="btn btn-primary" style="padding: 5px 10px; font-size:12px;" onclick="addStock(${item.id})">+ Add Stock</button>
+                    <td class="admin-only ${currentRole === 'admin' ? '' : 'hidden'}">${formatDisplayDate(item.lastStockDate)}</td>
+                    <td class="admin-only ${currentRole === 'admin' ? '' : 'hidden'} text-center">
+                        <button class="btn btn-success btn-sm" title="Add Stock" onclick="addStock(${item.id})">➕</button>
+                        <button class="btn btn-warning btn-sm" title="Edit SRP & Cost" onclick="editProduct(${item.id})">✏️</button>
+                        <button class="btn btn-danger btn-sm" title="Delete Product" onclick="deleteProduct(${item.id})">🗑️</button>
                     </td>
                 </tr>`;
-                tbody.innerHTML += tr;
+                invTbody.innerHTML += tr;
             });
 
-            // Update Finance Till
+            // 3. Finance Till Table
             let total = 0;
             for (let key in finance) {
                 if(document.getElementById(`fin-${key}`)) {
@@ -417,39 +684,261 @@
             }
             document.getElementById('fin-TOTAL').innerText = '₱' + total.toFixed(2);
 
-            // Update Reports Dashboard (Format purely layout, no altering dates)
+            // 4. Admin Reports & Data
             if(currentRole === 'admin') {
                 calculateReports();
+                renderTransactionHistory();
+                renderExpenseHistory();
             }
 
             // Save state to Local Storage
-            localStorage.setItem('clinic_inventory', JSON.stringify(inventory));
-            localStorage.setItem('clinic_finance', JSON.stringify(finance));
-            localStorage.setItem('clinic_tx_history', JSON.stringify(txHistory));
+            localStorage.setItem('clinic_inventory_v4', JSON.stringify(inventory));
+            localStorage.setItem('clinic_finance_v4', JSON.stringify(finance));
+            localStorage.setItem('clinic_tx_history_v4', JSON.stringify(txHistory));
+            localStorage.setItem('clinic_exp_history_v4', JSON.stringify(expHistory));
         }
 
+        // --- DASHBOARD CALCULATIONS (TRUE PROFIT) ---
         function calculateReports() {
-            let todayObj = new Date();
-            // Get local date string in YYYY-MM-DD format based on timezone
-            let offset = todayObj.getTimezoneOffset() * 60000;
-            let localISOTime = (new Date(todayObj - offset)).toISOString().slice(0, -1);
-            
+            let localISOTime = getLocalISODate();
             let todayStr = localISOTime.split('T')[0];
             let monthStr = todayStr.substring(0, 7);
             let yearStr = todayStr.substring(0, 4);
 
-            let daily = 0, monthly = 0, yearly = 0;
+            let dailyRev = 0, monthlyRev = 0, yearlyRev = 0;
+            let dailyGrossProf = 0, monthlyGrossProf = 0, yearlyGrossProf = 0;
+            let dailyExp = 0, monthlyExp = 0, yearlyExp = 0;
+            let dailyPat = 0, monthlyPat = 0, yearlyPat = 0;
             
+            let prodStats = {};
+            inventory.forEach(i => { prodStats[i.name] = { d: 0, m: 0, y: 0 }; });
+            let chartLabelsMap = {};
+            
+            // Calculate Revenues & COGS
             txHistory.forEach(tx => {
-                let txDate = tx.date.split('T')[0];
-                if (txDate === todayStr) daily += tx.amount;
-                if (txDate.startsWith(monthStr)) monthly += tx.amount;
-                if (txDate.startsWith(yearStr)) yearly += tx.amount;
+                let txDate = tx.date.split('T')[0]; 
+                let txMonth = txDate.substring(0, 7); 
+                let txGrossProfit = tx.amount - (tx.totalCost || 0); 
+
+                if(!prodStats[tx.item]) prodStats[tx.item] = { d: 0, m: 0, y: 0 };
+
+                if (txDate === todayStr) { dailyRev += tx.amount; dailyGrossProf += txGrossProfit; dailyPat++; prodStats[tx.item].d += tx.qty; }
+                if (txDate.startsWith(monthStr)) { monthlyRev += tx.amount; monthlyGrossProf += txGrossProfit; monthlyPat++; prodStats[tx.item].m += tx.qty; }
+                if (txDate.startsWith(yearStr)) { yearlyRev += tx.amount; yearlyGrossProf += txGrossProfit; yearlyPat++; prodStats[tx.item].y += tx.qty; }
+
+                if(txDate.startsWith(yearStr)) {
+                    if(!chartLabelsMap[txMonth]) chartLabelsMap[txMonth] = { rev: 0, prof: 0, exp: 0 };
+                    chartLabelsMap[txMonth].rev += tx.amount;
+                    chartLabelsMap[txMonth].prof += txGrossProfit;
+                }
             });
 
-            document.getElementById('reportDaily').innerText = '₱' + daily.toFixed(2);
-            document.getElementById('reportMonthly').innerText = '₱' + monthly.toFixed(2);
-            document.getElementById('reportYearly').innerText = '₱' + yearly.toFixed(2);
+            // Calculate Expenses
+            expHistory.forEach(exp => {
+                let expDate = exp.date.split('T')[0];
+                let expMonth = expDate.substring(0, 7);
+
+                if (expDate === todayStr) dailyExp += exp.amount;
+                if (expDate.startsWith(monthStr)) monthlyExp += exp.amount;
+                if (expDate.startsWith(yearStr)) yearlyExp += exp.amount;
+
+                if(expDate.startsWith(yearStr)) {
+                    if(!chartLabelsMap[expMonth]) chartLabelsMap[expMonth] = { rev: 0, prof: 0, exp: 0 };
+                    chartLabelsMap[expMonth].exp += exp.amount;
+                }
+            });
+
+            // True Net Profit = Gross Profit (Rev - COGS) - Expenses
+            let dailyNet = dailyGrossProf - dailyExp;
+            let monthlyNet = monthlyGrossProf - monthlyExp;
+            let yearlyNet = yearlyGrossProf - yearlyExp;
+
+            // Update Report Cards
+            document.getElementById('reportDaily').innerText = 'Revenue: ₱' + dailyRev.toFixed(2);
+            document.getElementById('expDaily').innerText = 'Expenses: ₱' + dailyExp.toFixed(2);
+            document.getElementById('profitDaily').innerText = 'True Profit: ₱' + dailyNet.toFixed(2);
+            document.getElementById('patientDaily').innerText = 'Total Patients: ' + dailyPat;
+            
+            document.getElementById('reportMonthly').innerText = 'Revenue: ₱' + monthlyRev.toFixed(2);
+            document.getElementById('expMonthly').innerText = 'Expenses: ₱' + monthlyExp.toFixed(2);
+            document.getElementById('profitMonthly').innerText = 'True Profit: ₱' + monthlyNet.toFixed(2);
+            document.getElementById('patientMonthly').innerText = 'Total Patients: ' + monthlyPat;
+            
+            document.getElementById('reportYearly').innerText = 'Revenue: ₱' + yearlyRev.toFixed(2);
+            document.getElementById('expYearly').innerText = 'Expenses: ₱' + yearlyExp.toFixed(2);
+            document.getElementById('profitYearly').innerText = 'True Profit: ₱' + yearlyNet.toFixed(2);
+            document.getElementById('patientYearly').innerText = 'Total Patients: ' + yearlyPat;
+
+            // Update True Profit in Chart Map
+            for(let key in chartLabelsMap) {
+                chartLabelsMap[key].prof = chartLabelsMap[key].prof - chartLabelsMap[key].exp;
+            }
+
+            renderBarChart(chartLabelsMap);
+            renderProductStats(prodStats);
+        }
+
+        // --- EXPENSE MANAGEMENT ---
+        function addExpense() {
+            let cat = document.getElementById('expCategory').value;
+            let note = document.getElementById('expNote').value.trim();
+            let amt = parseFloat(document.getElementById('expAmount').value);
+
+            if (isNaN(amt) || amt <= 0) return alert('Enter a valid amount.');
+            if (!note) note = "N/A";
+
+            let newExp = {
+                id: Date.now(),
+                date: getLocalISODate(),
+                category: cat,
+                note: note,
+                amount: amt,
+                user: currentName
+            };
+
+            expHistory.push(newExp);
+            document.getElementById('expNote').value = '';
+            document.getElementById('expAmount').value = '';
+            updateUI();
+        }
+
+        function deleteExpense(id) {
+            if(!confirm("Remove this expense record?")) return;
+            expHistory = expHistory.filter(e => e.id !== id);
+            updateUI();
+        }
+
+        function renderExpenseHistory() {
+            let tbody = document.querySelector('#expenseTable tbody');
+            tbody.innerHTML = '';
+            let reversed = [...expHistory].reverse(); 
+            
+            reversed.forEach(exp => {
+                let dStr = exp.date.split('T')[0] + " " + exp.date.split('T')[1].substring(0,5);
+                let tr = `<tr>
+                    <td>${dStr}</td>
+                    <td><strong>${exp.category}</strong></td>
+                    <td>${exp.note}</td>
+                    <td>${exp.user}</td>
+                    <td class="text-right" style="color: var(--danger); font-weight: bold;">₱${exp.amount.toFixed(2)}</td>
+                    <td class="text-center">
+                        <button class="btn btn-danger btn-sm" onclick="deleteExpense(${exp.id})">🗑️</button>
+                    </td>
+                </tr>`;
+                tbody.innerHTML += tr;
+            });
+        }
+
+        // --- INVENTORY MANAGEMENT (DELETE & EDIT) ---
+        function deleteProduct(id) {
+            let product = inventory.find(i => i.id === id);
+            if(confirm(`⚠️ WARNING: Are you sure you want to completely DELETE '${product.name}' from the inventory list? (Past transactions will remain in history).`)) {
+                inventory = inventory.filter(i => i.id !== id);
+                updateUI();
+            }
+        }
+
+        function editProduct(id) {
+            let product = inventory.find(i => i.id === id);
+            
+            let newSRP = prompt(`EDIT SRP (Selling Price) for ${product.name}:`, product.price);
+            if(newSRP !== null) {
+                let parsedSRP = parseFloat(newSRP);
+                if(!isNaN(parsedSRP) && parsedSRP >= 0) product.price = parsedSRP;
+            }
+
+            let newCost = prompt(`EDIT COST PRICE for ${product.name}:`, product.cost || 0);
+            if(newCost !== null) {
+                let parsedCost = parseFloat(newCost);
+                if(!isNaN(parsedCost) && parsedCost >= 0) product.cost = parsedCost;
+            }
+
+            updateUI();
+        }
+
+        // --- REMAINING FUNCTIONS (HISTORY, CHART, TRANSACTION, EXPORT) ---
+        function renderProductStats(prodStats) {
+            let tbody = document.querySelector('#productStatsTable tbody');
+            tbody.innerHTML = '';
+            for (let itemName in prodStats) {
+                let stats = prodStats[itemName];
+                let inInv = inventory.some(i => i.name === itemName);
+                if (inInv || stats.y > 0) {
+                    let tr = `<tr>
+                        <td><strong>${itemName}</strong></td>
+                        <td style="background-color: #f1f8e9;">${stats.d}</td>
+                        <td style="background-color: #e3f2fd;">${stats.m}</td>
+                        <td style="background-color: #fff8e1;">${stats.y}</td>
+                    </tr>`;
+                    tbody.innerHTML += tr;
+                }
+            }
+        }
+
+        function renderTransactionHistory() {
+            let tbody = document.querySelector('#historyTable tbody');
+            tbody.innerHTML = '';
+            let reversedHistory = [...txHistory].reverse(); 
+            
+            reversedHistory.forEach(tx => {
+                let dStr = tx.date.split('T')[0] + " " + tx.date.split('T')[1].substring(0,5);
+                let tr = `<tr>
+                    <td>${dStr}</td>
+                    <td><strong>${tx.item}</strong></td>
+                    <td>${tx.qty}</td>
+                    <td>${tx.method.replace('_', ' ')}</td>
+                    <td style="color: var(--primary); font-weight: bold;">₱${tx.amount.toFixed(2)}</td>
+                    <td>${tx.processedBy}</td>
+                    <td class="text-center">
+                        <button class="btn btn-danger btn-sm" onclick="deleteTransaction(${tx.id})">🗑️ Revert</button>
+                    </td>
+                </tr>`;
+                tbody.innerHTML += tr;
+            });
+        }
+
+        function renderBarChart(dataMap) {
+            let ctx = document.getElementById('monthlyChart').getContext('2d');
+            let labels = Object.keys(dataMap).sort();
+            let revData = labels.map(l => dataMap[l].rev);
+            let profData = labels.map(l => dataMap[l].prof); // Now represents True Net Profit
+
+            let displayLabels = labels.map(l => {
+                let d = new Date(l + "-01");
+                return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            });
+
+            if(myChart) myChart.destroy(); 
+
+            myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: displayLabels.length > 0 ? displayLabels : ["No Data"],
+                    datasets: [
+                        {
+                            label: 'Total Revenue',
+                            data: revData.length > 0 ? revData : [0],
+                            backgroundColor: 'rgba(37, 99, 235, 0.7)',
+                            borderColor: 'rgba(37, 99, 235, 1)',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'True Net Profit',
+                            data: profData.length > 0 ? profData : [0],
+                            backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                            borderColor: 'rgba(16, 185, 129, 1)',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { y: { beginAtZero: true, ticks: { callback: function(value) { return '₱' + value; } } } }
+                }
+            });
         }
 
         function processTransaction() {
@@ -462,43 +951,51 @@
 
             let product = inventory.find(i => i.id === prodId);
             
-            if (product.stock !== 999 && product.stock < qty) {
-                return alert('Insufficient stock!');
-            }
+            if (product.stock !== 999 && product.stock < qty) return alert('Insufficient stock!');
 
-            // Auto-deduct inventory
-            if (product.stock !== 999) {
-                product.stock -= qty;
-            }
+            if (product.stock !== 999) product.stock -= qty;
 
-            // Compute Finance
             let amountDue = (product.price * qty) * (1 - discountRate);
+            let totalCostVal = (product.cost || 0) * qty; 
+            
             finance[method] += amountDue;
-
-            // Log to Transaction History for Reports
-            let now = new Date();
-            let offset = now.getTimezoneOffset() * 60000;
-            let localISOTime = (new Date(now - offset)).toISOString().slice(0, -1);
 
             let txRecord = {
                 id: Date.now(),
-                date: localISOTime,
+                date: getLocalISODate(),
                 item: product.name,
                 qty: qty,
                 amount: amountDue,
+                totalCost: totalCostVal, 
                 method: method,
-                processedBy: currentName // Logs who did the transaction
+                processedBy: currentName
             };
             txHistory.push(txRecord);
 
-            // Show Receipt Overlay
             showReceipt(txRecord);
 
-            // Reset form
             document.getElementById('transQty').value = 1;
             document.getElementById('transDiscount').value = "0";
             
             updateUI();
+        }
+
+        function deleteTransaction(txId) {
+            if(!confirm("⚠️ WARNING: Reverting this transaction will deduct revenue and restock the item. Continue?")) return;
+            
+            let txIndex = txHistory.findIndex(t => t.id === txId);
+            if(txIndex > -1) {
+                let tx = txHistory[txIndex];
+                
+                finance[tx.method] -= tx.amount;
+                if (finance[tx.method] < 0) finance[tx.method] = 0; 
+                
+                let product = inventory.find(i => i.name === tx.item);
+                if(product && product.stock !== 999) product.stock += tx.qty;
+                
+                txHistory.splice(txIndex, 1);
+                updateUI();
+            }
         }
 
         function showReceipt(tx) {
@@ -508,57 +1005,59 @@
             document.getElementById('rcptQty').innerText = tx.qty;
             document.getElementById('rcptMethod').innerText = tx.method.replace('_', ' ');
             document.getElementById('rcptTotal').innerText = '₱' + tx.amount.toFixed(2);
-            document.getElementById('rcptUser').innerText = tx.processedBy; // Shows staff name
+            document.getElementById('rcptUser').innerText = tx.processedBy; 
             
             document.getElementById('receiptModalOverlay').classList.remove('hidden');
         }
 
-        function closeReceipt() {
-            document.getElementById('receiptModalOverlay').classList.add('hidden');
-        }
+        function closeReceipt() { document.getElementById('receiptModalOverlay').classList.add('hidden'); }
 
         function addProduct() {
             let name = document.getElementById('newProdName').value;
+            let cost = parseFloat(document.getElementById('newProdCost').value);
             let price = parseFloat(document.getElementById('newProdPrice').value);
             let stock = parseInt(document.getElementById('newProdStock').value);
 
-            if (!name || isNaN(price) || isNaN(stock)) return alert('Kumpletuhin ang details.');
+            if (!name || isNaN(cost) || isNaN(price) || isNaN(stock)) return alert('Kumpletuhin ang details. (Name, Cost, SRP, Stock)');
 
             let newId = inventory.length ? Math.max(...inventory.map(i => i.id)) + 1 : 1;
-            inventory.push({ id: newId, name, price, stock });
+            
+            inventory.push({ 
+                id: newId, name: name, cost: cost, price: price, stock: stock, lastStockDate: getLocalISODate() 
+            });
 
             document.getElementById('newProdName').value = '';
+            document.getElementById('newProdCost').value = '';
             document.getElementById('newProdPrice').value = '';
             document.getElementById('newProdStock').value = '';
             
-            alert('New product added successfully!');
             updateUI();
+            alert('Item added to Inventory Database successfully!');
         }
 
         function addStock(id) {
-            let qty = parseInt(prompt("Enter amount to add:"));
+            let qty = parseInt(prompt("Enter quantity of stock to add:"));
             if (!isNaN(qty) && qty > 0) {
                 let product = inventory.find(i => i.id === id);
                 product.stock += qty;
+                product.lastStockDate = getLocalISODate(); 
                 updateUI();
             }
         }
 
-        // Export with Manual Trigger (No auto-download, exactly as requested)
         function prepareExport() {
             let btn = document.getElementById('exportBtn');
             btn.disabled = true;
             let counter = 3;
-            btn.innerText = `Preparing Data... ${counter}`;
+            btn.innerText = `⏳ Preparing Data... ${counter}`;
             
             let interval = setInterval(() => {
                 counter--;
                 if (counter > 0) {
-                    btn.innerText = `Preparing Data... ${counter}`;
+                    btn.innerText = `⏳ Preparing Data... ${counter}`;
                 } else {
                     clearInterval(interval);
-                    // Setup button for manual click download
-                    btn.innerText = 'Click Here to Download CSV';
+                    btn.innerText = '✅ Click Here to Download CSV';
                     btn.classList.replace('btn-warning', 'btn-success');
                     btn.disabled = false;
                     btn.onclick = triggerDownload; 
@@ -567,7 +1066,6 @@
         }
 
         function triggerDownload() {
-            // Build CSV Data from Finance, Inventory, and History
             let csv = "--- CLINIC SYSTEM FULL REPORT ---\n\n";
             
             csv += "1. PAYMENT TILL SUMMARY\nMethod,Amount\n";
@@ -578,38 +1076,45 @@
             }
             csv += `TOTAL TILL,${totalTill}\n\n`;
 
-            csv += "2. INVENTORY STATUS\nProduct Name,Price,Current Stock\n";
+            csv += "2. INVENTORY & PROFITABILITY\nProduct Name,Cost Price,SRP,Profit Per Item,Current Stock,Last Restocked Date\n";
             inventory.forEach(item => {
                 let stockVal = item.stock === 999 ? 'Unlimited' : item.stock;
-                csv += `${item.name},${item.price},${stockVal}\n`;
+                let profVal = item.price - (item.cost || 0);
+                let dateFmt = item.lastStockDate ? item.lastStockDate.split('T')[0] : 'N/A';
+                csv += `${item.name},${item.cost || 0},${item.price},${profVal},${stockVal},${dateFmt}\n`;
             });
             csv += "\n";
 
-            csv += "3. TRANSACTION HISTORY\nDate,Item,Quantity,Payment Method,Amount,Processed By\n";
+            csv += "3. EXPENSES LOG\nDate,Category,Note,Amount,Logged By\n";
+            expHistory.forEach(exp => {
+                let dateFmt = exp.date.split('T')[0] + " " + exp.date.split('T')[1].substring(0,8);
+                csv += `${dateFmt},${exp.category},${exp.note},${exp.amount},${exp.user}\n`;
+            });
+            csv += "\n";
+
+            csv += "4. TRANSACTION HISTORY\nDate,Item,Quantity,Payment Method,Total Cost,Total Revenue(SRP),Gross Profit,Processed By\n";
             txHistory.forEach(tx => {
                 let dateFmt = tx.date.split('T')[0] + " " + tx.date.split('T')[1].substring(0,8);
-                csv += `${dateFmt},${tx.item},${tx.qty},${tx.method.replace('_', ' ')},${tx.amount},${tx.processedBy}\n`;
+                let tCost = tx.totalCost || 0;
+                let tProfit = tx.amount - tCost;
+                csv += `${dateFmt},${tx.item},${tx.qty},${tx.method.replace('_', ' ')},${tCost},${tx.amount},${tProfit},${tx.processedBy}\n`;
             });
 
-            // Trigger Download Object
             let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             let link = document.createElement("a");
-            let url = URL.createObjectURL(blob);
-            link.setAttribute("href", url);
-            link.setAttribute("download", "Clinic_Full_System_Report.csv");
-            link.style.visibility = 'hidden';
+            link.href = URL.createObjectURL(blob);
+            link.download = "Clinic_Master_Report.csv";
+            link.style.display = 'none';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
 
-            // Reset Export Button
             let btn = document.getElementById('exportBtn');
-            btn.innerText = 'Generate Full System Report (CSV)';
+            btn.innerText = '⬇️ Generate Full System Report (CSV)';
             btn.classList.replace('btn-success', 'btn-warning');
             btn.onclick = prepareExport;
         }
 
-        // Initialize display check
         document.getElementById('loginSection').classList.remove('hidden');
     </script>
 </body>
