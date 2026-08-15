@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Clinic Management System - Real-Time Cloud</title>
+    <title>Clinic Management System - Premium Cloud</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -11,9 +11,9 @@
     <style>
         :root {
             --primary: #4F46E5;
-            --primary-hover: #4338CA;
+            --primary-gradient: linear-gradient(135deg, #4F46E5, #4338CA);
             --secondary: #10B981;
-            --secondary-hover: #059669;
+            --secondary-gradient: linear-gradient(135deg, #10B981, #059669);
             --danger: #EF4444;
             --danger-hover: #DC2626;
             --warning: #F59E0B;
@@ -27,7 +27,7 @@
             --surface: #FFFFFF;
             --radius: 12px;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 10px 20px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
         *, *::before, *::after {
@@ -60,9 +60,11 @@
             box-shadow: var(--shadow); 
             width: 100%;
             border: 1px solid var(--gray-300);
+            transition: box-shadow 0.3s ease;
         }
+        .card:hover { box-shadow: var(--shadow-lg); }
 
-        h1, h2, h3, h4 { color: var(--dark); margin-top: 0; font-weight: 700; }
+        h1, h2, h3, h4 { color: var(--dark); margin-top: 0; font-weight: 700; letter-spacing: -0.02em; }
         
         .form-group { margin-bottom: 16px; width: 100%; }
         
@@ -100,10 +102,10 @@
             outline: none;
             border-color: var(--primary);
             background-color: var(--surface);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
         }
         
-        /* Custom Multi-Select List Styling */
+        /* Premium Custom Multi-Select with Inline Quantity */
         .product-list {
             max-height: 280px;
             overflow-y: auto;
@@ -112,12 +114,12 @@
             background: var(--surface);
         }
         .list-header {
-            background: var(--gray-100);
-            padding: 8px 16px;
-            font-size: 12px;
+            background: #F1F5F9;
+            padding: 10px 16px;
+            font-size: 11px;
             font-weight: 800;
             color: var(--gray-600);
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             border-bottom: 1px solid var(--gray-300);
             border-top: 1px solid var(--gray-300);
@@ -139,8 +141,8 @@
         .product-item:last-child { border-bottom: none; }
         .product-item:hover { background: #F8FAFC; }
         .product-item input[type="checkbox"] {
-            width: 20px; 
-            height: 20px; 
+            width: 22px; 
+            height: 22px; 
             margin-right: 14px;
             cursor: pointer;
             accent-color: var(--primary);
@@ -148,6 +150,17 @@
         .product-info { display: flex; flex-direction: column; flex: 1; }
         .product-name { font-weight: 700; color: var(--dark); font-size: 14px; }
         .product-meta { font-size: 12px; color: var(--gray-600); font-weight: 600; margin-top: 2px;}
+        
+        /* Inline Quantity Input */
+        .inline-qty-input {
+            width: 70px !important;
+            padding: 8px !important;
+            text-align: center;
+            font-weight: bold !important;
+            margin-left: 10px;
+        }
+        .inline-qty-input:disabled { background: var(--gray-100); opacity: 0.5; border: 1px dashed var(--gray-300); }
+        
         .opacity-50 { opacity: 0.5; pointer-events: none; }
 
         .btn { 
@@ -167,10 +180,10 @@
         }
         
         .btn:active { transform: translateY(1px); }
-        .btn-primary { background-color: var(--primary); }
-        .btn-primary:hover { background-color: var(--primary-hover); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
-        .btn-success { background-color: var(--secondary); }
-        .btn-success:hover { background-color: var(--secondary-hover); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+        .btn-primary { background: var(--primary-gradient); }
+        .btn-primary:hover { box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); }
+        .btn-success { background: var(--secondary-gradient); }
+        .btn-success:hover { box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); }
         .btn-danger { background-color: var(--danger); }
         .btn-danger:hover { background-color: var(--danger-hover); }
         .btn-warning { background-color: var(--warning); color: #fff; }
@@ -191,7 +204,7 @@
         
         table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 600px; }
         th, td { border-bottom: 1px solid var(--gray-100); padding: 16px; text-align: left; white-space: nowrap; }
-        th { background-color: var(--gray-100); font-weight: 700; color: var(--dark); text-transform: uppercase; font-size: 12px; letter-spacing: 0.05em; }
+        th { background-color: #F8FAFC; font-weight: 800; color: var(--gray-600); text-transform: uppercase; font-size: 11px; letter-spacing: 0.05em; }
         tbody tr:hover { background-color: #F8FAFC; }
         .text-right { text-align: right; }
         .text-center { text-align: center; }
@@ -250,7 +263,7 @@
         }
         
         .nav-btn:hover { background: var(--gray-100); color: var(--dark); }
-        .nav-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25); }
+        .nav-btn.active { background: var(--primary-gradient); color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
         
         .tab-pane { display: none; animation: fadeIn 0.3s ease-in-out; }
         .tab-pane.active { display: block; }
@@ -266,7 +279,7 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             transition: transform 0.2s;
         }
-        .stat-box:hover { transform: translateY(-3px); }
+        .stat-box:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
         
         .stat-box::before { 
             content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--primary); border-radius: 12px 0 0 12px;
@@ -279,12 +292,12 @@
 
         .top-item-row {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 0; border-bottom: 1px solid var(--gray-100);
+            padding: 14px 0; border-bottom: 1px solid var(--gray-100);
         }
         .top-item-row:last-child { border-bottom: none; }
         .top-item-name { font-weight: 700; color: var(--dark); font-size: 14px; }
         .top-item-qty { font-size: 12px; color: var(--gray-600); font-weight: 600; margin-top: 4px; }
-        .top-item-rev { font-weight: 800; color: var(--primary); font-size: 15px; }
+        .top-item-rev { font-weight: 800; color: var(--primary); font-size: 16px; }
 
         .chart-container {
             position: relative; height: 350px; width: 100%; margin-top: 10px; padding: 20px;
@@ -306,12 +319,12 @@
 
         #receiptModalOverlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(17, 24, 39, 0.8); display: flex; justify-content: center; align-items: center;
-            z-index: 1000; backdrop-filter: blur(4px); padding: 20px;
+            background: rgba(17, 24, 39, 0.85); display: flex; justify-content: center; align-items: center;
+            z-index: 1000; backdrop-filter: blur(5px); padding: 20px;
         }
         
         .receipt-box {
-            background: white; width: 100%; max-width: 360px; padding: 30px; border-radius: 16px;
+            background: white; width: 100%; max-width: 380px; padding: 30px; border-radius: 16px;
             font-family: 'Courier New', Courier, monospace; font-weight: 600;
             max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg);
         }
@@ -367,7 +380,7 @@
             
             <div id="formLogin">
                 <div style="text-align: center; margin-bottom: 30px;">
-                    <div style="background: var(--primary); width: 60px; height: 60px; border-radius: 16px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 28px;">🏥</div>
+                    <div style="background: var(--primary-gradient); width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">🏥</div>
                     <h2>Clinic System</h2>
                     <p style="color: var(--gray-600); font-size: 14px; font-weight: 500; margin: 0;">Authorized Personnel Only</p>
                 </div>
@@ -379,7 +392,7 @@
                 
                 <button class="btn btn-primary" id="btnLogin" style="margin-top: 10px; padding: 14px;" onclick="handleLogin()">Secure Login</button>
                 <div style="text-align: center; margin-top: 16px;"><button class="btn btn-outline" onclick="toggleAuthForm('register')">Request Staff Account</button></div>
-                <div style="text-align: center; margin-top: 30px;"><a href="#" onclick="promptSystemSetup()" style="color: var(--gray-300); font-size: 11px; text-decoration: none;">System Setup</a></div>
+                <div style="text-align: center; margin-top: 30px;"><a href="#" onclick="promptSystemSetup()" style="color: var(--gray-300); font-size: 11px; text-decoration: none; font-weight:600;">System Setup</a></div>
             </div>
 
             <div id="formRegister" class="hidden">
@@ -433,15 +446,16 @@
         <!-- TAB: DASHBOARD -->
         <div id="tab-dashboard" class="tab-pane active admin-only hidden">
             
-            <div class="header-bar" style="margin-bottom: 20px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border-radius: 12px; background: var(--surface); box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid var(--gray-300);">
+            <div class="header-bar" style="margin-bottom: 24px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border-radius: 12px; background: var(--surface); box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid var(--gray-300);">
                 <h3 style="margin: 0; color: var(--primary);">📅 Dashboard Filter</h3>
-                <div><input type="date" id="dashDateFilter" style="padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 6px; font-weight: bold; color: var(--dark); margin: 0; width: 100%;" onchange="renderUI()"></div>
+                <div><input type="date" id="dashDateFilter" style="padding: 10px 14px; border: 1px solid var(--gray-300); border-radius: 8px; font-weight: 700; color: var(--dark); margin: 0; width: 100%;" onchange="renderUI()"></div>
             </div>
 
+            <!-- ANALYTICS BREAKDOWN -->
             <div class="grid-2">
                 <div class="card">
-                    <h3 style="margin-bottom: 15px; color: var(--dark);">🛍️ Sales Analytics (Selected Date)</h3>
-                    <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 20px;">Breakdown of Products vs Services based on the date filter.</p>
+                    <h3 id="lblSales" style="margin-bottom: 15px; color: var(--dark);">🛍️ Sales Analytics</h3>
+                    <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 20px;">Breakdown of Products vs Services based on the selected date.</p>
                     
                     <div class="grid-2 mobile-grid-2">
                         <div class="stat-box" style="border-left-color: var(--info); padding: 16px;">
@@ -458,14 +472,15 @@
                 </div>
 
                 <div class="card">
-                    <h3 style="margin-bottom: 15px; color: var(--dark);">🏆 Top 5 Selling Items (Selected Date)</h3>
-                    <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Most popular items based on quantity sold.</p>
+                    <h3 id="lblTopItems" style="margin-bottom: 15px; color: var(--dark);">🏆 Top 5 Selling Items</h3>
+                    <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Most popular items based on quantity sold for the selected date.</p>
                     <div id="topItemsContainer"></div>
                 </div>
             </div>
 
+            <!-- DEMOGRAPHICS -->
             <div class="card">
-                <h3 style="margin-bottom: 20px; color: var(--dark);">👥 Patient Demographics (Selected Date)</h3>
+                <h3 id="lblDemographics" style="margin-bottom: 20px; color: var(--dark);">👥 Patient Demographics</h3>
                 <div class="grid-4 mobile-grid-2">
                     <div class="stat-box" style="border-left-color: var(--info); padding: 16px;"><h4>New Patient</h4><p class="main-stat" id="countNew">0</p></div>
                     <div class="stat-box" style="border-left-color: var(--primary); padding: 16px;"><h4>Old Patient</h4><p class="main-stat" id="countOld">0</p></div>
@@ -473,18 +488,31 @@
                     <div class="stat-box" style="border-left-color: var(--secondary); padding: 16px;"><h4>Senior Citizen</h4><p class="main-stat" id="countSenior">0</p></div>
                 </div>
             </div>
+            
+            <!-- STAFF PERFORMANCE -->
+            <div class="card">
+                <h3 id="lblStaffPerf" style="margin-bottom: 15px; color: var(--dark);">👩‍⚕️ Staff Performance</h3>
+                <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Revenue generated by each personnel based on the selected date.</p>
+                <div class="table-wrapper">
+                    <table id="staffPerfTable">
+                        <thead><tr><th>Staff Name</th><th>Daily Revenue</th><th>Monthly Revenue</th><th>Yearly Revenue</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
 
+            <!-- FINANCIAL OVERVIEW -->
             <div class="grid-3">
                 <div class="stat-box">
-                    <h4>Selected Date</h4><p class="main-stat" id="reportDaily">₱0.00</p><p class="expense-text" id="expDaily">Exp: ₱0.00</p>
+                    <h4 id="hdrDaily">Selected Date</h4><p class="main-stat" id="reportDaily">₱0.00</p><p class="expense-text" id="expDaily">Exp: ₱0.00</p>
                     <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 12px 0;"><p class="profit-text" id="profitDaily">True: ₱0.00</p>
                 </div>
                 <div class="stat-box">
-                    <h4>Selected Month</h4><p class="main-stat" id="reportMonthly">₱0.00</p><p class="expense-text" id="expMonthly">Exp: ₱0.00</p>
+                    <h4 id="hdrMonthly">Selected Month</h4><p class="main-stat" id="reportMonthly">₱0.00</p><p class="expense-text" id="expMonthly">Exp: ₱0.00</p>
                     <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 12px 0;"><p class="profit-text" id="profitMonthly">True: ₱0.00</p>
                 </div>
                 <div class="stat-box">
-                    <h4>Selected Year</h4><p class="main-stat" id="reportYearly">₱0.00</p><p class="expense-text" id="expYearly">Exp: ₱0.00</p>
+                    <h4 id="hdrYearly">Selected Year</h4><p class="main-stat" id="reportYearly">₱0.00</p><p class="expense-text" id="expYearly">Exp: ₱0.00</p>
                     <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 12px 0;"><p class="profit-text" id="profitYearly">True: ₱0.00</p>
                 </div>
             </div>
@@ -511,22 +539,17 @@
                         <select id="transCategory"><option value="New">New Patient</option><option value="Old">Old Patient</option><option value="PWD">PWD</option><option value="Senior">Senior Citizen</option></select>
                     </div>
                     
+                    <!-- NEW MULTI-SELECT UI WITH INLINE QUANTITY -->
                     <div class="form-group">
-                        <label>Select Product(s) / Service(s):</label>
+                        <label>Select Product(s) / Service(s) and Specify Quantity:</label>
                         <div class="product-list" id="transProductList">
                             <!-- Populated Automatically via renderUI -->
                         </div>
                     </div>
                     
-                    <div class="mobile-grid-2" style="margin-bottom: 16px;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Batch Qty:</label>
-                            <input type="number" id="transQty" value="1" min="1">
-                        </div>
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Discount:</label>
-                            <select id="transDiscount"><option value="0">None</option><option value="0.20">20% (Senior/PWD)</option><option value="1">100% Free</option></select>
-                        </div>
+                    <div class="form-group">
+                        <label>Global Discount (Applies to all selected items):</label>
+                        <select id="transDiscount"><option value="0">None</option><option value="0.20">20% (Senior/PWD)</option><option value="1">100% Free</option></select>
                     </div>
                     
                     <div class="form-group"><label>Payment Method:</label><select id="transMethod"><option value="CASH">CASH</option><option value="GCASH">GCASH</option><option value="MariBANK">MariBANK</option><option value="BANK_Transfer">BANK Transfer</option></select></div>
@@ -659,6 +682,9 @@
                 </div>
             </div>
         </div>
+        
+        <!-- SYSTEM FOOTER -->
+        <div style="text-align:center; padding: 30px; color: var(--gray-600); font-size: 13px; font-weight: 600;">System Created by Gelo Cutler</div>
 
     </div>
 
@@ -670,7 +696,6 @@
             <hr>
             <div class="receipt-row"><strong>Category:</strong> <span id="rcptCategory"></span></div>
             <div class="receipt-row" style="flex-direction: column;"><strong>Items:</strong> <span id="rcptItem" style="text-align: right; margin-top: 4px; line-height: 1.5;"></span></div>
-            <div class="receipt-row" style="margin-top: 5px;"><strong>Batch Qty:</strong> <span id="rcptQty"></span></div>
             <div class="receipt-row"><strong>Payment:</strong> <span id="rcptMethod"></span></div>
             <hr>
             <div class="receipt-row" style="font-size: 18px;"><strong>TOTAL:</strong> <strong id="rcptTotal"></strong></div>
@@ -687,8 +712,8 @@
         // ==========================================
         // 1. GLOBALS & INITIALIZATION
         // ==========================================
-        let inventory = []; // Strictly for products
-        let services = []; // Strictly for services
+        let inventory = []; 
+        let services = []; 
         let finance = { CASH: 0, GCASH: 0, MariBANK: 0, BANK_Transfer: 0 };
         let txHistory = [];
         let expHistory = [];
@@ -894,8 +919,20 @@
             }
         }
 
+        // Toggles the inline quantity input dynamically
+        function toggleQtyInput(checkbox, inputId) {
+            let qtyInput = document.getElementById(inputId);
+            if(checkbox.checked) {
+                qtyInput.disabled = false;
+                qtyInput.focus();
+            } else {
+                qtyInput.disabled = true;
+                qtyInput.value = 1;
+            }
+        }
+
         function renderUI() {
-            // Render Transact Split Multi-Select List
+            // Render Transact Split Multi-Select List with Inline Quantity
             let pl = document.getElementById('transProductList'); 
             pl.innerHTML = '';
             
@@ -906,10 +943,11 @@
                     let opacityClass = disabled ? 'opacity-50' : '';
                     pl.innerHTML += `
                         <label class="product-item ${opacityClass}">
-                            <input type="checkbox" name="selectedItems" value="prod_${i.id}" ${disabled}>
+                            <input type="checkbox" name="selectedItems" value="prod_${i.id}" ${disabled} onchange="toggleQtyInput(this, 'qty_prod_${i.id}')">
                             <div class="product-info">
                                 <span class="product-name">${i.name}</span><span class="product-meta">₱${i.price.toFixed(2)} | Stock: ${i.stock}</span>
                             </div>
+                            <input type="number" id="qty_prod_${i.id}" class="inline-qty-input" value="1" min="1" disabled onclick="event.stopPropagation()">
                         </label>`;
                 });
             }
@@ -919,10 +957,11 @@
                 services.forEach(s => {
                     pl.innerHTML += `
                         <label class="product-item">
-                            <input type="checkbox" name="selectedItems" value="serv_${s.id}">
+                            <input type="checkbox" name="selectedItems" value="serv_${s.id}" onchange="toggleQtyInput(this, 'qty_serv_${s.id}')">
                             <div class="product-info">
                                 <span class="product-name">${s.name}</span><span class="product-meta">Fee: ₱${s.price.toFixed(2)}</span>
                             </div>
+                            <input type="number" id="qty_serv_${s.id}" class="inline-qty-input" value="1" min="1" disabled onclick="event.stopPropagation()">
                         </label>`;
                 });
             }
@@ -965,21 +1004,24 @@
             let checkboxes = document.querySelectorAll('input[name="selectedItems"]:checked');
             if(checkboxes.length === 0) return alert('Select at least one product or service.');
 
-            let rawDate = document.getElementById('transDate').value, qty = parseInt(document.getElementById('transQty').value), method = document.getElementById('transMethod').value, disc = parseFloat(document.getElementById('transDiscount').value), cat = document.getElementById('transCategory').value;
-            if(isNaN(qty) || qty <= 0) return alert('Invalid quantity.'); 
+            let rawDate = document.getElementById('transDate').value, method = document.getElementById('transMethod').value, disc = parseFloat(document.getElementById('transDiscount').value), cat = document.getElementById('transCategory').value;
             
             let selectedItems = [];
             for(let cb of checkboxes) {
                 let [type, idStr] = cb.value.split('_');
                 let id = parseInt(idStr);
                 
+                // Get Inline Quantity
+                let inlineQty = parseInt(document.getElementById(`qty_${cb.value}`).value);
+                if(isNaN(inlineQty) || inlineQty <= 0) return alert('Invalid quantity for one of the selected items.');
+                
                 if (type === 'prod') {
                     let p = inventory.find(i => i.id === id);
-                    if(p.stock < qty) return alert(`Not enough stock for ${p.name}. Available: ${p.stock}`);
-                    selectedItems.push({ isService: false, ref: p });
+                    if(p.stock < inlineQty) return alert(`Not enough stock for ${p.name}. Available: ${p.stock}`);
+                    selectedItems.push({ isService: false, ref: p, qty: inlineQty });
                 } else {
                     let s = services.find(i => i.id === id);
-                    selectedItems.push({ isService: true, ref: s });
+                    selectedItems.push({ isService: true, ref: s, qty: inlineQty });
                 }
             }
 
@@ -988,29 +1030,31 @@
             let totalAmt = 0; let receiptItemsHTML = [];
 
             selectedItems.forEach(obj => {
-                let itemAmt = (obj.ref.price * qty) * (1 - disc); 
+                let itemAmt = (obj.ref.price * obj.qty) * (1 - disc); 
                 totalAmt += itemAmt; finance[method] += itemAmt;
                 let cost = 0;
                 
                 if(!obj.isService) {
-                    obj.ref.stock -= qty;
-                    cost = obj.ref.cost * qty;
+                    obj.ref.stock -= obj.qty;
+                    cost = obj.ref.cost * obj.qty;
                 }
                 
                 txHistory.push({ 
                     id: Date.now() + Math.random(), date: finalDate, category: cat, 
-                    item: obj.ref.name, isService: obj.isService, qty: qty, method: method, 
+                    item: obj.ref.name, isService: obj.isService, qty: obj.qty, method: method, 
                     amount: itemAmt, totalCost: cost, processedBy: currentUser.name 
                 }); 
-                receiptItemsHTML.push(`<strong>${obj.ref.name}</strong> - ₱${itemAmt.toFixed(2)}`);
+                receiptItemsHTML.push(`<strong>${obj.ref.name}</strong> (x${obj.qty}) - ₱${itemAmt.toFixed(2)}`);
             });
 
             pushLiveClinicData(); 
             
-            checkboxes.forEach(cb => cb.checked = false); document.getElementById('transQty').value = 1;
-            document.getElementById('rcptDate').innerText = new Date(finalDate).toLocaleString(); 
+            checkboxes.forEach(cb => { cb.checked = false; toggleQtyInput(cb, `qty_${cb.value}`); }); 
+            
+            let receiptDateObj = new Date(finalDate);
+            document.getElementById('rcptDate').innerText = receiptDateObj.toLocaleString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }); 
             document.getElementById('rcptCategory').innerText = cat; document.getElementById('rcptItem').innerHTML = receiptItemsHTML.join('<br>'); 
-            document.getElementById('rcptQty').innerText = qty; document.getElementById('rcptMethod').innerText = method; 
+            document.getElementById('rcptMethod').innerText = method; 
             document.getElementById('rcptTotal').innerText = '₱' + totalAmt.toFixed(2); document.getElementById('rcptUser').innerText = currentUser.name; 
             document.getElementById('receiptModalOverlay').classList.remove('hidden');
         }
@@ -1049,15 +1093,35 @@
             let dateInput = document.getElementById('dashDateFilter');
             if (!dateInput.value) dateInput.value = getLocalISODate().split('T')[0];
             let td = dateInput.value, tm = td.substring(0,7), ty = td.substring(0,4);
+            
+            // Format dynamic date texts
+            let selDateObj = new Date(td);
+            let formattedDate = selDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            let formattedMonth = selDateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            let formattedYear = selDateObj.toLocaleDateString('en-US', { year: 'numeric' });
+
+            document.getElementById('lblSales').innerText = `🛍️ Sales Analytics (${formattedDate})`;
+            document.getElementById('lblTopItems').innerText = `🏆 Top 5 Selling Items (${formattedDate})`;
+            document.getElementById('lblDemographics').innerText = `👥 Patient Demographics (${formattedDate})`;
+            document.getElementById('lblStaffPerf').innerText = `👩‍⚕️ Staff Performance (${formattedDate})`;
+            
+            document.getElementById('hdrDaily').innerText = `Date: ${formattedDate}`;
+            document.getElementById('hdrMonthly').innerText = `Month: ${formattedMonth}`;
+            document.getElementById('hdrYearly').innerText = `Year: ${formattedYear}`;
+
             let dr = 0, mr = 0, yr = 0, dp = 0, mp = 0, yp = 0, de = 0, me = 0, ye = 0; 
             let catsDaily = { New: 0, Old: 0, PWD: 0, Senior: 0 };
             let chartData = {};
             let prodQty = 0, servQty = 0, prodRev = 0, servRev = 0;
             let itemStats = {};
+            let staffStats = {};
             let dailyPatientTimestamps = new Set();
             
             txHistory.forEach(t => { 
                 let d = t.date.split('T')[0]; let monthStr = t.date.substring(0,7); let prof = t.amount - t.totalCost; 
+                
+                // Track Staff Stats
+                if(!staffStats[t.processedBy]) staffStats[t.processedBy] = { d: 0, m: 0, y: 0 };
                 
                 if(d === td) {
                     let exactTime = t.date.split('T')[1] || t.id;
@@ -1067,9 +1131,12 @@
                     if(t.isService) { servQty += t.qty; servRev += t.amount; } else { prodQty += t.qty; prodRev += t.amount; }
                     if(!itemStats[t.item]) itemStats[t.item] = { qty: 0, rev: 0 };
                     itemStats[t.item].qty += t.qty; itemStats[t.item].rev += t.amount;
+                    
+                    staffStats[t.processedBy].d += t.amount;
                 } 
-                if(d.startsWith(tm)) { mr += t.amount; mp += prof; } 
-                if(d.startsWith(ty)) { yr += t.amount; yp += prof; } 
+                if(d.startsWith(tm)) { mr += t.amount; mp += prof; staffStats[t.processedBy].m += t.amount; } 
+                if(d.startsWith(ty)) { yr += t.amount; yp += prof; staffStats[t.processedBy].y += t.amount; } 
+                
                 if(d.startsWith(ty)) {
                     if(!chartData[monthStr]) chartData[monthStr] = { rev: 0, prof: 0, exp: 0 };
                     chartData[monthStr].rev += t.amount; chartData[monthStr].prof += prof;
@@ -1089,6 +1156,21 @@
             let sortedItems = Object.keys(itemStats).map(k => ({ name: k, qty: itemStats[k].qty, rev: itemStats[k].rev })).sort((a, b) => b.qty - a.qty); 
             if(sortedItems.length === 0) topContainer.innerHTML = '<p style="color: var(--gray-600); font-size: 13px; text-align: center; margin-top: 30px;">No sales recorded.</p>';
             else { sortedItems.slice(0, 5).forEach(item => { topContainer.innerHTML += `<div class="top-item-row"><div><div class="top-item-name">${item.name}</div><div class="top-item-qty">Sold: ${item.qty}</div></div><div class="top-item-rev">₱${item.rev.toFixed(2)}</div></div>`; }); }
+
+            // Render Staff Table
+            let stBody = document.querySelector('#staffPerfTable tbody'); stBody.innerHTML = '';
+            if(Object.keys(staffStats).length === 0) {
+                stBody.innerHTML = '<tr><td colspan="4" class="text-center">No staff transactions recorded.</td></tr>';
+            } else {
+                for(let staff in staffStats) {
+                    stBody.innerHTML += `<tr>
+                        <td><strong>${staff}</strong></td>
+                        <td style="color:var(--primary); font-weight:bold;">₱${staffStats[staff].d.toFixed(2)}</td>
+                        <td style="color:var(--info);">₱${staffStats[staff].m.toFixed(2)}</td>
+                        <td style="color:var(--warning);">₱${staffStats[staff].y.toFixed(2)}</td>
+                    </tr>`;
+                }
+            }
 
             document.getElementById('countNew').innerText = catsDaily.New; document.getElementById('countOld').innerText = catsDaily.Old; document.getElementById('countPWD').innerText = catsDaily.PWD; document.getElementById('countSenior').innerText = catsDaily.Senior;
             document.getElementById('reportDaily').innerText = '₱' + dr.toFixed(2); document.getElementById('expDaily').innerText = 'Exp: ₱' + de.toFixed(2); updateProfitDisplay('profitDaily', dp - de);
