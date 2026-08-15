@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Management & Inventory System</title>
+    <style>
+        /* Base Styling & White Background */
+        body { 
+            background-color: #ffffff; 
+            color: #333; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0; 
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .card { 
+            background: #ffffff; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px; 
+            padding: 20px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+        }
+        h1, h2, h3, h4 { color: #2c3e50; margin-top: 0; }
+        
+        /* Buttons */
+        .btn { 
+            padding: 10px 15px; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            color: white; 
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .btn-primary { background-color: #007bff; }
+        .btn-primary:hover { background-color: #0056b3; }
+        .btn-success { background-color: #28a745; width: 100%; margin-top: 10px;}
+        .btn-success:hover { background-color: #218838; }
+        .btn-danger { background-color: #dc3545; }
+        .btn-warning { background-color: #ffc107; color: #333; }
+        .btn-info { background-color: #17a2b8; }
+        
+        /* Inputs & Tables */
+        input, select { 
+            padding: 10px; 
+            width: 100%; 
+            box-sizing: border-box; 
+            margin-top: 5px; 
+            margin-bottom: 15px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #eee; padding: 12px; text-align: left; }
+        th { background-color: #f8f9fa; }
+        .text-right { text-align: right; }
+        .text-center { text-align: center; }
+        
+        /* Utilities */
+        .hidden { display: none !important; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        
+        /* Header & Footer */
+        .header-bar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 2px solid #f0f0f0; 
+            padding-bottom: 15px; 
+            margin-bottom: 20px; 
+        }
+        .live-clock {
+            font-size: 16px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-top: 5px;
+        }
+        .badge { 
+            background-color: #17a2b8; 
+            color: white; 
+            padding: 5px 10px; 
+            border-radius: 15px; 
+            font-size: 14px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        .footer { text-align: center; margin-top: 40px; font-size: 13px; color: #7f8c8d; border-top: 1px solid #eee; padding-top: 20px; }
+        
+        /* Dashboard Stats */
+        .stat-box {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            text-align: center;
+        }
+        .stat-box h4 { margin: 0; color: #666; font-size: 14px; }
+        .stat-box p { margin: 10px 0 0 0; font-size: 20px; font-weight: bold; color: #28a745; }
+
+        /* Receipt Modal */
+        #receiptModalOverlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 1000;
+        }
+        .receipt-box {
+            background: white; width: 320px; padding: 20px; border-radius: 5px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .receipt-box hr { border: 1px dashed #ccc; }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .header-bar { flex-direction: column; text-align: center; gap: 10px; }
+        }
+
+        /* Print Media Query */
+        @media print {
+            body * { visibility: hidden; }
+            #receiptModalOverlay, #receiptModalOverlay * { visibility: visible; }
+            #receiptModalOverlay { position: absolute; left: 0; top: 0; background: none; justify-content: flex-start; align-items: flex-start; }
+            .receipt-box { box-shadow: none; width: 100%; border: none; margin: 0; padding: 0; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Screen -->
+    <div id="loginSection" class="container">
+        <div class="card" style="max-width: 400px; margin: 80px auto;">
+            <h2 style="text-align:center; color: #007bff;">Secure Login</h2>
+            <p style="text-align:center; color:#666; font-size:14px;">Please enter your details to continue</p>
+            
+            <label>Your Name (e.g. Ivy):</label>
+            <input type="text" id="loginName" placeholder="Enter your name" required>
+
+            <label>Role:</label>
+            <select id="loginRole">
+                <option value="staff">Staff</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <label>Password:</label>
+            <input type="password" id="loginPassword" placeholder="Enter password">
+            
+            <button class="btn btn-primary" style="width:100%; margin-top: 10px;" onclick="login()">Login</button>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp" class="container hidden">
+        <div class="header-bar">
+            <div>
+                <h2>Clinic Inventory & Finance</h2>
+                <div class="live-clock" id="liveClock">Loading Date & Time...</div>
+                <div style="margin-top: 10px;">
+                    <span class="badge" id="currentUserRole"></span>
+                    <span class="badge" id="currentUserName" style="background-color: #28a745;"></span>
+                </div>
+            </div>
+            <button class="btn btn-danger" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- Admin Reports Dashboard -->
+        <div class="card admin-only hidden">
+            <h3>📊 Sales & Finance Reports</h3>
+            <div class="grid-3">
+                <div class="stat-box">
+                    <h4>Today's Sales</h4>
+                    <p id="reportDaily">₱0.00</p>
+                </div>
+                <div class="stat-box">
+                    <h4>This Month's Sales</h4>
+                    <p id="reportMonthly">₱0.00</p>
+                </div>
+                <div class="stat-box">
+                    <h4>This Year's Sales</h4>
+                    <p id="reportYearly">₱0.00</p>
+                </div>
+            </div>
+            <div style="margin-top: 15px;">
+                <button class="btn btn-warning" id="exportBtn" style="width:100%;" onclick="prepareExport()">Generate Full System Report (CSV)</button>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <!-- Transaction Panel -->
+            <div class="card">
+                <h3>📋 Process Transaction</h3>
+                <label>Select Product / Vaccine:</label>
+                <select id="transProduct"></select>
+                
+                <div class="grid-2" style="gap: 10px;">
+                    <div>
+                        <label>Quantity:</label>
+                        <input type="number" id="transQty" value="1" min="1">
+                    </div>
+                    <div>
+                        <label>Discount Type:</label>
+                        <select id="transDiscount">
+                            <option value="0">None (Regular)</option>
+                            <option value="0.20">Senior/PWD (20%)</option>
+                            <option value="1">Free (100%)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <label>Payment Method:</label>
+                <select id="transMethod">
+                    <option value="CASH">CASH</option>
+                    <option value="GCASH">GCASH</option>
+                    <option value="MariBANK">MariBANK</option>
+                    <option value="BANK_Transfer">BANK Transfer</option>
+                </select>
+                
+                <button class="btn btn-success" onclick="processTransaction()">Submit Transaction</button>
+            </div>
+
+            <!-- Financial Summary Panel -->
+            <div class="card">
+                <h3>💰 Till Summary (Overall)</h3>
+                <table id="financeTable">
+                    <tr><td>CASH</td><td class="text-right" id="fin-CASH">₱0.00</td></tr>
+                    <tr><td>GCASH</td><td class="text-right" id="fin-GCASH">₱0.00</td></tr>
+                    <tr><td>MariBANK</td><td class="text-right" id="fin-MariBANK">₱0.00</td></tr>
+                    <tr><td>BANK Transfer</td><td class="text-right" id="fin-BANK_Transfer">₱0.00</td></tr>
+                    <tr style="font-weight:bold; background-color:#f8f9fa;">
+                        <td>TOTAL REVENUE</td><td class="text-right" id="fin-TOTAL">₱0.00</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Inventory List -->
+        <div class="card">
+            <h3>📦 Inventory Report</h3>
+            <table id="inventoryTable">
+                <thead>
+                    <tr>
+                        <th>Product Name</th>
+                        <th>Price</th>
+                        <th>Current Stock</th>
+                        <th class="admin-only hidden">Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            
+            <div class="admin-only hidden" style="margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+                <h4>➕ Add New Product</h4>
+                <div class="grid-2" style="gap:10px;">
+                    <input type="text" id="newProdName" placeholder="Product Name">
+                    <input type="number" id="newProdPrice" placeholder="Price (₱)">
+                    <input type="number" id="newProdStock" placeholder="Initial Stock">
+                    <button class="btn btn-primary" onclick="addProduct()">Save New Product</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            System Created by Gelo Cutler
+        </div>
+    </div>
+
+    <!-- Receipt Modal Overlay -->
+    <div id="receiptModalOverlay" class="hidden">
+        <div class="receipt-box">
+            <h3 class="text-center" style="margin-bottom: 5px;">CLINIC RECEIPT</h3>
+            <p class="text-center" style="margin-top: 0; font-size: 12px; color: #666;" id="rcptDate"></p>
+            <hr>
+            <div style="display: flex; justify-content: space-between;">
+                <strong>Item:</strong> <span id="rcptItem"></span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                <strong>Qty:</strong> <span id="rcptQty"></span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                <strong>Payment:</strong> <span id="rcptMethod"></span>
+            </div>
+            <hr>
+            <div style="display: flex; justify-content: space-between; font-size: 18px;">
+                <strong>TOTAL:</strong> <strong id="rcptTotal"></strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 12px;">
+                <strong>Processed By:</strong> <span id="rcptUser"></span>
+            </div>
+            <div class="text-center" style="margin-top: 20px; font-size: 12px; color: #666;">
+                Thank you!
+            </div>
+            <div class="grid-2 no-print" style="margin-top: 20px;">
+                <button class="btn btn-info" onclick="window.print()">Print</button>
+                <button class="btn btn-danger" onclick="closeReceipt()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Start Live Clock
+        function updateClock() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            document.getElementById('liveClock').innerText = now.toLocaleDateString('en-US', options);
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Initial Data Structure (Stored in LocalStorage)
+        let inventory = JSON.parse(localStorage.getItem('clinic_inventory')) || [
+            { id: 1, name: 'Abhayrab', price: 590, stock: 3 },
+            { id: 2, name: 'Speeda', price: 590, stock: 0 },
+            { id: 3, name: 'Tetanus Toxoid', price: 200, stock: 1 },
+            { id: 4, name: 'Equirab', price: 1950, stock: 2 },
+            { id: 5, name: 'Vinrab', price: 590, stock: 0 },
+            { id: 6, name: 'Regular ID', price: 590, stock: 999 },
+            { id: 7, name: 'Regular IM', price: 1450, stock: 999 },
+            { id: 8, name: 'ERIG', price: 1950, stock: 999 }
+        ];
+
+        let finance = JSON.parse(localStorage.getItem('clinic_finance')) || {
+            CASH: 0, GCASH: 0, MariBANK: 590, BANK_Transfer: 0 
+        };
+
+        // Transaction History for Reports
+        let txHistory = JSON.parse(localStorage.getItem('clinic_tx_history')) || [];
+
+        let currentRole = '';
+        let currentName = '';
+
+        function login() {
+            let nameInput = document.getElementById('loginName').value.trim();
+            let role = document.getElementById('loginRole').value;
+            let pass = document.getElementById('loginPassword').value;
+
+            if (nameInput === '') {
+                alert('Please enter your name.');
+                return;
+            }
+
+            // Secure Auth Check
+            if (role === 'admin' && pass === 'admin123') {
+                currentRole = 'admin';
+                currentName = nameInput;
+                enterApp();
+            } else if (role === 'staff' && pass === 'staff123') {
+                currentRole = 'staff';
+                currentName = nameInput;
+                enterApp();
+            } else {
+                alert('Mali ang password! Please try again.');
+            }
+        }
+
+        function enterApp() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('currentUserRole').innerText = "Role: " + currentRole.toUpperCase();
+            document.getElementById('currentUserName').innerText = "User: " + currentName;
+            
+            // Toggle Admin Only Elements
+            let adminEls = document.querySelectorAll('.admin-only');
+            adminEls.forEach(el => {
+                if (currentRole === 'admin') el.classList.remove('hidden');
+                else el.classList.add('hidden');
+            });
+
+            updateUI();
+        }
+
+        function logout() {
+            currentRole = '';
+            currentName = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+        }
+
+        function updateUI() {
+            // Update Transaction Dropdown
+            let productSelect = document.getElementById('transProduct');
+            productSelect.innerHTML = '';
+            inventory.forEach(item => {
+                let opt = document.createElement('option');
+                opt.value = item.id;
+                opt.text = `${item.name} - ₱${item.price} (Stock: ${item.stock === 999 ? 'Unlimited' : item.stock})`;
+                if (item.stock <= 0 && item.stock !== 999) opt.disabled = true;
+                productSelect.appendChild(opt);
+            });
+
+            // Update Inventory Table
+            let tbody = document.querySelector('#inventoryTable tbody');
+            tbody.innerHTML = '';
+            inventory.forEach(item => {
+                let stockDisplay = item.stock === 999 ? 'Service/Unlimited' : item.stock;
+                let tr = `<tr>
+                    <td>${item.name}</td>
+                    <td>₱${item.price}</td>
+                    <td style="color: ${item.stock <= 0 ? 'red' : 'green'}; font-weight:bold;">${stockDisplay}</td>
+                    <td class="admin-only ${currentRole === 'admin' ? '' : 'hidden'}">
+                        <button class="btn btn-primary" style="padding: 5px 10px; font-size:12px;" onclick="addStock(${item.id})">+ Add Stock</button>
+                    </td>
+                </tr>`;
+                tbody.innerHTML += tr;
+            });
+
+            // Update Finance Till
+            let total = 0;
+            for (let key in finance) {
+                if(document.getElementById(`fin-${key}`)) {
+                    document.getElementById(`fin-${key}`).innerText = '₱' + finance[key].toFixed(2);
+                }
+                total += finance[key];
+            }
+            document.getElementById('fin-TOTAL').innerText = '₱' + total.toFixed(2);
+
+            // Update Reports Dashboard (Format purely layout, no altering dates)
+            if(currentRole === 'admin') {
+                calculateReports();
+            }
+
+            // Save state to Local Storage
+            localStorage.setItem('clinic_inventory', JSON.stringify(inventory));
+            localStorage.setItem('clinic_finance', JSON.stringify(finance));
+            localStorage.setItem('clinic_tx_history', JSON.stringify(txHistory));
+        }
+
+        function calculateReports() {
+            let todayObj = new Date();
+            // Get local date string in YYYY-MM-DD format based on timezone
+            let offset = todayObj.getTimezoneOffset() * 60000;
+            let localISOTime = (new Date(todayObj - offset)).toISOString().slice(0, -1);
+            
+            let todayStr = localISOTime.split('T')[0];
+            let monthStr = todayStr.substring(0, 7);
+            let yearStr = todayStr.substring(0, 4);
+
+            let daily = 0, monthly = 0, yearly = 0;
+            
+            txHistory.forEach(tx => {
+                let txDate = tx.date.split('T')[0];
+                if (txDate === todayStr) daily += tx.amount;
+                if (txDate.startsWith(monthStr)) monthly += tx.amount;
+                if (txDate.startsWith(yearStr)) yearly += tx.amount;
+            });
+
+            document.getElementById('reportDaily').innerText = '₱' + daily.toFixed(2);
+            document.getElementById('reportMonthly').innerText = '₱' + monthly.toFixed(2);
+            document.getElementById('reportYearly').innerText = '₱' + yearly.toFixed(2);
+        }
+
+        function processTransaction() {
+            let prodId = parseInt(document.getElementById('transProduct').value);
+            let qty = parseInt(document.getElementById('transQty').value);
+            let method = document.getElementById('transMethod').value;
+            let discountRate = parseFloat(document.getElementById('transDiscount').value);
+
+            if (!prodId || isNaN(qty) || qty <= 0) return alert('Please enter valid details.');
+
+            let product = inventory.find(i => i.id === prodId);
+            
+            if (product.stock !== 999 && product.stock < qty) {
+                return alert('Insufficient stock!');
+            }
+
+            // Auto-deduct inventory
+            if (product.stock !== 999) {
+                product.stock -= qty;
+            }
+
+            // Compute Finance
+            let amountDue = (product.price * qty) * (1 - discountRate);
+            finance[method] += amountDue;
+
+            // Log to Transaction History for Reports
+            let now = new Date();
+            let offset = now.getTimezoneOffset() * 60000;
+            let localISOTime = (new Date(now - offset)).toISOString().slice(0, -1);
+
+            let txRecord = {
+                id: Date.now(),
+                date: localISOTime,
+                item: product.name,
+                qty: qty,
+                amount: amountDue,
+                method: method,
+                processedBy: currentName // Logs who did the transaction
+            };
+            txHistory.push(txRecord);
+
+            // Show Receipt Overlay
+            showReceipt(txRecord);
+
+            // Reset form
+            document.getElementById('transQty').value = 1;
+            document.getElementById('transDiscount').value = "0";
+            
+            updateUI();
+        }
+
+        function showReceipt(tx) {
+            let options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            document.getElementById('rcptDate').innerText = new Date().toLocaleDateString('en-US', options);
+            document.getElementById('rcptItem').innerText = tx.item;
+            document.getElementById('rcptQty').innerText = tx.qty;
+            document.getElementById('rcptMethod').innerText = tx.method.replace('_', ' ');
+            document.getElementById('rcptTotal').innerText = '₱' + tx.amount.toFixed(2);
+            document.getElementById('rcptUser').innerText = tx.processedBy; // Shows staff name
+            
+            document.getElementById('receiptModalOverlay').classList.remove('hidden');
+        }
+
+        function closeReceipt() {
+            document.getElementById('receiptModalOverlay').classList.add('hidden');
+        }
+
+        function addProduct() {
+            let name = document.getElementById('newProdName').value;
+            let price = parseFloat(document.getElementById('newProdPrice').value);
+            let stock = parseInt(document.getElementById('newProdStock').value);
+
+            if (!name || isNaN(price) || isNaN(stock)) return alert('Kumpletuhin ang details.');
+
+            let newId = inventory.length ? Math.max(...inventory.map(i => i.id)) + 1 : 1;
+            inventory.push({ id: newId, name, price, stock });
+
+            document.getElementById('newProdName').value = '';
+            document.getElementById('newProdPrice').value = '';
+            document.getElementById('newProdStock').value = '';
+            
+            alert('New product added successfully!');
+            updateUI();
+        }
+
+        function addStock(id) {
+            let qty = parseInt(prompt("Enter amount to add:"));
+            if (!isNaN(qty) && qty > 0) {
+                let product = inventory.find(i => i.id === id);
+                product.stock += qty;
+                updateUI();
+            }
+        }
+
+        // Export with Manual Trigger (No auto-download, exactly as requested)
+        function prepareExport() {
+            let btn = document.getElementById('exportBtn');
+            btn.disabled = true;
+            let counter = 3;
+            btn.innerText = `Preparing Data... ${counter}`;
+            
+            let interval = setInterval(() => {
+                counter--;
+                if (counter > 0) {
+                    btn.innerText = `Preparing Data... ${counter}`;
+                } else {
+                    clearInterval(interval);
+                    // Setup button for manual click download
+                    btn.innerText = 'Click Here to Download CSV';
+                    btn.classList.replace('btn-warning', 'btn-success');
+                    btn.disabled = false;
+                    btn.onclick = triggerDownload; 
+                }
+            }, 1000);
+        }
+
+        function triggerDownload() {
+            // Build CSV Data from Finance, Inventory, and History
+            let csv = "--- CLINIC SYSTEM FULL REPORT ---\n\n";
+            
+            csv += "1. PAYMENT TILL SUMMARY\nMethod,Amount\n";
+            let totalTill = 0;
+            for(let key in finance) { 
+                csv += `${key.replace('_', ' ')},${finance[key]}\n`;
+                totalTill += finance[key];
+            }
+            csv += `TOTAL TILL,${totalTill}\n\n`;
+
+            csv += "2. INVENTORY STATUS\nProduct Name,Price,Current Stock\n";
+            inventory.forEach(item => {
+                let stockVal = item.stock === 999 ? 'Unlimited' : item.stock;
+                csv += `${item.name},${item.price},${stockVal}\n`;
+            });
+            csv += "\n";
+
+            csv += "3. TRANSACTION HISTORY\nDate,Item,Quantity,Payment Method,Amount,Processed By\n";
+            txHistory.forEach(tx => {
+                let dateFmt = tx.date.split('T')[0] + " " + tx.date.split('T')[1].substring(0,8);
+                csv += `${dateFmt},${tx.item},${tx.qty},${tx.method.replace('_', ' ')},${tx.amount},${tx.processedBy}\n`;
+            });
+
+            // Trigger Download Object
+            let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            let link = document.createElement("a");
+            let url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "Clinic_Full_System_Report.csv");
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Reset Export Button
+            let btn = document.getElementById('exportBtn');
+            btn.innerText = 'Generate Full System Report (CSV)';
+            btn.classList.replace('btn-success', 'btn-warning');
+            btn.onclick = prepareExport;
+        }
+
+        // Initialize display check
+        document.getElementById('loginSection').classList.remove('hidden');
+    </script>
+</body>
+</html>
