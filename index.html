@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Clinic Management System - Cloud Sync</title>
+    <title>Clinic Management System - Real-Time Cloud</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -74,7 +74,7 @@
             margin-bottom: 6px; 
         }
         
-        input, select { 
+        input:not([type="checkbox"]), select { 
             width: 100%; 
             padding: 12px 16px; 
             border: 1px solid var(--gray-300); 
@@ -96,13 +96,60 @@
             padding-right: 40px;
         }
         
-        input:focus, select:focus { 
+        input:focus:not([type="checkbox"]), select:focus { 
             outline: none;
             border-color: var(--primary);
             background-color: var(--surface);
             box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
         }
         
+        /* Custom Multi-Select List Styling */
+        .product-list {
+            max-height: 280px;
+            overflow-y: auto;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            background: var(--surface);
+        }
+        .list-header {
+            background: var(--gray-100);
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--gray-600);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--gray-300);
+            border-top: 1px solid var(--gray-300);
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        .list-header:first-child { border-top: none; }
+        
+        .product-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--gray-100);
+            cursor: pointer;
+            transition: background 0.2s;
+            margin: 0;
+        }
+        .product-item:last-child { border-bottom: none; }
+        .product-item:hover { background: #F8FAFC; }
+        .product-item input[type="checkbox"] {
+            width: 20px; 
+            height: 20px; 
+            margin-right: 14px;
+            cursor: pointer;
+            accent-color: var(--primary);
+        }
+        .product-info { display: flex; flex-direction: column; flex: 1; }
+        .product-name { font-weight: 700; color: var(--dark); font-size: 14px; }
+        .product-meta { font-size: 12px; color: var(--gray-600); font-weight: 600; margin-top: 2px;}
+        .opacity-50 { opacity: 0.5; pointer-events: none; }
+
         .btn { 
             padding: 12px 20px; 
             border: none; 
@@ -142,29 +189,9 @@
             background: var(--surface);
         }
         
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            font-size: 14px; 
-            min-width: 600px; 
-        }
-        
-        th, td { 
-            border-bottom: 1px solid var(--gray-100); 
-            padding: 16px; 
-            text-align: left; 
-            white-space: nowrap; 
-        }
-        
-        th { 
-            background-color: var(--gray-100); 
-            font-weight: 700; 
-            color: var(--dark); 
-            text-transform: uppercase; 
-            font-size: 12px; 
-            letter-spacing: 0.05em; 
-        }
-        
+        table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 600px; }
+        th, td { border-bottom: 1px solid var(--gray-100); padding: 16px; text-align: left; white-space: nowrap; }
+        th { background-color: var(--gray-100); font-weight: 700; color: var(--dark); text-transform: uppercase; font-size: 12px; letter-spacing: 0.05em; }
         tbody tr:hover { background-color: #F8FAFC; }
         .text-right { text-align: right; }
         .text-center { text-align: center; }
@@ -229,7 +256,6 @@
         .tab-pane.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Beautiful Financial & Demographic Stat Boxes */
         .stat-box {
             background: var(--surface); 
             border: 1px solid var(--gray-300);
@@ -243,56 +269,26 @@
         .stat-box:hover { transform: translateY(-3px); }
         
         .stat-box::before { 
-            content: ''; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 6px; 
-            height: 100%; 
-            background: var(--primary); 
-            border-radius: 12px 0 0 12px;
+            content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--primary); border-radius: 12px 0 0 12px;
         }
         
-        .stat-box h4 { 
-            margin: 0; 
-            color: var(--gray-600); 
-            font-size: 13px; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            letter-spacing: 0.08em; 
+        .stat-box h4 { margin: 0; color: var(--gray-600); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+        .stat-box p.main-stat { margin: 12px 0 8px 0; font-size: 32px; font-weight: 800; color: var(--dark); letter-spacing: -0.02em; }
+        .stat-box .profit-text { font-size: 16px; font-weight: 700; margin: 12px 0 0 0; }
+        .stat-box .expense-text { color: var(--danger); font-size: 15px; font-weight: 600; margin: 4px 0; }
+
+        .top-item-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px solid var(--gray-100);
         }
-        
-        .stat-box p.main-stat { 
-            margin: 12px 0 8px 0; 
-            font-size: 32px; 
-            font-weight: 800; 
-            color: var(--dark); 
-            letter-spacing: -0.02em;
-        }
-        
-        .stat-box .profit-text { 
-            font-size: 16px; 
-            font-weight: 700; 
-            margin: 12px 0 0 0; 
-        }
-        
-        .stat-box .expense-text { 
-            color: var(--danger); 
-            font-size: 15px; 
-            font-weight: 600; 
-            margin: 4px 0; 
-        }
+        .top-item-row:last-child { border-bottom: none; }
+        .top-item-name { font-weight: 700; color: var(--dark); font-size: 14px; }
+        .top-item-qty { font-size: 12px; color: var(--gray-600); font-weight: 600; margin-top: 4px; }
+        .top-item-rev { font-weight: 800; color: var(--primary); font-size: 15px; }
 
         .chart-container {
-            position: relative;
-            height: 350px;
-            width: 100%;
-            margin-top: 10px;
-            padding: 20px;
-            background: #fff;
-            border: 1px solid var(--gray-300);
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            position: relative; height: 350px; width: 100%; margin-top: 10px; padding: 20px;
+            background: #fff; border: 1px solid var(--gray-300); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
         
         @media (max-width: 768px) {
@@ -310,30 +306,18 @@
 
         #receiptModalOverlay {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(17, 24, 39, 0.8); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-            z-index: 1000; 
-            backdrop-filter: blur(4px); 
-            padding: 20px;
+            background: rgba(17, 24, 39, 0.8); display: flex; justify-content: center; align-items: center;
+            z-index: 1000; backdrop-filter: blur(4px); padding: 20px;
         }
         
         .receipt-box {
-            background: white; 
-            width: 100%; 
-            max-width: 360px; 
-            padding: 30px; 
-            border-radius: 16px;
-            font-family: 'Courier New', Courier, monospace; 
-            font-weight: 600;
-            max-height: 90vh; 
-            overflow-y: auto; 
-            box-shadow: var(--shadow-lg);
+            background: white; width: 100%; max-width: 360px; padding: 30px; border-radius: 16px;
+            font-family: 'Courier New', Courier, monospace; font-weight: 600;
+            max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg);
         }
         
         .receipt-box hr { border: 1px dashed #D1D5DB; margin: 20px 0; }
-        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; align-items: flex-start; }
     </style>
 </head>
 <body>
@@ -342,7 +326,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, getDocs, deleteDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAQzeUZZlTwWSfaAF23x-l3XC3OqyXzQME",
@@ -358,11 +342,9 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Secondary Auth for admin creating accounts silently without logging out
         const secondaryApp = initializeApp(firebaseConfig, "Secondary");
         const secondaryAuth = getAuth(secondaryApp);
 
-        // Expose to window for inline scripts
         window.firebaseAuth = auth;
         window.firebaseDB = db;
         window.secondaryAuth = secondaryAuth;
@@ -376,13 +358,13 @@
         window.getDocs = getDocs;
         window.deleteDoc = deleteDoc;
         window.updateDoc = updateDoc;
+        window.onSnapshot = onSnapshot; 
     </script>
 
     <!-- 1. AUTHENTICATION SCREENS -->
     <div id="loginSection" class="container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
         <div class="card" style="max-width: 400px; padding: 40px 30px; border-radius: 20px; box-shadow: var(--shadow-lg);">
             
-            <!-- Login Form -->
             <div id="formLogin">
                 <div style="text-align: center; margin-bottom: 30px;">
                     <div style="background: var(--primary); width: 60px; height: 60px; border-radius: 16px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 28px;">🏥</div>
@@ -392,87 +374,32 @@
                 
                 <div id="loginErrorMsg" class="hidden" style="background: #FEE2E2; color: #DC2626; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center; border: 1px solid #FCA5A5;"></div>
 
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="loginEmail" placeholder="e.g. staff@clinic.com" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" placeholder="••••••••" required>
-                </div>
+                <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="e.g. staff@clinic.com" required></div>
+                <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••" required></div>
                 
                 <button class="btn btn-primary" id="btnLogin" style="margin-top: 10px; padding: 14px;" onclick="handleLogin()">Secure Login</button>
-                
-                <div style="text-align: center; margin-top: 16px;">
-                    <button class="btn btn-outline" onclick="toggleAuthForm('register')">Request Staff Account</button>
-                </div>
-                
-                <div style="text-align: center; margin-top: 30px;">
-                    <a href="#" onclick="promptSystemSetup()" style="color: var(--gray-300); font-size: 11px; text-decoration: none;">System Setup</a>
-                </div>
+                <div style="text-align: center; margin-top: 16px;"><button class="btn btn-outline" onclick="toggleAuthForm('register')">Request Staff Account</button></div>
+                <div style="text-align: center; margin-top: 30px;"><a href="#" onclick="promptSystemSetup()" style="color: var(--gray-300); font-size: 11px; text-decoration: none;">System Setup</a></div>
             </div>
 
-            <!-- Public Register Form -->
             <div id="formRegister" class="hidden">
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <h2>Request Account</h2>
-                    <p style="color: var(--warning); font-size: 13px; font-weight: 600; margin: 0;">Requires Admin Approval in System</p>
-                </div>
-                
+                <div style="text-align: center; margin-bottom: 30px;"><h2>Request Account</h2><p style="color: var(--warning); font-size: 13px; font-weight: 600; margin: 0;">Requires Admin Approval in System</p></div>
                 <div id="regStatusMsg" class="hidden" style="padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center;"></div>
-
-                <div class="form-group">
-                    <label>Full Name</label>
-                    <input type="text" id="regName" placeholder="Juan Dela Cruz">
-                </div>
-                
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" id="regEmail" placeholder="juan@clinic.com">
-                </div>
-                
-                <div class="form-group">
-                    <label>Password (Min 6)</label>
-                    <input type="password" id="regPassword" placeholder="••••••••">
-                </div>
-                
+                <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Juan Dela Cruz"></div>
+                <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="juan@clinic.com"></div>
+                <div class="form-group"><label>Password (Min 6)</label><input type="password" id="regPassword" placeholder="••••••••"></div>
                 <button class="btn btn-warning" id="btnRegister" style="margin-top: 10px; padding: 14px; color: white;" onclick="handlePublicRegister()">Submit Request</button>
-                
-                <div style="text-align: center; margin-top: 16px;">
-                    <button class="btn btn-outline" onclick="toggleAuthForm('login')">Back to Login</button>
-                </div>
+                <div style="text-align: center; margin-top: 16px;"><button class="btn btn-outline" onclick="toggleAuthForm('login')">Back to Login</button></div>
             </div>
 
-            <!-- Master Admin Initialization Form -->
             <div id="formInitAdmin" class="hidden">
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <h2>Master Setup</h2>
-                    <p style="color: var(--info); font-size: 13px; font-weight: 600; margin: 0;">Create First Administrator Account</p>
-                </div>
-                
+                <div style="text-align: center; margin-bottom: 30px;"><h2>Master Setup</h2><p style="color: var(--info); font-size: 13px; font-weight: 600; margin: 0;">Create First Administrator Account</p></div>
                 <div id="initStatusMsg" class="hidden" style="padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center;"></div>
-
-                <div class="form-group">
-                    <label>Admin Name</label>
-                    <input type="text" id="initName" placeholder="Master Admin">
-                </div>
-                
-                <div class="form-group">
-                    <label>Admin Email</label>
-                    <input type="email" id="initEmail" placeholder="admin@clinic.com">
-                </div>
-                
-                <div class="form-group">
-                    <label>Password (Min 6)</label>
-                    <input type="password" id="initPassword" placeholder="••••••••">
-                </div>
-                
+                <div class="form-group"><label>Admin Name</label><input type="text" id="initName" placeholder="Master Admin"></div>
+                <div class="form-group"><label>Admin Email</label><input type="email" id="initEmail" placeholder="admin@clinic.com"></div>
+                <div class="form-group"><label>Password (Min 6)</label><input type="password" id="initPassword" placeholder="••••••••"></div>
                 <button class="btn btn-dark" id="btnInitAdmin" style="margin-top: 10px; padding: 14px;" onclick="handleInitAdmin()">Create Master Admin</button>
-                
-                <div style="text-align: center; margin-top: 16px;">
-                    <button class="btn btn-outline" onclick="toggleAuthForm('login')">Cancel</button>
-                </div>
+                <div style="text-align: center; margin-top: 16px;"><button class="btn btn-outline" onclick="toggleAuthForm('login')">Cancel</button></div>
             </div>
 
         </div>
@@ -498,7 +425,7 @@
             <button class="nav-btn active admin-only hidden" onclick="switchTab('tab-dashboard')">📊 Dashboard</button>
             <button class="nav-btn" onclick="switchTab('tab-transact')">📋 Transact</button>
             <button class="nav-btn admin-only hidden" onclick="switchTab('tab-expenses')">💸 Expenses</button>
-            <button class="nav-btn" onclick="switchTab('tab-inventory')">📦 Inventory</button>
+            <button class="nav-btn" onclick="switchTab('tab-inventory')">📦 Products & Services</button>
             <button class="nav-btn admin-only hidden" onclick="switchTab('tab-history')">📝 History</button>
             <button class="nav-btn admin-only hidden" onclick="switchTab('tab-accounts')">🔐 Accounts</button>
         </div>
@@ -506,69 +433,69 @@
         <!-- TAB: DASHBOARD -->
         <div id="tab-dashboard" class="tab-pane active admin-only hidden">
             
-            <!-- Dashboard Date Picker Header -->
             <div class="header-bar" style="margin-bottom: 20px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border-radius: 12px; background: var(--surface); box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid var(--gray-300);">
                 <h3 style="margin: 0; color: var(--primary);">📅 Dashboard Filter</h3>
-                <div>
-                    <input type="date" id="dashDateFilter" style="padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 6px; font-weight: bold; color: var(--dark); margin: 0; width: 100%;" onchange="calculateReports()">
+                <div><input type="date" id="dashDateFilter" style="padding: 8px 12px; border: 1px solid var(--gray-300); border-radius: 6px; font-weight: bold; color: var(--dark); margin: 0; width: 100%;" onchange="renderUI()"></div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <h3 style="margin-bottom: 15px; color: var(--dark);">🛍️ Sales Analytics (Selected Date)</h3>
+                    <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 20px;">Breakdown of Products vs Services based on the date filter.</p>
+                    
+                    <div class="grid-2 mobile-grid-2">
+                        <div class="stat-box" style="border-left-color: var(--info); padding: 16px;">
+                            <h4 style="color: var(--info);">📦 Products Sold</h4>
+                            <p class="main-stat" id="statProdQty" style="font-size: 26px; margin-bottom: 5px;">0</p>
+                            <p class="profit-text" id="statProdRev" style="font-size: 14px; margin:0; color: var(--info);">Rev: ₱0.00</p>
+                        </div>
+                        <div class="stat-box" style="border-left-color: var(--warning); padding: 16px;">
+                            <h4 style="color: var(--warning);">🩺 Services Availed</h4>
+                            <p class="main-stat" id="statServQty" style="font-size: 26px; margin-bottom: 5px;">0</p>
+                            <p class="profit-text" id="statServRev" style="font-size: 14px; margin:0; color: var(--warning);">Rev: ₱0.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 15px; color: var(--dark);">🏆 Top 5 Selling Items (Selected Date)</h3>
+                    <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Most popular items based on quantity sold.</p>
+                    <div id="topItemsContainer"></div>
                 </div>
             </div>
 
             <div class="card">
                 <h3 style="margin-bottom: 20px; color: var(--dark);">👥 Patient Demographics (Selected Date)</h3>
-                <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -15px; margin-bottom: 20px;">Patient counts recorded for the exact date selected above.</p>
                 <div class="grid-4 mobile-grid-2">
-                    <div class="stat-box" style="border-left-color: var(--info);">
-                        <h4>New Patient</h4><p class="main-stat" id="countNew">0</p>
-                    </div>
-                    <div class="stat-box" style="border-left-color: var(--primary);">
-                        <h4>Old Patient</h4><p class="main-stat" id="countOld">0</p>
-                    </div>
-                    <div class="stat-box" style="border-left-color: var(--warning);">
-                        <h4>PWD</h4><p class="main-stat" id="countPWD">0</p>
-                    </div>
-                    <div class="stat-box" style="border-left-color: var(--secondary);">
-                        <h4>Senior Citizen</h4><p class="main-stat" id="countSenior">0</p>
-                    </div>
+                    <div class="stat-box" style="border-left-color: var(--info); padding: 16px;"><h4>New Patient</h4><p class="main-stat" id="countNew">0</p></div>
+                    <div class="stat-box" style="border-left-color: var(--primary); padding: 16px;"><h4>Old Patient</h4><p class="main-stat" id="countOld">0</p></div>
+                    <div class="stat-box" style="border-left-color: var(--warning); padding: 16px;"><h4>PWD</h4><p class="main-stat" id="countPWD">0</p></div>
+                    <div class="stat-box" style="border-left-color: var(--secondary); padding: 16px;"><h4>Senior Citizen</h4><p class="main-stat" id="countSenior">0</p></div>
                 </div>
             </div>
 
             <div class="grid-3">
                 <div class="stat-box">
-                    <h4>Selected Date</h4>
-                    <p class="main-stat" id="reportDaily">₱0.00</p>
-                    <p class="expense-text" id="expDaily">Exp: ₱0.00</p>
-                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 12px 0;">
-                    <p class="profit-text" id="profitDaily">True: ₱0.00</p>
+                    <h4>Selected Date</h4><p class="main-stat" id="reportDaily">₱0.00</p><p class="expense-text" id="expDaily">Exp: ₱0.00</p>
+                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 12px 0;"><p class="profit-text" id="profitDaily">True: ₱0.00</p>
                 </div>
                 <div class="stat-box">
-                    <h4>Selected Month</h4>
-                    <p class="main-stat" id="reportMonthly">₱0.00</p>
-                    <p class="expense-text" id="expMonthly">Exp: ₱0.00</p>
-                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 12px 0;">
-                    <p class="profit-text" id="profitMonthly">True: ₱0.00</p>
+                    <h4>Selected Month</h4><p class="main-stat" id="reportMonthly">₱0.00</p><p class="expense-text" id="expMonthly">Exp: ₱0.00</p>
+                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 12px 0;"><p class="profit-text" id="profitMonthly">True: ₱0.00</p>
                 </div>
                 <div class="stat-box">
-                    <h4>Selected Year</h4>
-                    <p class="main-stat" id="reportYearly">₱0.00</p>
-                    <p class="expense-text" id="expYearly">Exp: ₱0.00</p>
-                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 12px 0;">
-                    <p class="profit-text" id="profitYearly">True: ₱0.00</p>
+                    <h4>Selected Year</h4><p class="main-stat" id="reportYearly">₱0.00</p><p class="expense-text" id="expYearly">Exp: ₱0.00</p>
+                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 12px 0;"><p class="profit-text" id="profitYearly">True: ₱0.00</p>
                 </div>
             </div>
             
-            <!-- BEAUTIFUL CHART CONTAINER -->
             <div class="card" style="margin-top: 24px;">
                 <h3 style="margin-bottom: 5px;">📈 Monthly Performance Overview</h3>
-                <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-bottom: 10px;">Visual representation of Total Revenue vs True Net Profit/Loss based on Selected Year.</p>
-                <div class="chart-container">
-                    <canvas id="monthlyChart"></canvas>
-                </div>
+                <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-bottom: 10px;">Visual representation based on Selected Year.</p>
+                <div class="chart-container"><canvas id="monthlyChart"></canvas></div>
             </div>
             
-            <div class="card" style="margin-top: 24px;">
-                <button class="btn btn-warning" id="exportBtn" style="padding: 16px; font-size: 16px;" onclick="prepareExport()">⬇️ Generate Full System Report (CSV)</button>
-            </div>
+            <div class="card" style="margin-top: 24px;"><button class="btn btn-warning" id="exportBtn" style="padding: 16px; font-size: 16px;" onclick="prepareExport()">⬇️ Generate Full System Report (CSV)</button></div>
         </div>
 
         <!-- TAB: TRANSACT -->
@@ -577,50 +504,32 @@
                 <div class="card">
                     <h3 style="margin-bottom: 20px;">📋 New Transaction</h3>
                     
-                    <div class="form-group">
-                        <label>Transaction Date (Can be backdated):</label>
-                        <input type="date" id="transDate">
-                    </div>
+                    <div class="form-group"><label>Transaction Date (Can be backdated):</label><input type="date" id="transDate"></div>
 
                     <div class="form-group">
                         <label>Patient Category:</label>
-                        <select id="transCategory">
-                            <option value="New">New Patient</option>
-                            <option value="Old">Old Patient</option>
-                            <option value="PWD">PWD</option>
-                            <option value="Senior">Senior Citizen</option>
-                        </select>
+                        <select id="transCategory"><option value="New">New Patient</option><option value="Old">Old Patient</option><option value="PWD">PWD</option><option value="Senior">Senior Citizen</option></select>
                     </div>
                     
                     <div class="form-group">
-                        <label>Select Product / Service:</label>
-                        <select id="transProduct"></select>
+                        <label>Select Product(s) / Service(s):</label>
+                        <div class="product-list" id="transProductList">
+                            <!-- Populated Automatically via renderUI -->
+                        </div>
                     </div>
                     
                     <div class="mobile-grid-2" style="margin-bottom: 16px;">
                         <div class="form-group" style="margin-bottom: 0;">
-                            <label>Qty:</label>
+                            <label>Batch Qty:</label>
                             <input type="number" id="transQty" value="1" min="1">
                         </div>
                         <div class="form-group" style="margin-bottom: 0;">
                             <label>Discount:</label>
-                            <select id="transDiscount">
-                                <option value="0">None</option>
-                                <option value="0.20">20% (Senior/PWD)</option>
-                                <option value="1">100% Free</option>
-                            </select>
+                            <select id="transDiscount"><option value="0">None</option><option value="0.20">20% (Senior/PWD)</option><option value="1">100% Free</option></select>
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label>Payment Method:</label>
-                        <select id="transMethod">
-                            <option value="CASH">CASH</option>
-                            <option value="GCASH">GCASH</option>
-                            <option value="MariBANK">MariBANK</option>
-                            <option value="BANK_Transfer">BANK Transfer</option>
-                        </select>
-                    </div>
+                    <div class="form-group"><label>Payment Method:</label><select id="transMethod"><option value="CASH">CASH</option><option value="GCASH">GCASH</option><option value="MariBANK">MariBANK</option><option value="BANK_Transfer">BANK Transfer</option></select></div>
                     
                     <button class="btn btn-success" style="padding: 14px; margin-top: 8px;" onclick="processTransaction()">✅ Process & Print Receipt</button>
                 </div>
@@ -634,10 +543,7 @@
                             <tr><td>📱 GCASH</td><td class="text-right" id="fin-GCASH" style="font-weight: 700;">₱0.00</td></tr>
                             <tr><td>🏦 MariBANK</td><td class="text-right" id="fin-MariBANK" style="font-weight: 700;">₱0.00</td></tr>
                             <tr><td>💻 BANK Transfer</td><td class="text-right" id="fin-BANK_Transfer" style="font-weight: 700;">₱0.00</td></tr>
-                            <tr style="background-color: #F8FAFC;">
-                                <td style="font-weight: 800; color: var(--dark);">TOTAL REVENUE</td>
-                                <td class="text-right" id="fin-TOTAL" style="color: var(--primary); font-size: 18px; font-weight: 800;">₱0.00</td>
-                            </tr>
+                            <tr style="background-color: #F8FAFC;"><td style="font-weight: 800; color: var(--dark);">TOTAL REVENUE</td><td class="text-right" id="fin-TOTAL" style="color: var(--primary); font-size: 18px; font-weight: 800;">₱0.00</td></tr>
                         </table>
                     </div>
                 </div>
@@ -648,32 +554,13 @@
         <div id="tab-expenses" class="tab-pane admin-only hidden">
             <div class="card">
                 <h3 style="margin-bottom: 20px;">💸 Log Expense</h3>
-                
                 <div class="grid-2" style="margin-bottom: 16px;">
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label>Expense Date (Can be backdated)</label>
-                        <input type="date" id="expDate">
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label>Category</label>
-                        <select id="expCategory">
-                            <option>Salary</option>
-                            <option>Electric Bill</option>
-                            <option>Clinic Supply</option>
-                            <option>Miscellaneous</option>
-                        </select>
-                    </div>
+                    <div class="form-group" style="margin-bottom: 0;"><label>Expense Date (Can be backdated)</label><input type="date" id="expDate"></div>
+                    <div class="form-group" style="margin-bottom: 0;"><label>Category</label><select id="expCategory"><option>Salary</option><option>Electric Bill</option><option>Clinic Supply</option><option>Miscellaneous</option></select></div>
                 </div>
-                
                 <div class="grid-3" style="align-items: flex-end;">
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label>Note</label>
-                        <input type="text" id="expNote" placeholder="e.g. Internet">
-                    </div>
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label>Amount</label>
-                        <input type="number" id="expAmount" placeholder="0.00">
-                    </div>
+                    <div class="form-group" style="margin-bottom: 0;"><label>Note</label><input type="text" id="expNote" placeholder="e.g. Internet"></div>
+                    <div class="form-group" style="margin-bottom: 0;"><label>Amount</label><input type="number" id="expAmount" placeholder="0.00"></div>
                     <button class="btn btn-danger" onclick="addExpense()">➖ Deduct</button>
                 </div>
             </div>
@@ -682,64 +569,54 @@
                 <h3>🧾 Expense History</h3>
                 <div class="table-wrapper" style="max-height: 400px;">
                     <table id="expenseTable">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Category</th>
-                                <th>Note</th>
-                                <th>By</th>
-                                <th class="text-right">Amount</th>
-                                <th class="text-center">Action</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Date</th><th>Category</th><th>Note</th><th>By</th><th class="text-right">Amount</th><th class="text-center">Action</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
         </div>
 
-        <!-- TAB: INVENTORY -->
+        <!-- TAB: INVENTORY & SERVICES (SPLIT) -->
         <div id="tab-inventory" class="tab-pane">
+            
             <div class="card">
-                <h3 style="margin-bottom: 20px;">📦 Inventory Database</h3>
+                <h3 style="margin-bottom: 15px;">📦 Products Inventory</h3>
+                <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Items with physical stock and cost.</p>
                 <div class="table-wrapper">
                     <table id="inventoryTable">
-                        <thead>
-                            <tr>
-                                <th>Product Name</th>
-                                <th class="admin-only hidden">Cost Price</th>
-                                <th>SRP</th>
-                                <th class="admin-only hidden">Profit/Item</th>
-                                <th>Stock</th>
-                                <th class="admin-only hidden text-center">Actions</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Product Name</th><th class="admin-only hidden">Cost Price</th><th>SRP</th><th class="admin-only hidden">Profit/Item</th><th>Stock</th><th class="admin-only hidden text-center">Actions</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
-                
-                <div class="admin-only hidden" style="margin-top: 32px; border-top: 1px solid var(--gray-300); padding-top: 24px;">
-                    <h4 style="margin-bottom: 16px;">➕ Register New Item</h4>
-                    <div class="grid-4">
-                        <div class="form-group">
-                            <label>Name</label>
-                            <input type="text" id="newProdName">
-                        </div>
-                        <div class="form-group">
-                            <label>Cost (₱)</label>
-                            <input type="number" id="newProdCost">
-                        </div>
-                        <div class="form-group">
-                            <label>SRP (₱)</label>
-                            <input type="number" id="newProdPrice">
-                        </div>
-                        <div class="form-group">
-                            <label>Initial Stock (999=Service)</label>
-                            <input type="number" id="newProdStock">
-                        </div>
-                    </div>
-                    <button class="btn btn-primary" onclick="addProduct()">Save Item</button>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 15px;">🩺 Services Catalog</h3>
+                <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Professional services offered.</p>
+                <div class="table-wrapper">
+                    <table id="servicesTable">
+                        <thead><tr><th>Service Name</th><th>Price (Fee)</th><th class="admin-only hidden text-center">Actions</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
+            </div>
+            
+            <div class="card admin-only hidden">
+                <h3 style="margin-bottom: 16px;">➕ Register New Item</h3>
+                <div class="grid-4">
+                    <div class="form-group">
+                        <label>Item Type</label>
+                        <select id="newItemType" onchange="toggleNewItemFields()">
+                            <option value="product">Product (Has Stock)</option>
+                            <option value="service">Service (No Stock)</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Name</label><input type="text" id="newProdName"></div>
+                    <div class="form-group" id="costField"><label>Cost (₱)</label><input type="number" id="newProdCost"></div>
+                    <div class="form-group"><label>Selling Price / Fee (₱)</label><input type="number" id="newProdPrice"></div>
+                    <div class="form-group" id="stockField"><label>Initial Stock</label><input type="number" id="newProdStock"></div>
+                </div>
+                <button class="btn btn-primary" onclick="addItem()">Save to Database</button>
             </div>
         </div>
 
@@ -749,18 +626,7 @@
                 <h3 style="margin-bottom: 20px;">📝 Transaction Logs</h3>
                 <div class="table-wrapper" style="max-height: 500px;">
                     <table id="historyTable">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Type</th>
-                                <th>Item</th>
-                                <th>Qty</th>
-                                <th>Method</th>
-                                <th>Revenue</th>
-                                <th>Staff</th>
-                                <th class="text-center">Action</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Date</th><th>Type</th><th>Item</th><th>Qty</th><th>Method</th><th>Revenue</th><th>Staff</th><th class="text-center">Action</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -769,61 +635,29 @@
 
         <!-- TAB: ACCOUNTS -->
         <div id="tab-accounts" class="tab-pane admin-only hidden">
-            
             <div class="grid-2">
-                <!-- Create Account Module -->
                 <div class="card">
                     <h3 style="margin-bottom: 5px;">🔐 Add Auto-Approved Staff</h3>
                     <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-bottom: 20px;">Accounts created here bypass manual activation.</p>
-                    
                     <div id="accStatusMsg" class="hidden" style="padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center;"></div>
-
-                    <div class="form-group">
-                        <label>Full Name</label>
-                        <input type="text" id="newStaffName" placeholder="e.g. Ivy Santos">
-                    </div>
-                    <div class="form-group">
-                        <label>Email (Username)</label>
-                        <input type="email" id="newStaffEmail" placeholder="ivy@clinic.com">
-                    </div>
-                    <div class="form-group">
-                        <label>Password (min 6 chars)</label>
-                        <input type="password" id="newStaffPassword" placeholder="••••••••">
-                    </div>
-                    <div class="form-group">
-                        <label>Assign Role</label>
-                        <select id="newStaffRole">
-                            <option value="staff">Regular Staff</option>
-                            <option value="admin">Administrator</option>
-                        </select>
-                    </div>
-                    
+                    <div class="form-group"><label>Full Name</label><input type="text" id="newStaffName" placeholder="e.g. Ivy Santos"></div>
+                    <div class="form-group"><label>Email (Username)</label><input type="email" id="newStaffEmail" placeholder="ivy@clinic.com"></div>
+                    <div class="form-group"><label>Password (min 6 chars)</label><input type="password" id="newStaffPassword" placeholder="••••••••"></div>
+                    <div class="form-group"><label>Assign Role</label><select id="newStaffRole"><option value="staff">Regular Staff</option><option value="admin">Administrator</option></select></div>
                     <button class="btn btn-primary" onclick="createStaffAccount()" id="btnCreateUser" style="margin-top: 10px;">➕ Register Account</button>
                 </div>
 
-                <!-- Users Database Module -->
                 <div class="card">
                     <h3 style="margin-bottom: 5px;">👥 User Accounts Database</h3>
                     <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-bottom: 20px;">View details, passwords, and manage access.</p>
-                    
                     <div class="table-wrapper" style="max-height: 400px;">
                         <table id="accountsTable">
-                            <thead>
-                                <tr>
-                                    <th>User Name</th>
-                                    <th>Email / Pass</th>
-                                    <th>Status/Role</th>
-                                    <th class="text-center">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td colspan="4" class="text-center">Loading accounts...</td></tr>
-                            </tbody>
+                            <thead><tr><th>User Name</th><th>Email / Pass</th><th>Status/Role</th><th class="text-center">Actions</th></tr></thead>
+                            <tbody><tr><td colspan="4" class="text-center">Loading accounts...</td></tr></tbody>
                         </table>
                     </div>
                 </div>
             </div>
-
         </div>
 
     </div>
@@ -835,8 +669,8 @@
             <p class="text-center" style="margin-top: 0; font-size: 12px; color: var(--gray-600);" id="rcptDate"></p>
             <hr>
             <div class="receipt-row"><strong>Category:</strong> <span id="rcptCategory"></span></div>
-            <div class="receipt-row"><strong>Item:</strong> <span id="rcptItem"></span></div>
-            <div class="receipt-row"><strong>Qty:</strong> <span id="rcptQty"></span></div>
+            <div class="receipt-row" style="flex-direction: column;"><strong>Items:</strong> <span id="rcptItem" style="text-align: right; margin-top: 4px; line-height: 1.5;"></span></div>
+            <div class="receipt-row" style="margin-top: 5px;"><strong>Batch Qty:</strong> <span id="rcptQty"></span></div>
             <div class="receipt-row"><strong>Payment:</strong> <span id="rcptMethod"></span></div>
             <hr>
             <div class="receipt-row" style="font-size: 18px;"><strong>TOTAL:</strong> <strong id="rcptTotal"></strong></div>
@@ -853,876 +687,494 @@
         // ==========================================
         // 1. GLOBALS & INITIALIZATION
         // ==========================================
-        let inventory = [];
+        let inventory = []; // Strictly for products
+        let services = []; // Strictly for services
         let finance = { CASH: 0, GCASH: 0, MariBANK: 0, BANK_Transfer: 0 };
         let txHistory = [];
         let expHistory = [];
         let currentUser = { name: '', role: '', uid: '' };
         
-        let dashboardChart = null; // Graph instance global variable
+        let dashboardChart = null; 
+        let isFirstLoad = true;
 
         function getLocalISODate() { 
-            let d = new Date(); 
-            return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, -1); 
+            let d = new Date(); return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, -1); 
         }
 
         setInterval(() => { 
-            document.getElementById('liveClock').innerText = new Date().toLocaleDateString('en-US', { 
-                weekday:'long', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' 
-            }); 
+            document.getElementById('liveClock').innerText = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }); 
         }, 1000);
         
         function switchTab(tabId) {
-            // Hide all tabs
             document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-            
-            // Show selected tab
             document.getElementById(tabId).classList.add('active');
             event.currentTarget.classList.add('active');
-            
-            updateUI();
-            
-            // If Admin clicks Accounts tab, load the accounts table from Firebase
-            if(tabId === 'tab-accounts' && currentUser.role === 'admin') {
-                loadAccounts();
-            }
+            renderUI();
+            if(tabId === 'tab-accounts' && currentUser.role === 'admin') loadAccounts();
         }
         
         function toggleAuthForm(type) {
             document.getElementById('formLogin').classList.add('hidden');
             document.getElementById('formRegister').classList.add('hidden');
             document.getElementById('formInitAdmin').classList.add('hidden');
-            
-            if(type === 'register') {
-                document.getElementById('formRegister').classList.remove('hidden');
-            } else if(type === 'init') {
-                document.getElementById('formInitAdmin').classList.remove('hidden');
-            } else {
-                document.getElementById('formLogin').classList.remove('hidden');
-            }
+            if(type === 'register') document.getElementById('formRegister').classList.remove('hidden');
+            else if(type === 'init') document.getElementById('formInitAdmin').classList.remove('hidden');
+            else document.getElementById('formLogin').classList.remove('hidden');
         }
 
         // ==========================================
-        // 2. MASTER ADMIN SETUP (Gelo2026 Key)
+        // 2. MASTER ADMIN SETUP 
         // ==========================================
         function promptSystemSetup() {
             let key = prompt("Enter Secret System Setup Key:");
-            if(key === "gelo2026") { 
-                toggleAuthForm('init'); 
-            } else if(key !== null) { 
-                alert("Unauthorized Access. Incorrect Key."); 
-            }
+            if(key === "gelo2026") toggleAuthForm('init'); 
+            else if(key !== null) alert("Unauthorized Access."); 
         }
 
         async function handleInitAdmin() {
-            let name = document.getElementById('initName').value.trim();
-            let email = document.getElementById('initEmail').value.trim();
-            let pass = document.getElementById('initPassword').value;
-            let btn = document.getElementById('btnInitAdmin');
-            let status = document.getElementById('initStatusMsg');
-
-            if(!name || !email || pass.length < 6) {
-                return alert("Please fill all fields properly. Password must be 6+ chars.");
-            }
-
-            btn.innerText = "Creating..."; 
-            btn.disabled = true; 
-            status.classList.add('hidden');
-
+            let name = document.getElementById('initName').value.trim(), email = document.getElementById('initEmail').value.trim(), pass = document.getElementById('initPassword').value;
+            let btn = document.getElementById('btnInitAdmin'), status = document.getElementById('initStatusMsg');
+            if(!name || !email || pass.length < 6) return alert("Fill all fields. Pass 6+ chars.");
+            btn.innerText = "Creating..."; btn.disabled = true; status.classList.add('hidden');
             try {
-                // Creates user in Firebase Auth
                 const newCred = await window.createUserWithEmailAndPassword(window.firebaseAuth, email, pass);
-                
-                // Forces status to ACTIVE and role to ADMIN directly in Firestore
                 await window.setDoc(window.doc(window.firebaseDB, "users", newCred.user.uid), {
-                    name: name, 
-                    email: email, 
-                    role: "admin", 
-                    status: "active", 
-                    initialPassword: pass, 
-                    createdAt: getLocalISODate(), 
-                    createdBy: "System Setup"
+                    name: name, email: email, role: "admin", status: "active", initialPassword: pass, createdAt: getLocalISODate(), createdBy: "System Setup"
                 });
-
-                // Immediately log them out so they have to test the login screen
                 await window.signOut(window.firebaseAuth);
-
-                alert(`Master Admin ${name} successfully created! You will be redirected to the Login page.`);
-                
-                document.getElementById('initName').value = ''; 
-                document.getElementById('initEmail').value = ''; 
-                document.getElementById('initPassword').value = '';
+                alert(`Master Admin ${name} created!`);
+                document.getElementById('initName').value = ''; document.getElementById('initEmail').value = ''; document.getElementById('initPassword').value = '';
                 toggleAuthForm('login');
-
             } catch(error) {
-                status.innerText = "Error: " + error.message; 
-                status.style.background = "#FEE2E2"; 
-                status.style.color = "#DC2626"; 
-                status.style.border = "1px solid #FCA5A5"; 
-                status.classList.remove('hidden');
+                status.innerText = "Error: " + error.message; status.style.background = "#FEE2E2"; status.style.color = "#DC2626"; status.style.border = "1px solid #FCA5A5"; status.classList.remove('hidden');
             }
-            btn.innerText = "Create Master Admin"; 
-            btn.disabled = false;
+            btn.innerText = "Create Master Admin"; btn.disabled = false;
         }
 
         // ==========================================
-        // 3. FIREBASE LIVE DATA SYNC
+        // 3. REAL-TIME DATA SYNC
         // ==========================================
-        async function fetchLiveClinicData() {
-            try {
-                const docRef = window.doc(window.firebaseDB, "clinicData", "main");
-                const docSnap = await window.getDoc(docRef);
-                
+        function listenToClinicData() {
+            const docRef = window.doc(window.firebaseDB, "clinicData", "main");
+            window.onSnapshot(docRef, (docSnap) => {
+                document.getElementById('syncStatus').innerText = "🔄 Syncing...";
                 if (docSnap.exists()) {
                     let data = docSnap.data();
                     inventory = data.inventory || []; 
+                    services = data.services || [];
                     finance = data.finance || { CASH: 0, GCASH: 0, MariBANK: 0, BANK_Transfer: 0 };
                     txHistory = data.txHistory || []; 
                     expHistory = data.expHistory || [];
-                } else { 
-                    // Init empty database if none exists
-                    await pushLiveClinicData(); 
-                }
-            } catch (e) { 
-                console.error("Error fetching data:", e); 
-            }
+                    renderUI(); 
+                } else { if(isFirstLoad) pushLiveClinicData(); }
+                isFirstLoad = false;
+                document.getElementById('syncStatus').innerText = "🟢 Live Sync Active";
+            }, (error) => { document.getElementById('syncStatus').innerText = "🔴 Sync Error"; });
         }
 
         async function pushLiveClinicData() {
             try {
-                document.getElementById('syncStatus').innerText = "🔄 Syncing...";
                 const docRef = window.doc(window.firebaseDB, "clinicData", "main");
-                await window.setDoc(docRef, { inventory, finance, txHistory, expHistory });
-                document.getElementById('syncStatus').innerText = "🟢 Live Sync Active";
-            } catch (e) { 
-                document.getElementById('syncStatus').innerText = "🔴 Sync Error"; 
-            }
+                await window.setDoc(docRef, { inventory, services, finance, txHistory, expHistory });
+            } catch (e) { console.error("Error writing: ", e); }
         }
 
         // ==========================================
-        // 4. AUTHENTICATION (LOGIN & LOGOUT)
+        // 4. AUTHENTICATION
         // ==========================================
         async function handleLogin() {
-            let email = document.getElementById('loginEmail').value.trim();
-            let pass = document.getElementById('loginPassword').value;
-            let btn = document.getElementById('btnLogin');
-            let err = document.getElementById('loginErrorMsg');
-            
-            if(!email || !pass) return alert("Please enter email and password.");
-            
-            btn.innerText = "Authenticating..."; 
-            btn.disabled = true; 
-            err.classList.add('hidden');
-
+            let email = document.getElementById('loginEmail').value.trim(), pass = document.getElementById('loginPassword').value;
+            let btn = document.getElementById('btnLogin'), err = document.getElementById('loginErrorMsg');
+            if(!email || !pass) return alert("Enter email and password.");
+            btn.innerText = "Authenticating..."; btn.disabled = true; err.classList.add('hidden');
             try {
                 const userCredential = await window.signInWithEmailAndPassword(window.firebaseAuth, email, pass);
                 const uid = userCredential.user.uid;
-                
                 const docSnap = await window.getDoc(window.doc(window.firebaseDB, "users", uid));
-                
                 if (docSnap.exists()) {
                     let data = docSnap.data();
                     if(data.status !== "active") {
-                        err.innerText = "Access Denied: Account is pending or deleted."; 
-                        err.classList.remove('hidden'); 
-                        await window.signOut(window.firebaseAuth);
+                        err.innerText = "Access Denied: Account pending/deleted."; err.classList.remove('hidden'); await window.signOut(window.firebaseAuth);
                     } else {
-                        currentUser = { uid: uid, name: data.name, role: data.role };
-                        await fetchLiveClinicData(); 
-                        enterApp();
+                        currentUser = { uid: uid, name: data.name, role: data.role }; enterApp();
                     }
                 } else {
-                    err.innerText = "Access Denied: Record not found in Database."; 
-                    err.classList.remove('hidden'); 
-                    window.signOut(window.firebaseAuth);
+                    err.innerText = "Access Denied: Record not found."; err.classList.remove('hidden'); window.signOut(window.firebaseAuth);
                 }
-            } catch (error) {
-                err.innerText = error.code === 'auth/invalid-credential' ? "Invalid Credentials." : error.message; 
-                err.classList.remove('hidden');
-            }
-            
-            btn.innerText = "Secure Login"; 
-            btn.disabled = false;
+            } catch (error) { err.innerText = "Login Failed."; err.classList.remove('hidden'); }
+            btn.innerText = "Secure Login"; btn.disabled = false;
         }
 
         function enterApp() {
-            document.getElementById('loginSection').classList.add('hidden'); 
-            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('loginSection').classList.add('hidden'); document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('currentUserRole').innerText = currentUser.role.toUpperCase(); document.getElementById('currentUserName').innerText = currentUser.name;
+            document.querySelectorAll('.admin-only').forEach(el => { if(currentUser.role === 'admin') el.classList.remove('hidden'); else el.classList.add('hidden'); });
             
-            document.getElementById('currentUserRole').innerText = currentUser.role.toUpperCase(); 
-            document.getElementById('currentUserName').innerText = currentUser.name;
-            
-            document.querySelectorAll('.admin-only').forEach(el => { 
-                if(currentUser.role === 'admin') el.classList.remove('hidden'); 
-                else el.classList.add('hidden'); 
-            });
-            
-            // Set Default Dates upon successful login
             let todayDate = getLocalISODate().split('T')[0];
-            if (!document.getElementById('dashDateFilter').value) document.getElementById('dashDateFilter').value = todayDate;
-            if (!document.getElementById('transDate').value) document.getElementById('transDate').value = todayDate;
-            if (!document.getElementById('expDate').value) document.getElementById('expDate').value = todayDate;
+            document.getElementById('dashDateFilter').value = todayDate; document.getElementById('transDate').value = todayDate; document.getElementById('expDate').value = todayDate;
             
-            if(currentUser.role === 'admin') switchTab('tab-dashboard'); 
-            else switchTab('tab-transact');
+            listenToClinicData();
+            if(currentUser.role === 'admin') switchTab('tab-dashboard'); else switchTab('tab-transact');
         }
 
         async function handleLogout() {
-            await window.signOut(window.firebaseAuth); 
-            currentUser = { name: '', role: '', uid: '' };
-            document.getElementById('loginPassword').value = ''; 
-            document.getElementById('mainApp').classList.add('hidden'); 
-            document.getElementById('loginSection').classList.remove('hidden');
+            await window.signOut(window.firebaseAuth); currentUser = { name: '', role: '', uid: '' };
+            document.getElementById('loginPassword').value = ''; document.getElementById('mainApp').classList.add('hidden'); document.getElementById('loginSection').classList.remove('hidden');
         }
 
         // ==========================================
-        // 5. ACCOUNT CREATION & MANAGEMENT
+        // 5. ACCOUNT CREATION 
         // ==========================================
         async function handlePublicRegister() {
-            let name = document.getElementById('regName').value.trim();
-            let email = document.getElementById('regEmail').value.trim();
-            let pass = document.getElementById('regPassword').value;
-            let btn = document.getElementById('btnRegister');
-            let status = document.getElementById('regStatusMsg');
-
-            if(!name || !email || pass.length < 6) return alert("Fill all fields. Pass min 6 chars.");
-            
-            btn.innerText = "Submitting..."; 
-            btn.disabled = true; 
-            status.classList.add('hidden');
-
+            let name = document.getElementById('regName').value.trim(), email = document.getElementById('regEmail').value.trim(), pass = document.getElementById('regPassword').value;
+            let btn = document.getElementById('btnRegister'), status = document.getElementById('regStatusMsg');
+            if(!name || !email || pass.length < 6) return alert("Fill fields.");
+            btn.innerText = "Submitting..."; btn.disabled = true; status.classList.add('hidden');
             try {
-                // Secondary app handles creation to not interrupt current session
                 const newCred = await window.createUserWithEmailAndPassword(window.secondaryAuth, email, pass);
-                await window.setDoc(window.doc(window.firebaseDB, "users", newCred.user.uid), {
-                    name: name, 
-                    email: email, 
-                    role: "staff", 
-                    status: "pending", 
-                    initialPassword: pass, 
-                    createdAt: getLocalISODate()
-                });
+                await window.setDoc(window.doc(window.firebaseDB, "users", newCred.user.uid), { name: name, email: email, role: "staff", status: "pending", initialPassword: pass, createdAt: getLocalISODate() });
                 await window.signOut(window.secondaryAuth);
-                
-                status.innerText = "Request Sent! Admin needs to approve in Accounts tab."; 
-                status.style.background = "#FEF3C7"; 
-                status.style.color = "#D97706"; 
-                status.style.border = "1px solid #FCD34D"; 
-                status.classList.remove('hidden');
-                
-                document.getElementById('regName').value = ''; 
-                document.getElementById('regEmail').value = ''; 
-                document.getElementById('regPassword').value = '';
-            } catch(error) { 
-                status.innerText = "Error: " + error.message; 
-                status.style.background = "#FEE2E2"; 
-                status.style.color = "#DC2626"; 
-                status.style.border = "1px solid #FCA5A5"; 
-                status.classList.remove('hidden'); 
-            }
-            btn.innerText = "Submit Request"; 
-            btn.disabled = false;
+                status.innerText = "Request Sent! Admin needs to approve."; status.style.background = "#FEF3C7"; status.style.color = "#D97706"; status.style.border = "1px solid #FCD34D"; status.classList.remove('hidden');
+                document.getElementById('regName').value = ''; document.getElementById('regEmail').value = ''; document.getElementById('regPassword').value = '';
+            } catch(error) { status.innerText = "Error: " + error.message; status.style.background = "#FEE2E2"; status.style.color = "#DC2626"; status.style.border = "1px solid #FCA5A5"; status.classList.remove('hidden'); }
+            btn.innerText = "Submit Request"; btn.disabled = false;
         }
 
         async function createStaffAccount() {
-            let name = document.getElementById('newStaffName').value.trim();
-            let email = document.getElementById('newStaffEmail').value.trim();
-            let pass = document.getElementById('newStaffPassword').value;
-            let role = document.getElementById('newStaffRole').value;
-            
-            let btn = document.getElementById('btnCreateUser');
-            let status = document.getElementById('accStatusMsg');
-
+            let name = document.getElementById('newStaffName').value.trim(), email = document.getElementById('newStaffEmail').value.trim(), pass = document.getElementById('newStaffPassword').value, role = document.getElementById('newStaffRole').value;
+            let btn = document.getElementById('btnCreateUser'), status = document.getElementById('accStatusMsg');
             if(!name || !email || pass.length < 6) return alert("Fill all fields.");
-            
-            btn.innerText = "Processing..."; 
-            btn.disabled = true; 
-            status.classList.add('hidden');
-
+            btn.innerText = "Processing..."; btn.disabled = true; status.classList.add('hidden');
             try {
                 const newCred = await window.createUserWithEmailAndPassword(window.secondaryAuth, email, pass);
-                await window.setDoc(window.doc(window.firebaseDB, "users", newCred.user.uid), {
-                    name: name, 
-                    email: email, 
-                    role: role, 
-                    status: "active", 
-                    initialPassword: pass, 
-                    createdAt: getLocalISODate(), 
-                    createdBy: currentUser.name
-                });
+                await window.setDoc(window.doc(window.firebaseDB, "users", newCred.user.uid), { name: name, email: email, role: role, status: "active", initialPassword: pass, createdAt: getLocalISODate(), createdBy: currentUser.name });
                 await window.signOut(window.secondaryAuth);
-
-                status.innerText = `Success! Account created for ${name}.`; 
-                status.style.background = "#D1FAE5"; 
-                status.style.color = "#059669"; 
-                status.style.border = "1px solid #34D399"; 
-                status.classList.remove('hidden');
-                
-                document.getElementById('newStaffName').value = ''; 
-                document.getElementById('newStaffEmail').value = ''; 
-                document.getElementById('newStaffPassword').value = '';
-                
-                // Refresh accounts table
-                loadAccounts(); 
-            } catch(error) { 
-                status.innerText = "Error: " + error.message; 
-                status.style.background = "#FEE2E2"; 
-                status.style.color = "#DC2626"; 
-                status.style.border = "1px solid #FCA5A5"; 
-                status.classList.remove('hidden'); 
-            }
-            btn.innerText = "➕ Register Account"; 
-            btn.disabled = false;
+                status.innerText = `Success! Account created.`; status.style.background = "#D1FAE5"; status.style.color = "#059669"; status.style.border = "1px solid #34D399"; status.classList.remove('hidden');
+                document.getElementById('newStaffName').value = ''; document.getElementById('newStaffEmail').value = ''; document.getElementById('newStaffPassword').value = ''; loadAccounts(); 
+            } catch(error) { status.innerText = "Error: " + error.message; status.style.background = "#FEE2E2"; status.style.color = "#DC2626"; status.style.border = "1px solid #FCA5A5"; status.classList.remove('hidden'); }
+            btn.innerText = "➕ Register Account"; btn.disabled = false;
         }
 
         async function loadAccounts() {
-            let tbody = document.querySelector('#accountsTable tbody');
-            tbody.innerHTML = '<tr><td colspan="4" class="text-center">Loading accounts...</td></tr>';
-            
+            let tbody = document.querySelector('#accountsTable tbody'); tbody.innerHTML = '<tr><td colspan="4" class="text-center">Loading accounts...</td></tr>';
             try {
                 const querySnapshot = await window.getDocs(window.collection(window.firebaseDB, "users"));
                 tbody.innerHTML = '';
-                
                 querySnapshot.forEach((docSnap) => {
-                    let d = docSnap.data();
-                    let uid = docSnap.id;
-                    
-                    let statBadge = d.status === 'active' 
-                        ? `<span class="badge badge-user">Active</span>` 
-                        : `<span class="badge badge-role">Pending</span>`;
-                        
-                    let roleStr = d.role === 'admin' ? `Admin` : `Staff`;
-                    
+                    let d = docSnap.data(), uid = docSnap.id;
+                    let statBadge = d.status === 'active' ? `<span class="badge badge-user">Active</span>` : `<span class="badge badge-role">Pending</span>`;
                     let actions = '';
-                    if(d.status === 'pending') {
-                        actions += `<button class="btn btn-sm btn-success" style="margin-right:4px;" onclick="approveUser('${uid}')">Approve</button>`;
-                    }
-                    if(currentUser.uid !== uid) {
-                        actions += `<button class="btn btn-sm btn-danger" onclick="deleteUser('${uid}')">Delete</button>`;
-                    } else {
-                        actions += `<span style="font-size:11px; color:gray;">(You)</span>`;
-                    }
-
+                    if(d.status === 'pending') actions += `<button class="btn btn-sm btn-success" style="margin-right:4px;" onclick="approveUser('${uid}')">Approve</button>`;
+                    if(currentUser.uid !== uid) actions += `<button class="btn btn-sm btn-danger" onclick="deleteUser('${uid}')">Delete</button>`; else actions += `<span style="font-size:11px; color:gray;">(You)</span>`;
                     tbody.innerHTML += `<tr>
-                        <td>
-                            <strong>${d.name}</strong><br>
-                            <span style="font-size:11px; color:gray;">${d.createdAt ? d.createdAt.split('T')[0] : ''}</span>
-                        </td>
-                        <td>
-                            ${d.email}<br>
-                            <span style="font-size:11px; color:var(--primary); font-weight:700;">Pass: ${d.initialPassword || 'Hidden'}</span>
-                        </td>
-                        <td>${statBadge} <span style="font-size:12px; margin-left:4px;">${roleStr}</span></td>
+                        <td><strong>${d.name}</strong><br><span style="font-size:11px; color:gray;">${d.createdAt ? d.createdAt.split('T')[0] : ''}</span></td>
+                        <td>${d.email}<br><span style="font-size:11px; color:var(--primary); font-weight:700;">Pass: ${d.initialPassword || 'Hidden'}</span></td>
+                        <td>${statBadge} <span style="font-size:12px; margin-left:4px;">${d.role === 'admin' ? `Admin` : `Staff`}</span></td>
                         <td class="text-center">${actions}</td>
                     </tr>`;
                 });
-            } catch(e) { 
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center" style="color:var(--danger)">Error: ${e.message}</td></tr>`; 
-            }
+            } catch(e) { tbody.innerHTML = `<tr><td colspan="4" class="text-center" style="color:var(--danger)">Error: ${e.message}</td></tr>`; }
         }
 
-        async function approveUser(uid) {
-            if(confirm("Approve this account to grant login access?")) {
-                try {
-                    await window.updateDoc(window.doc(window.firebaseDB, "users", uid), { status: "active" });
-                    alert("Account approved!"); 
-                    loadAccounts();
-                } catch(e) { 
-                    alert("Error approving: " + e.message); 
-                }
-            }
-        }
-
-        async function deleteUser(uid) {
-            if(confirm("WARNING: This will permanently revoke the user's access. Proceed?")) {
-                try {
-                    await window.deleteDoc(window.doc(window.firebaseDB, "users", uid));
-                    alert("Account access revoked and deleted from database."); 
-                    loadAccounts();
-                } catch(e) { 
-                    alert("Error deleting: " + e.message); 
-                }
-            }
-        }
+        async function approveUser(uid) { if(confirm("Approve account?")) { try { await window.updateDoc(window.doc(window.firebaseDB, "users", uid), { status: "active" }); alert("Approved!"); loadAccounts(); } catch(e) { alert("Error: " + e.message); } } }
+        async function deleteUser(uid) { if(confirm("WARNING: Revoke access?")) { try { await window.deleteDoc(window.doc(window.firebaseDB, "users", uid)); alert("Deleted."); loadAccounts(); } catch(e) { alert("Error: " + e.message); } } }
 
         // ==========================================
-        // 6. CLINIC CORE OPERATIONS & LOGIC
+        // 6. CORE UI RENDERING
         // ==========================================
-        function updateUI() {
-            let sel = document.getElementById('transProduct'); 
-            sel.innerHTML = '';
-            
-            inventory.forEach(i => {
-                let opt = document.createElement('option'); 
-                opt.value = i.id;
-                opt.text = `${i.name} - ₱${i.price} (Stock: ${i.stock===999?'Unli':i.stock})`;
-                if(i.stock<=0 && i.stock!==999) opt.disabled = true;
-                sel.appendChild(opt);
-            });
+        function toggleNewItemFields() {
+            let type = document.getElementById('newItemType').value;
+            if(type === 'service') {
+                document.getElementById('costField').classList.add('hidden');
+                document.getElementById('stockField').classList.add('hidden');
+            } else {
+                document.getElementById('costField').classList.remove('hidden');
+                document.getElementById('stockField').classList.remove('hidden');
+            }
+        }
 
-            let invTb = document.querySelector('#inventoryTable tbody'); 
-            invTb.innerHTML = '';
+        function renderUI() {
+            // Render Transact Split Multi-Select List
+            let pl = document.getElementById('transProductList'); 
+            pl.innerHTML = '';
             
+            if(inventory.length > 0) {
+                pl.innerHTML += `<div class="list-header">📦 Products</div>`;
+                inventory.forEach(i => {
+                    let disabled = (i.stock <= 0) ? 'disabled' : '';
+                    let opacityClass = disabled ? 'opacity-50' : '';
+                    pl.innerHTML += `
+                        <label class="product-item ${opacityClass}">
+                            <input type="checkbox" name="selectedItems" value="prod_${i.id}" ${disabled}>
+                            <div class="product-info">
+                                <span class="product-name">${i.name}</span><span class="product-meta">₱${i.price.toFixed(2)} | Stock: ${i.stock}</span>
+                            </div>
+                        </label>`;
+                });
+            }
+            
+            if(services.length > 0) {
+                pl.innerHTML += `<div class="list-header">🩺 Services</div>`;
+                services.forEach(s => {
+                    pl.innerHTML += `
+                        <label class="product-item">
+                            <input type="checkbox" name="selectedItems" value="serv_${s.id}">
+                            <div class="product-info">
+                                <span class="product-name">${s.name}</span><span class="product-meta">Fee: ₱${s.price.toFixed(2)}</span>
+                            </div>
+                        </label>`;
+                });
+            }
+
+            // Render Inventory Table
+            let invTb = document.querySelector('#inventoryTable tbody'); invTb.innerHTML = '';
             inventory.forEach(i => {
                 invTb.innerHTML += `<tr>
-                    <td><strong>${i.name}</strong></td>
-                    <td class="admin-only ${currentUser.role==='admin'?'':'hidden'}">₱${i.cost}</td>
+                    <td><strong>${i.name}</strong></td><td class="admin-only ${currentUser.role==='admin'?'':'hidden'}">₱${i.cost}</td>
                     <td style="color:var(--primary); font-weight:700;">₱${i.price}</td>
                     <td class="admin-only ${currentUser.role==='admin'?'':'hidden'}" style="color:var(--secondary); font-weight:700;">₱${i.price - i.cost}</td>
-                    <td><span class="badge ${i.stock<=0?'badge-role':'badge-user'}">${i.stock===999?'Unli':i.stock}</span></td>
+                    <td><span class="badge ${i.stock<=0?'badge-role':'badge-user'}">${i.stock}</span></td>
                     <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-center">
                         <button class="btn btn-sm btn-info" onclick="addStock(${i.id})">➕</button>
                         <button class="btn btn-sm btn-warning" onclick="editProduct(${i.id})">✏️</button>
                         <button class="btn btn-sm btn-danger" onclick="deleteProduct(${i.id})">🗑️</button>
-                    </td>
-                </tr>`;
+                    </td></tr>`;
+            });
+            
+            // Render Services Table
+            let srvTb = document.querySelector('#servicesTable tbody'); srvTb.innerHTML = '';
+            services.forEach(s => {
+                srvTb.innerHTML += `<tr>
+                    <td><strong>${s.name}</strong></td>
+                    <td style="color:var(--primary); font-weight:700;">₱${s.price}</td>
+                    <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-center">
+                        <button class="btn btn-sm btn-warning" onclick="editService(${s.id})">✏️</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteService(${s.id})">🗑️</button>
+                    </td></tr>`;
             });
 
-            let tot = 0; 
-            for(let k in finance){ 
-                document.getElementById(`fin-${k}`).innerText='₱'+finance[k].toFixed(2); 
-                tot+=finance[k]; 
-            }
+            // Till
+            let tot = 0; for(let k in finance){ document.getElementById(`fin-${k}`).innerText='₱'+finance[k].toFixed(2); tot+=finance[k]; }
             document.getElementById('fin-TOTAL').innerText = '₱'+tot.toFixed(2);
 
-            if(currentUser.role === 'admin') { 
-                // Ensure Date Picker has a value before calculating
-                if (!document.getElementById('dashDateFilter').value) {
-                    document.getElementById('dashDateFilter').value = getLocalISODate().split('T')[0];
-                }
-                calculateReports(); 
-                renderHistory(); 
-            }
-            
-            // Sync to Firebase whenever UI updates
-            pushLiveClinicData();
+            if(currentUser.role === 'admin') { calculateReports(); renderHistory(); }
         }
 
         function processTransaction() {
-            let rawDate = document.getElementById('transDate').value;
-            let pId = parseInt(document.getElementById('transProduct').value);
-            let qty = parseInt(document.getElementById('transQty').value);
-            let method = document.getElementById('transMethod').value;
-            let disc = parseFloat(document.getElementById('transDiscount').value);
-            let cat = document.getElementById('transCategory').value;
+            let checkboxes = document.querySelectorAll('input[name="selectedItems"]:checked');
+            if(checkboxes.length === 0) return alert('Select at least one product or service.');
 
-            if(!pId || isNaN(qty) || qty<=0) return alert('Invalid entry.'); 
+            let rawDate = document.getElementById('transDate').value, qty = parseInt(document.getElementById('transQty').value), method = document.getElementById('transMethod').value, disc = parseFloat(document.getElementById('transDiscount').value), cat = document.getElementById('transCategory').value;
+            if(isNaN(qty) || qty <= 0) return alert('Invalid quantity.'); 
             
-            let p = inventory.find(i => i.id === pId);
-            
-            if(p.stock !== 999 && p.stock < qty) return alert('No stock left.');
-            if(p.stock !== 999) p.stock -= qty;
+            let selectedItems = [];
+            for(let cb of checkboxes) {
+                let [type, idStr] = cb.value.split('_');
+                let id = parseInt(idStr);
+                
+                if (type === 'prod') {
+                    let p = inventory.find(i => i.id === id);
+                    if(p.stock < qty) return alert(`Not enough stock for ${p.name}. Available: ${p.stock}`);
+                    selectedItems.push({ isService: false, ref: p });
+                } else {
+                    let s = services.find(i => i.id === id);
+                    selectedItems.push({ isService: true, ref: s });
+                }
+            }
 
-            let amt = (p.price * qty) * (1 - disc); 
-            finance[method] += amt;
-            
-            // Determine final Date (combining user selected date + current exact time)
             let timePart = getLocalISODate().split('T')[1] || "12:00:00";
             let finalDate = rawDate ? (rawDate + "T" + timePart) : getLocalISODate();
+            let totalAmt = 0; let receiptItemsHTML = [];
+
+            selectedItems.forEach(obj => {
+                let itemAmt = (obj.ref.price * qty) * (1 - disc); 
+                totalAmt += itemAmt; finance[method] += itemAmt;
+                let cost = 0;
+                
+                if(!obj.isService) {
+                    obj.ref.stock -= qty;
+                    cost = obj.ref.cost * qty;
+                }
+                
+                txHistory.push({ 
+                    id: Date.now() + Math.random(), date: finalDate, category: cat, 
+                    item: obj.ref.name, isService: obj.isService, qty: qty, method: method, 
+                    amount: itemAmt, totalCost: cost, processedBy: currentUser.name 
+                }); 
+                receiptItemsHTML.push(`<strong>${obj.ref.name}</strong> - ₱${itemAmt.toFixed(2)}`);
+            });
+
+            pushLiveClinicData(); 
             
-            let tx = { 
-                id: Date.now(), 
-                date: finalDate, 
-                category: cat, 
-                item: p.name, 
-                qty: qty, 
-                method: method, 
-                amount: amt, 
-                totalCost: (p.cost*qty), 
-                processedBy: currentUser.name 
-            };
-            
-            txHistory.push(tx); 
-            updateUI();
-            
-            // Format receipt date to show the backdated date properly
-            let receiptDateObj = new Date(finalDate);
-            document.getElementById('rcptDate').innerText = receiptDateObj.toLocaleString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }); 
-            
-            document.getElementById('rcptCategory').innerText = tx.category; 
-            document.getElementById('rcptItem').innerText = tx.item; 
-            document.getElementById('rcptQty').innerText = tx.qty;
-            document.getElementById('rcptMethod').innerText = tx.method; 
-            document.getElementById('rcptTotal').innerText = '₱' + tx.amount.toFixed(2); 
-            document.getElementById('rcptUser').innerText = tx.processedBy; 
-            
+            checkboxes.forEach(cb => cb.checked = false); document.getElementById('transQty').value = 1;
+            document.getElementById('rcptDate').innerText = new Date(finalDate).toLocaleString(); 
+            document.getElementById('rcptCategory').innerText = cat; document.getElementById('rcptItem').innerHTML = receiptItemsHTML.join('<br>'); 
+            document.getElementById('rcptQty').innerText = qty; document.getElementById('rcptMethod').innerText = method; 
+            document.getElementById('rcptTotal').innerText = '₱' + totalAmt.toFixed(2); document.getElementById('rcptUser').innerText = currentUser.name; 
             document.getElementById('receiptModalOverlay').classList.remove('hidden');
         }
 
-        function closeReceipt() { 
-            document.getElementById('receiptModalOverlay').classList.add('hidden'); 
-        }
+        function closeReceipt() { document.getElementById('receiptModalOverlay').classList.add('hidden'); }
 
         function addExpense() {
-            let rawDate = document.getElementById('expDate').value;
-            let cat = document.getElementById('expCategory').value;
-            let note = document.getElementById('expNote').value;
-            let amt = parseFloat(document.getElementById('expAmount').value);
-            
+            let rawDate = document.getElementById('expDate').value, cat = document.getElementById('expCategory').value, note = document.getElementById('expNote').value, amt = parseFloat(document.getElementById('expAmount').value);
             if(isNaN(amt) || amt <= 0) return alert('Valid amount needed.');
-            
-            let timePart = getLocalISODate().split('T')[1] || "12:00:00";
-            let finalDate = rawDate ? (rawDate + "T" + timePart) : getLocalISODate();
-            
-            expHistory.push({
-                id: Date.now(), 
-                date: finalDate, 
-                category: cat, 
-                note: note || 'N/A', 
-                amount: amt, 
-                user: currentUser.name
-            }); 
-            
-            document.getElementById('expAmount').value = ''; 
-            document.getElementById('expNote').value = ''; 
-            updateUI();
+            let timePart = getLocalISODate().split('T')[1] || "12:00:00"; let finalDate = rawDate ? (rawDate + "T" + timePart) : getLocalISODate();
+            expHistory.push({ id: Date.now(), date: finalDate, category: cat, note: note || 'N/A', amount: amt, user: currentUser.name }); 
+            document.getElementById('expAmount').value = ''; document.getElementById('expNote').value = ''; pushLiveClinicData();
         }
 
         function renderHistory() {
-            let txb = document.querySelector('#historyTable tbody'); 
-            txb.innerHTML = '';
-            
-            // Sort tx by Date (Newest first)
-            let sortedTx = [...txHistory].sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            sortedTx.forEach(t => {
-                txb.innerHTML += `<tr>
-                    <td>${t.date.split('T')[0]}</td>
-                    <td><span class="badge" style="background:#E0E7FF;color:#4338CA;">${t.category}</span></td>
-                    <td>${t.item}</td>
-                    <td>${t.qty}</td>
-                    <td>${t.method}</td>
-                    <td style="font-weight:800;">₱${t.amount.toFixed(2)}</td>
-                    <td>${t.processedBy}</td>
-                    <td class="text-center"><button class="btn btn-sm btn-danger" onclick="delTx(${t.id})">Revert</button></td>
-                </tr>`;
+            let txb = document.querySelector('#historyTable tbody'); txb.innerHTML = '';
+            [...txHistory].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(t => {
+                txb.innerHTML += `<tr><td>${t.date.split('T')[0]}</td><td><span class="badge" style="background:#E0E7FF;color:#4338CA;">${t.category}</span></td><td>${t.item}</td><td>${t.qty}</td><td>${t.method}</td><td style="font-weight:800;">₱${t.amount.toFixed(2)}</td><td>${t.processedBy}</td><td class="text-center"><button class="btn btn-sm btn-danger" onclick="delTx(${t.id})">Revert</button></td></tr>`;
             });
-            
-            let exb = document.querySelector('#expenseTable tbody'); 
-            exb.innerHTML = '';
-            
-            // Sort exp by Date (Newest first)
-            let sortedExp = [...expHistory].sort((a, b) => new Date(b.date) - new Date(a.date));
-            
-            sortedExp.forEach(e => {
-                exb.innerHTML += `<tr>
-                    <td>${e.date.split('T')[0]}</td>
-                    <td>${e.category}</td>
-                    <td>${e.note}</td>
-                    <td>${e.user}</td>
-                    <td class="text-right" style="color:var(--danger); font-weight:800;">₱${e.amount.toFixed(2)}</td>
-                    <td class="text-center"><button class="btn btn-sm btn-danger" onclick="delExp(${e.id})">🗑️</button></td>
-                </tr>`;
+            let exb = document.querySelector('#expenseTable tbody'); exb.innerHTML = '';
+            [...expHistory].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(e => {
+                exb.innerHTML += `<tr><td>${e.date.split('T')[0]}</td><td>${e.category}</td><td>${e.note}</td><td>${e.user}</td><td class="text-right" style="color:var(--danger); font-weight:800;">₱${e.amount.toFixed(2)}</td><td class="text-center"><button class="btn btn-sm btn-danger" onclick="delExp(${e.id})">🗑️</button></td></tr>`;
             });
         }
 
         // ==========================================
-        // 7. REPORTS, LOSS DETECTION & CHART.JS
+        // 7. ANALYTICS & DASHBOARD
         // ==========================================
-        
         function updateProfitDisplay(elementId, netValue) {
             let el = document.getElementById(elementId);
-            if (netValue < 0) {
-                el.innerText = 'Loss: -₱' + Math.abs(netValue).toFixed(2);
-                el.style.color = 'var(--danger)'; 
-            } else {
-                el.innerText = 'True: ₱' + netValue.toFixed(2);
-                el.style.color = 'var(--secondary)'; 
-            }
+            if (netValue < 0) { el.innerText = 'Loss: -₱' + Math.abs(netValue).toFixed(2); el.style.color = 'var(--danger)'; } 
+            else { el.innerText = 'True: ₱' + netValue.toFixed(2); el.style.color = 'var(--secondary)'; }
         }
         
         function calculateReports() {
-            // Read Date from the Date Picker Filter
             let dateInput = document.getElementById('dashDateFilter');
             if (!dateInput.value) dateInput.value = getLocalISODate().split('T')[0];
-            
-            let td = dateInput.value;          // e.g. 2026-08-15
-            let tm = td.substring(0,7);        // e.g. 2026-08
-            let ty = td.substring(0,4);        // e.g. 2026
-            
-            let dr = 0, mr = 0, yr = 0;
-            let dp = 0, mp = 0, yp = 0;
-            let de = 0, me = 0, ye = 0; 
-            
-            // Daily Demographics Only
+            let td = dateInput.value, tm = td.substring(0,7), ty = td.substring(0,4);
+            let dr = 0, mr = 0, yr = 0, dp = 0, mp = 0, yp = 0, de = 0, me = 0, ye = 0; 
             let catsDaily = { New: 0, Old: 0, PWD: 0, Senior: 0 };
-            
-            // Chart Data Prep
             let chartData = {};
+            let prodQty = 0, servQty = 0, prodRev = 0, servRev = 0;
+            let itemStats = {};
+            let dailyPatientTimestamps = new Set();
             
             txHistory.forEach(t => { 
-                let d = t.date.split('T')[0];
-                let monthStr = t.date.substring(0,7);
-                let prof = t.amount - t.totalCost; 
+                let d = t.date.split('T')[0]; let monthStr = t.date.substring(0,7); let prof = t.amount - t.totalCost; 
                 
-                // Track Demographics for FILTERED DATE only
-                if(d === td && catsDaily[t.category] !== undefined) {
-                    catsDaily[t.category]++;
-                }
-                
-                // Filtered Daily, Monthly, Yearly Revenue & Gross Profit
-                if(d === td) { dr += t.amount; dp += prof; } 
+                if(d === td) {
+                    let exactTime = t.date.split('T')[1] || t.id;
+                    if(!dailyPatientTimestamps.has(exactTime) && catsDaily[t.category] !== undefined) { catsDaily[t.category]++; dailyPatientTimestamps.add(exactTime); }
+                    dr += t.amount; dp += prof; 
+                    
+                    if(t.isService) { servQty += t.qty; servRev += t.amount; } else { prodQty += t.qty; prodRev += t.amount; }
+                    if(!itemStats[t.item]) itemStats[t.item] = { qty: 0, rev: 0 };
+                    itemStats[t.item].qty += t.qty; itemStats[t.item].rev += t.amount;
+                } 
                 if(d.startsWith(tm)) { mr += t.amount; mp += prof; } 
                 if(d.startsWith(ty)) { yr += t.amount; yp += prof; } 
-                
-                // Prepare Graph Data
                 if(d.startsWith(ty)) {
                     if(!chartData[monthStr]) chartData[monthStr] = { rev: 0, prof: 0, exp: 0 };
-                    chartData[monthStr].rev += t.amount;
-                    chartData[monthStr].prof += prof;
+                    chartData[monthStr].rev += t.amount; chartData[monthStr].prof += prof;
                 }
             });
             
             expHistory.forEach(e => { 
-                let d = e.date.split('T')[0]; 
-                let monthStr = e.date.substring(0,7);
-                
-                if(d === td) de += e.amount; 
-                if(d.startsWith(tm)) me += e.amount; 
-                if(d.startsWith(ty)) ye += e.amount; 
-                
-                // Prepare Graph Data (Deduct expenses to get True Net Profit)
-                if(d.startsWith(ty)) {
-                    if(!chartData[monthStr]) chartData[monthStr] = { rev: 0, prof: 0, exp: 0 };
-                    chartData[monthStr].exp += e.amount;
-                }
+                let d = e.date.split('T')[0]; let monthStr = e.date.substring(0,7);
+                if(d === td) de += e.amount; if(d.startsWith(tm)) me += e.amount; if(d.startsWith(ty)) ye += e.amount; 
+                if(d.startsWith(ty)) { if(!chartData[monthStr]) chartData[monthStr] = { rev: 0, prof: 0, exp: 0 }; chartData[monthStr].exp += e.amount; }
             });
 
-            // Calculate True Net Profit & Apply Visual Loss Updates
-            let dailyNet = dp - de;
-            let monthlyNet = mp - me;
-            let yearlyNet = yp - ye;
+            document.getElementById('statProdQty').innerText = prodQty; document.getElementById('statProdRev').innerText = 'Rev: ₱' + prodRev.toFixed(2);
+            document.getElementById('statServQty').innerText = servQty; document.getElementById('statServRev').innerText = 'Rev: ₱' + servRev.toFixed(2);
 
-            // Render Demographics (Filtered Date)
-            document.getElementById('countNew').innerText = catsDaily.New; 
-            document.getElementById('countOld').innerText = catsDaily.Old; 
-            document.getElementById('countPWD').innerText = catsDaily.PWD; 
-            document.getElementById('countSenior').innerText = catsDaily.Senior;
+            let topContainer = document.getElementById('topItemsContainer'); topContainer.innerHTML = '';
+            let sortedItems = Object.keys(itemStats).map(k => ({ name: k, qty: itemStats[k].qty, rev: itemStats[k].rev })).sort((a, b) => b.qty - a.qty); 
+            if(sortedItems.length === 0) topContainer.innerHTML = '<p style="color: var(--gray-600); font-size: 13px; text-align: center; margin-top: 30px;">No sales recorded.</p>';
+            else { sortedItems.slice(0, 5).forEach(item => { topContainer.innerHTML += `<div class="top-item-row"><div><div class="top-item-name">${item.name}</div><div class="top-item-qty">Sold: ${item.qty}</div></div><div class="top-item-rev">₱${item.rev.toFixed(2)}</div></div>`; }); }
+
+            document.getElementById('countNew').innerText = catsDaily.New; document.getElementById('countOld').innerText = catsDaily.Old; document.getElementById('countPWD').innerText = catsDaily.PWD; document.getElementById('countSenior').innerText = catsDaily.Senior;
+            document.getElementById('reportDaily').innerText = '₱' + dr.toFixed(2); document.getElementById('expDaily').innerText = 'Exp: ₱' + de.toFixed(2); updateProfitDisplay('profitDaily', dp - de);
+            document.getElementById('reportMonthly').innerText = '₱' + mr.toFixed(2); document.getElementById('expMonthly').innerText = 'Exp: ₱' + me.toFixed(2); updateProfitDisplay('profitMonthly', mp - me);
+            document.getElementById('reportYearly').innerText = '₱' + yr.toFixed(2); document.getElementById('expYearly').innerText = 'Exp: ₱' + ye.toFixed(2); updateProfitDisplay('profitYearly', yp - ye);
             
-            // Render Revenues & Expenses
-            document.getElementById('reportDaily').innerText = '₱' + dr.toFixed(2); 
-            document.getElementById('expDaily').innerText = 'Exp: ₱' + de.toFixed(2); 
-            updateProfitDisplay('profitDaily', dailyNet);
-            
-            document.getElementById('reportMonthly').innerText = '₱' + mr.toFixed(2); 
-            document.getElementById('expMonthly').innerText = 'Exp: ₱' + me.toFixed(2); 
-            updateProfitDisplay('profitMonthly', monthlyNet);
-            
-            document.getElementById('reportYearly').innerText = '₱' + yr.toFixed(2); 
-            document.getElementById('expYearly').innerText = 'Exp: ₱' + ye.toFixed(2); 
-            updateProfitDisplay('profitYearly', yearlyNet);
-            
-            // Process Graph Data
-            for(let key in chartData) {
-                chartData[key].prof = chartData[key].prof - chartData[key].exp; // True Net
-            }
+            for(let key in chartData) chartData[key].prof -= chartData[key].exp; 
             renderChart(chartData);
         }
 
         function renderChart(dataMap) {
             let ctx = document.getElementById('monthlyChart').getContext('2d');
-            let labels = Object.keys(dataMap).sort(); // Sort YYYY-MM
-            let revData = labels.map(l => dataMap[l].rev);
-            let profData = labels.map(l => dataMap[l].prof);
-
-            let displayLabels = labels.map(l => {
-                let d = new Date(l + "-01");
-                return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-            });
-
-            // Destroy existing chart before re-drawing
+            let labels = Object.keys(dataMap).sort(); 
+            let revData = labels.map(l => dataMap[l].rev), profData = labels.map(l => dataMap[l].prof);
+            let displayLabels = labels.map(l => new Date(l + "-01").toLocaleDateString('en-US', { month: 'short', year: 'numeric' }));
             if(dashboardChart) dashboardChart.destroy(); 
-
             dashboardChart = new Chart(ctx, {
                 type: 'bar',
-                data: {
-                    labels: displayLabels.length > 0 ? displayLabels : ["No Data"],
-                    datasets: [
-                        {
-                            label: 'Total Revenue',
-                            data: revData.length > 0 ? revData : [0],
-                            backgroundColor: '#4F46E5', // Primary
-                            borderRadius: 4
-                        },
-                        {
-                            label: 'True Net Profit/Loss',
-                            data: profData.length > 0 ? profData : [0],
-                            backgroundColor: profData.map(v => v < 0 ? '#EF4444' : '#10B981'), // Red if Loss, Green if Profit
-                            borderRadius: 4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: { 
-                        y: { beginAtZero: true, ticks: { callback: function(value) { return '₱' + value; } } } 
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) label += ': ';
-                                    if (context.parsed.y !== null) {
-                                        label += '₱' + context.parsed.y.toFixed(2);
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
+                data: { labels: displayLabels.length > 0 ? displayLabels : ["No Data"], datasets: [{ label: 'Revenue', data: revData.length > 0 ? revData : [0], backgroundColor: '#4F46E5', borderRadius: 4 }, { label: 'Net Profit/Loss', data: profData.length > 0 ? profData : [0], backgroundColor: profData.map(v => v < 0 ? '#EF4444' : '#10B981'), borderRadius: 4 }] },
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: v => '₱' + v } } } }
             });
         }
 
         // ==========================================
-        // 8. ADD/EDIT/DELETE DATA & EXPORT
+        // 8. DATA MANAGEMENT
         // ==========================================
-
-        function addProduct() {
-            let n = document.getElementById('newProdName').value;
-            let c = parseFloat(document.getElementById('newProdCost').value);
-            let p = parseFloat(document.getElementById('newProdPrice').value);
-            let s = parseInt(document.getElementById('newProdStock').value);
+        function addItem() {
+            let type = document.getElementById('newItemType').value;
+            let n = document.getElementById('newProdName').value, p = parseFloat(document.getElementById('newProdPrice').value);
             
-            if(!n || isNaN(c) || isNaN(p) || isNaN(s)) return alert('Complete all details.');
-            
-            inventory.push({
-                id: Date.now(), 
-                name: n, 
-                cost: c, 
-                price: p, 
-                stock: s
-            }); 
-            updateUI();
-            
-            document.getElementById('newProdName').value = ''; 
-            document.getElementById('newProdCost').value = ''; 
-            document.getElementById('newProdPrice').value = ''; 
-            document.getElementById('newProdStock').value = '';
+            if(type === 'product') {
+                let c = parseFloat(document.getElementById('newProdCost').value), s = parseInt(document.getElementById('newProdStock').value);
+                if(!n || isNaN(c) || isNaN(p) || isNaN(s)) return alert('Complete all details.');
+                inventory.push({ id: Date.now(), name: n, cost: c, price: p, stock: s });
+            } else {
+                if(!n || isNaN(p)) return alert('Complete all details.');
+                services.push({ id: Date.now(), name: n, price: p });
+            }
+            pushLiveClinicData();
+            document.getElementById('newProdName').value = ''; document.getElementById('newProdCost').value = ''; document.getElementById('newProdPrice').value = ''; document.getElementById('newProdStock').value = '';
         }
 
-        function addStock(id) { 
-            let q = parseInt(prompt("Quantity to add:")); 
-            if(!isNaN(q) && q > 0) { 
-                inventory.find(i => i.id === id).stock += q; 
-                updateUI(); 
-            } 
-        }
-
-        function editProduct(id) { 
-            let p = inventory.find(i => i.id === id); 
-            p.price = parseFloat(prompt("New SRP:", p.price)) || p.price; 
-            p.cost = parseFloat(prompt("New Cost:", p.cost)) || p.cost; 
-            updateUI(); 
-        }
-
-        function deleteProduct(id) { 
-            if(confirm('Delete this item?')) { 
-                inventory = inventory.filter(i => i.id !== id); 
-                updateUI(); 
-            } 
-        }
-
+        function addStock(id) { let q = parseInt(prompt("Quantity to add:")); if(!isNaN(q) && q > 0) { inventory.find(i => i.id === id).stock += q; pushLiveClinicData(); } }
+        function editProduct(id) { let p = inventory.find(i => i.id === id); p.price = parseFloat(prompt("New SRP:", p.price)) || p.price; p.cost = parseFloat(prompt("New Cost:", p.cost)) || p.cost; pushLiveClinicData(); }
+        function editService(id) { let s = services.find(i => i.id === id); s.price = parseFloat(prompt("New Fee:", s.price)) || s.price; pushLiveClinicData(); }
+        function deleteProduct(id) { if(confirm('Delete product?')) { inventory = inventory.filter(i => i.id !== id); pushLiveClinicData(); } }
+        function deleteService(id) { if(confirm('Delete service?')) { services = services.filter(i => i.id !== id); pushLiveClinicData(); } }
+        
         function delTx(id) { 
-            if(confirm('Revert? Revenue will be deducted and stock returned.')) { 
+            if(confirm('Revert? Revenue will be deducted and product stock returned.')) { 
                 let x = txHistory.find(t => t.id === id); 
                 finance[x.method] -= x.amount; 
-                
-                let p = inventory.find(i => i.name === x.item); 
-                if(p && p.stock !== 999) p.stock += x.qty; 
-                
-                txHistory = txHistory.filter(t => t.id !== id); 
-                updateUI(); 
+                if(!x.isService) { let p = inventory.find(i => i.name === x.item); if(p) p.stock += x.qty; }
+                txHistory = txHistory.filter(t => t.id !== id); pushLiveClinicData(); 
             } 
         }
+        function delExp(id) { if(confirm('Delete expense?')) { expHistory = expHistory.filter(e => e.id !== id); pushLiveClinicData(); } }
 
-        function delExp(id) { 
-            if(confirm('Delete expense?')) { 
-                expHistory = expHistory.filter(e => e.id !== id); 
-                updateUI(); 
-            } 
-        }
-
+        // CSV Export
         let currentBlobUrl = null;
-        
         function prepareExport() {
-            let btn = document.getElementById('exportBtn'); 
-            btn.disabled = true; 
-            let counter = 3; 
-            btn.innerText = `⏳ Preparing Data... ${counter}`;
-            
-            let interval = setInterval(() => {
-                counter--; 
-                if (counter > 0) {
-                    btn.innerText = `⏳ Preparing Data... ${counter}`;
-                } else { 
-                    clearInterval(interval); 
-                    generateBlob(); 
-                    btn.innerText = '✅ Click Here to Download CSV'; 
-                    btn.classList.replace('btn-warning', 'btn-success'); 
-                    btn.disabled = false; 
-                    btn.onclick = triggerDownload; 
-                }
-            }, 1000);
+            let btn = document.getElementById('exportBtn'); btn.disabled = true; let counter = 3; btn.innerText = `⏳ Preparing Data... ${counter}`;
+            let interval = setInterval(() => { counter--; if (counter > 0) btn.innerText = `⏳ Preparing Data... ${counter}`; else { clearInterval(interval); generateBlob(); btn.innerText = '✅ Click Here to Download CSV'; btn.classList.replace('btn-warning', 'btn-success'); btn.disabled = false; btn.onclick = triggerDownload; } }, 1000);
         }
-
         function generateBlob() {
-            let csv = "--- CLINIC SYSTEM FULL REPORT ---\n\n1. PAYMENT TILL SUMMARY\nMethod,Amount\n"; 
-            let totalTill = 0;
+            let csv = "--- CLINIC SYSTEM FULL REPORT ---\n\n1. PAYMENT TILL SUMMARY\nMethod,Amount\n"; let totalTill = 0;
+            for(let key in finance) { csv += `${key.replace('_', ' ')},${finance[key]}\n`; totalTill += finance[key]; } csv += `TOTAL TILL,${totalTill}\n\n`;
             
-            for(let key in finance) { 
-                csv += `${key.replace('_', ' ')},${finance[key]}\n`; 
-                totalTill += finance[key]; 
-            }
-            csv += `TOTAL TILL,${totalTill}\n\n`;
-            
-            csv += "2. PATIENT DEMOGRAPHICS (All-Time)\nCategory,Total Visits\n";
-            let cats = { 'New': 0, 'Old': 0, 'PWD': 0, 'Senior': 0 }; 
-            
-            txHistory.forEach(tx => { 
-                if(cats[tx.category] !== undefined) cats[tx.category]++; 
-            });
-            for(let k in cats) { 
-                csv += `${k},${cats[k]}\n`; 
-            }
-            
-            csv += "\n3. INVENTORY & PROFITABILITY\nProduct Name,Cost Price,SRP,Profit Per Item,Current Stock\n";
-            inventory.forEach(item => { 
-                csv += `${item.name},${item.cost || 0},${item.price},${item.price - (item.cost || 0)},${item.stock === 999 ? 'Unlimited' : item.stock}\n`; 
-            });
+            csv += "2. INVENTORY (Products)\nProduct Name,Cost Price,SRP,Stock\n";
+            inventory.forEach(item => { csv += `${item.name},${item.cost},${item.price},${item.stock}\n`; });
+            csv += "\n3. SERVICES CATALOG\nService Name,Fee\n";
+            services.forEach(item => { csv += `${item.name},${item.price}\n`; });
             
             csv += "\n4. EXPENSES LOG\nDate,Category,Note,Amount,Logged By\n";
-            expHistory.forEach(exp => { 
-                csv += `${exp.date.split('T')[0]},${exp.category},${exp.note},${exp.amount},${exp.user}\n`; 
-            });
+            expHistory.forEach(exp => { csv += `${exp.date.split('T')[0]},${exp.category},${exp.note},${exp.amount},${exp.user}\n`; });
             
-            csv += "\n5. TRANSACTION HISTORY\nDate,Category,Item,Quantity,Payment Method,Total Cost,Total Revenue(SRP),Gross Profit,Processed By\n";
-            txHistory.forEach(tx => { 
-                csv += `${tx.date.split('T')[0]},${tx.category || 'N/A'},${tx.item},${tx.qty},${tx.method.replace('_', ' ')},${tx.totalCost || 0},${tx.amount},${tx.amount - (tx.totalCost || 0)},${tx.processedBy}\n`; 
-            });
+            csv += "\n5. TRANSACTION HISTORY\nDate,Category,Type,Item,Quantity,Payment Method,Total Cost,Total Revenue,Gross Profit,Processed By\n";
+            txHistory.forEach(tx => { csv += `${tx.date.split('T')[0]},${tx.category || 'N/A'},${tx.isService ? 'Service':'Product'},${tx.item},${tx.qty},${tx.method.replace('_', ' ')},${tx.totalCost || 0},${tx.amount},${tx.amount - (tx.totalCost || 0)},${tx.processedBy}\n`; });
 
             let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            if(currentBlobUrl) URL.revokeObjectURL(currentBlobUrl); 
-            currentBlobUrl = URL.createObjectURL(blob);
+            if(currentBlobUrl) URL.revokeObjectURL(currentBlobUrl); currentBlobUrl = URL.createObjectURL(blob);
         }
-
         function triggerDownload() {
-            let link = document.createElement("a"); 
-            link.href = currentBlobUrl; 
-            link.download = "Clinic_Master_Report.csv"; 
-            document.body.appendChild(link); 
-            link.click(); 
-            document.body.removeChild(link);
-            
-            let btn = document.getElementById('exportBtn'); 
-            btn.innerText = '⬇️ Generate Full System Report (CSV)'; 
-            btn.classList.replace('btn-success', 'btn-warning'); 
-            btn.onclick = prepareExport;
+            let link = document.createElement("a"); link.href = currentBlobUrl; link.download = "Clinic_Master_Report.csv"; document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            let btn = document.getElementById('exportBtn'); btn.innerText = '⬇️ Generate Full System Report (CSV)'; btn.classList.replace('btn-success', 'btn-warning'); btn.onclick = prepareExport;
         }
-
     </script>
 </body>
 </html>
