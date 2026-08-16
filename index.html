@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,8 +7,10 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
+        /* CSS VARIABLES FOR LIGHT & DARK THEME */
         :root {
             --primary: #4F46E5;
             --primary-gradient: linear-gradient(135deg, #4F46E5, #4338CA);
@@ -18,21 +20,41 @@
             --danger-hover: #DC2626;
             --warning: #F59E0B;
             --info: #3B82F6;
+            
+            /* LIGHT THEME DEFAULTS */
             --dark: #111827;
             --gray-900: #1F2937;
             --gray-600: #4B5563;
             --gray-300: #D1D5DB;
             --gray-100: #F3F4F6;
-            --bg-color: #FFFFFF;
+            --bg-color: #F8FAFC;
             --surface: #FFFFFF;
+            --table-header: #F1F5F9;
+            --table-hover: #F8FAFC;
+            
             --radius: 12px;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 10px 20px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
-        *, *::before, *::after {
-            box-sizing: border-box;
-            max-width: 100vw;
+        /* DARK THEME OVERRIDES */
+        [data-theme="dark"] {
+            --dark: #F8FAFC;
+            --gray-900: #E2E8F0;
+            --gray-600: #94A3B8;
+            --gray-300: #334155;
+            --gray-100: #1E293B;
+            --bg-color: #0F172A;
+            --surface: #1E293B;
+            --table-header: #0F172A;
+            --table-hover: #334155;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 20px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+        }
+
+        *, *::before, *::after { 
+            box-sizing: border-box; 
+            max-width: 100vw; 
         }
         
         body { 
@@ -43,6 +65,7 @@
             padding: 0; 
             overflow-x: hidden; 
             -webkit-font-smoothing: antialiased;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .container { 
@@ -58,15 +81,26 @@
             padding: 24px; 
             margin-bottom: 24px; 
             box-shadow: var(--shadow); 
-            width: 100%;
-            border: 1px solid var(--gray-300);
-            transition: box-shadow 0.3s ease;
+            width: 100%; 
+            border: 1px solid var(--gray-300); 
+            transition: all 0.3s ease;
         }
-        .card:hover { box-shadow: var(--shadow-lg); }
-
-        h1, h2, h3, h4 { color: var(--dark); margin-top: 0; font-weight: 700; letter-spacing: -0.02em; }
         
-        .form-group { margin-bottom: 16px; width: 100%; }
+        .card:hover { 
+            box-shadow: var(--shadow-lg); 
+        }
+
+        h1, h2, h3, h4 { 
+            color: var(--dark); 
+            margin-top: 0; 
+            font-weight: 700; 
+            letter-spacing: -0.02em; 
+        }
+        
+        .form-group { 
+            margin-bottom: 16px; 
+            width: 100%; 
+        }
         
         label { 
             display: block; 
@@ -81,98 +115,175 @@
             padding: 12px 16px; 
             border: 1px solid var(--gray-300); 
             border-radius: 8px; 
-            background-color: var(--gray-100);
-            font-size: 14px;
-            color: var(--gray-900);
+            background-color: var(--gray-100); 
+            font-size: 14px; 
+            color: var(--gray-900); 
             font-weight: 500;
-            transition: all 0.2s ease;
-            font-family: 'Inter', sans-serif;
+            transition: all 0.2s ease; 
+            font-family: 'Inter', sans-serif; 
             appearance: none; 
         }
         
         select {
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236B7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-            background-repeat: no-repeat;
-            background-position: right 12px top 50%;
-            background-size: 12px auto;
+            background-repeat: no-repeat; 
+            background-position: right 12px top 50%; 
+            background-size: 12px auto; 
             padding-right: 40px;
         }
         
         input:focus:not([type="checkbox"]), select:focus { 
-            outline: none;
-            border-color: var(--primary);
-            background-color: var(--surface);
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+            outline: none; 
+            border-color: var(--primary); 
+            background-color: var(--surface); 
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15); 
         }
         
-        /* Premium Custom Multi-Select with Inline Quantity & Serial */
-        .product-list {
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid var(--gray-300);
-            border-radius: 8px;
-            background: var(--surface);
-        }
-        .list-header {
-            background: #F1F5F9;
-            padding: 10px 16px;
-            font-size: 11px;
-            font-weight: 800;
-            color: var(--gray-600);
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            border-bottom: 1px solid var(--gray-300);
-            border-top: 1px solid var(--gray-300);
-            position: sticky;
-            top: 0;
-            z-index: 1;
-        }
-        .list-header:first-child { border-top: none; }
-        
-        .product-item {
-            display: flex;
-            flex-direction: column;
-            padding: 16px;
-            border-bottom: 1px solid var(--gray-100);
-            transition: background 0.2s;
-            margin: 0;
-            cursor: pointer;
-        }
-        .product-item:last-child { border-bottom: none; }
-        .product-item:hover { background: #F8FAFC; }
-        
-        .item-left { display: flex; align-items: center; width: 100%; justify-content: space-between;}
-        .item-left input[type="checkbox"] {
-            width: 22px; height: 22px; margin-right: 14px; cursor: pointer; accent-color: var(--primary);
-        }
-        .product-info { display: flex; flex-direction: column; flex: 1; }
-        .product-name { font-weight: 700; color: var(--dark); font-size: 14px; }
-        .product-meta { font-size: 12px; color: var(--gray-600); font-weight: 600; margin-top: 2px;}
-        
-        /* Advanced Nested Form Styling for Checked Items */
-        .item-inputs {
-            background: #F8FAFC;
-            padding: 14px;
-            border-radius: 8px;
-            border: 1px solid var(--gray-300);
-            margin-top: 12px;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-left: 36px;
-            width: calc(100% - 36px);
+        .product-list { 
+            max-height: 450px; 
+            overflow-y: auto; 
+            border: 1px solid var(--gray-300); 
+            border-radius: 8px; 
+            background: var(--surface); 
         }
         
-        .inline-qty-input { width: 90px !important; padding: 10px !important; text-align: center; font-weight: bold !important; font-size: 14px !important; }
-        .inline-serial-input { flex: 1 !important; padding: 10px !important; font-weight: bold !important; font-size: 14px !important; }
+        .list-header { 
+            background: var(--table-header); 
+            padding: 10px 16px; 
+            font-size: 12px; 
+            font-weight: 800; 
+            color: var(--primary); 
+            letter-spacing: 0.1em; 
+            text-transform: uppercase; 
+            border-bottom: 1px solid var(--gray-300); 
+            border-top: 1px solid var(--gray-300); 
+            position: sticky; 
+            top: 0; 
+            z-index: 1; 
+        }
         
-        .inline-qty-input:disabled, .inline-serial-input:disabled { background: var(--gray-100); opacity: 0.5; border: 1px dashed var(--gray-300); }
-        .opacity-50 { opacity: 0.5; pointer-events: none; }
+        .list-header:first-child { 
+            border-top: none; 
+        }
+        
+        .product-item { 
+            display: flex; 
+            flex-direction: column; 
+            padding: 16px; 
+            border-bottom: 1px solid var(--gray-100); 
+            transition: background 0.2s; 
+            margin: 0; 
+            cursor: pointer; 
+        }
+        
+        .product-item:last-child { 
+            border-bottom: none; 
+        }
+        
+        .product-item:hover { 
+            background: var(--table-hover); 
+        }
+        
+        .item-left { 
+            display: flex; 
+            align-items: center; 
+            width: 100%; 
+            justify-content: space-between;
+        }
+        
+        .item-left input[type="checkbox"] { 
+            width: 22px; 
+            height: 22px; 
+            margin-right: 14px; 
+            cursor: pointer; 
+            accent-color: var(--primary); 
+        }
+        
+        .product-info { 
+            display: flex; 
+            flex-direction: column; 
+            flex: 1; 
+        }
+        
+        .product-name { 
+            font-weight: 800; 
+            color: var(--dark); 
+            font-size: 15px; 
+        }
+        
+        .product-meta { 
+            font-size: 12px; 
+            color: var(--gray-600); 
+            font-weight: 600; 
+            margin-top: 4px;
+        }
+        
+        .item-inputs { 
+            background: var(--gray-100); 
+            padding: 16px; 
+            border-radius: 12px; 
+            border: 2px solid var(--primary); 
+            margin-top: 12px; 
+            width: calc(100% - 36px); 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            margin-left: 36px; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); 
+        }
+        
+        .item-inputs label { 
+            color: var(--primary); 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            font-size: 11px; 
+        }
+        
+        .inline-qty-input { 
+            width: 100px !important; 
+            padding: 12px !important; 
+            text-align: center; 
+            font-weight: 800 !important; 
+            font-size: 16px !important; 
+            border-color: var(--primary) !important; 
+            color: var(--primary) !important;
+        }
+        
+        .inline-serial-input { 
+            flex: 1 !important; 
+            padding: 12px !important; 
+            font-weight: 800 !important; 
+            font-size: 14px !important; 
+            border-color: var(--primary) !important;
+        }
+        
+        .inline-qty-input:disabled, .inline-serial-input:disabled { 
+            background: var(--gray-100); 
+            opacity: 0.5; 
+            border: 1px dashed var(--gray-300) !important; 
+            color: var(--gray-600) !important;
+        }
+        
+        .opacity-50 { 
+            opacity: 0.5; 
+            pointer-events: none; 
+        }
 
         .btn { 
-            padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: 700; font-size: 14px;
-            transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            color: white; 
+            font-weight: 700; 
+            font-size: 14px; 
+            transition: all 0.2s ease; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 8px; 
+            width: 100%; 
         }
         
         .btn:active { transform: translateY(1px); }
@@ -184,32 +295,78 @@
         .btn-danger:hover { background-color: var(--danger-hover); }
         .btn-warning { background-color: var(--warning); color: #fff; }
         .btn-info { background-color: var(--info); }
-        .btn-dark { background-color: var(--dark); color: #fff; }
+        .btn-dark { background-color: var(--dark); color: var(--surface); border: 1px solid var(--gray-300); }
         .btn-sm { padding: 8px 12px; font-size: 12px; width: auto; }
         .btn-outline { background-color: transparent; border: 2px solid var(--gray-300); color: var(--gray-900); }
         .btn-outline:hover { background-color: var(--gray-100); }
         
-        .table-wrapper {
-            width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
-            border-radius: 8px; border: 1px solid var(--gray-300); background: var(--surface);
+        .theme-toggle { 
+            background: var(--gray-100); 
+            border: 1px solid var(--gray-300); 
+            border-radius: 20px; 
+            padding: 6px 12px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 6px; 
+            font-weight: bold; 
+            color: var(--dark); 
+            transition: all 0.3s; 
+        }
+        .theme-toggle:hover { background: var(--gray-300); }
+
+        .table-wrapper { 
+            width: 100%; 
+            overflow-x: auto; 
+            -webkit-overflow-scrolling: touch; 
+            border-radius: 8px; 
+            border: 1px solid var(--gray-300); 
+            background: var(--surface); 
         }
         
-        table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 600px; }
-        th, td { border-bottom: 1px solid var(--gray-100); padding: 16px; text-align: left; white-space: nowrap; }
-        th { background-color: #F8FAFC; font-weight: 800; color: var(--gray-600); text-transform: uppercase; font-size: 11px; letter-spacing: 0.05em; }
-        tbody tr:hover { background-color: #F8FAFC; }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 14px; 
+            min-width: 600px; 
+        }
+        
+        th, td { 
+            border-bottom: 1px solid var(--gray-100); 
+            padding: 16px; 
+            text-align: left; 
+            white-space: nowrap; 
+        }
+        
+        th { 
+            background-color: var(--table-header); 
+            font-weight: 800; 
+            color: var(--gray-600); 
+            text-transform: uppercase; 
+            font-size: 11px; 
+            letter-spacing: 0.05em; 
+        }
+        
+        tbody tr:hover { background-color: var(--table-hover); }
         .text-right { text-align: right; }
         .text-center { text-align: center; }
         
         .hidden { display: none !important; }
-        
         .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
         .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
         
         .header-bar { 
-            display: flex; justify-content: space-between; align-items: center; background: var(--surface); 
-            padding: 20px 24px; border-radius: var(--radius); margin-bottom: 24px; box-shadow: var(--shadow); border: 1px solid var(--gray-300);
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: var(--surface); 
+            padding: 20px 24px; 
+            border-radius: var(--radius); 
+            margin-bottom: 24px; 
+            box-shadow: var(--shadow); 
+            border: 1px solid var(--gray-300); 
+            transition: all 0.3s; 
         }
         
         .header-bar h2 { margin: 0; font-size: 20px; }
@@ -218,14 +375,34 @@
         .badge-role { background-color: #FEF3C7; color: #D97706; }
         .badge-user { background-color: #D1FAE5; color: #059669; }
 
-        .nav-tabs {
-            display: flex; gap: 12px; background: var(--surface); padding: 12px; border-radius: var(--radius); 
-            margin-bottom: 24px; overflow-x: auto; box-shadow: var(--shadow); border: 1px solid var(--gray-300); -webkit-overflow-scrolling: touch;
+        .nav-tabs { 
+            display: flex; 
+            gap: 12px; 
+            background: var(--surface); 
+            padding: 12px; 
+            border-radius: var(--radius); 
+            margin-bottom: 24px; 
+            overflow-x: auto; 
+            box-shadow: var(--shadow); 
+            border: 1px solid var(--gray-300); 
+            -webkit-overflow-scrolling: touch; 
+            transition: all 0.3s; 
         }
         
-        .nav-btn {
-            flex: 1; padding: 12px 20px; text-align: center; background: transparent; border: none; border-radius: 8px; cursor: pointer; 
-            white-space: nowrap; font-weight: 700; color: var(--gray-600); transition: all 0.2s; min-width: fit-content; font-size: 14px;
+        .nav-btn { 
+            flex: 1; 
+            padding: 12px 20px; 
+            text-align: center; 
+            background: transparent; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            white-space: nowrap; 
+            font-weight: 700; 
+            color: var(--gray-600); 
+            transition: all 0.2s; 
+            min-width: fit-content; 
+            font-size: 14px; 
         }
         
         .nav-btn:hover { background: var(--gray-100); color: var(--dark); }
@@ -235,12 +412,17 @@
         .tab-pane.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .stat-box {
-            background: var(--surface); border: 1px solid var(--gray-300); border-radius: 12px; padding: 24px; 
-            position: relative; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: transform 0.2s;
+        .stat-box { 
+            background: var(--surface); 
+            border: 1px solid var(--gray-300); 
+            border-radius: 12px; 
+            padding: 24px; 
+            position: relative; 
+            overflow: hidden; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); 
+            transition: transform 0.2s; 
         }
         .stat-box:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-        
         .stat-box::before { content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--primary); border-radius: 12px 0 0 12px; }
         .stat-box h4 { margin: 0; color: var(--gray-600); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
         .stat-box p.main-stat { margin: 12px 0 8px 0; font-size: 32px; font-weight: 800; color: var(--dark); letter-spacing: -0.02em; }
@@ -253,31 +435,71 @@
         .top-item-qty { font-size: 12px; color: var(--gray-600); font-weight: 600; margin-top: 4px; }
         .top-item-rev { font-weight: 800; color: var(--primary); font-size: 16px; }
 
-        .chart-container { position: relative; height: 350px; width: 100%; margin-top: 10px; padding: 20px; background: #fff; border: 1px solid var(--gray-300); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .chart-container { 
+            position: relative; 
+            height: 350px; 
+            width: 100%; 
+            margin-top: 10px; 
+            padding: 20px; 
+            background: var(--surface); 
+            border: 1px solid var(--gray-300); 
+            border-radius: 12px; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); 
+        }
         
         @media (max-width: 768px) {
             .container { padding: 12px; }
             .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; gap: 16px; }
-            .mobile-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
             .header-bar { flex-direction: column; text-align: center; gap: 16px; padding: 16px; }
             .header-bar > div { width: 100%; display: flex; flex-direction: column; align-items: center; }
             .nav-tabs { justify-content: flex-start; padding: 8px; border-radius: 8px; }
             .nav-btn { flex: 0 0 auto; padding: 10px 16px; font-size: 13px; }
             .card { padding: 16px; }
-            .form-group { margin-bottom: 12px; }
-            .chart-container { height: 280px; padding: 10px; }
             .item-inputs { margin-left: 0; width: 100%; }
+            .chart-container { height: 280px; padding: 10px; }
         }
 
-        #receiptModalOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(17, 24, 39, 0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); padding: 20px; }
-        .receipt-box { background: white; width: 100%; max-width: 380px; padding: 30px; border-radius: 16px; font-family: 'Courier New', Courier, monospace; font-weight: 600; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); }
+        #receiptModalOverlay { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            right: 0; 
+            bottom: 0; 
+            background: rgba(17, 24, 39, 0.85); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 1000; 
+            backdrop-filter: blur(5px); 
+            padding: 20px; 
+        }
+        
+        .receipt-wrapper { 
+            display:flex; 
+            flex-direction:column; 
+            align-items:center; 
+            gap: 15px; 
+        }
+        
+        .receipt-box { 
+            background: #FFFFFF; 
+            color: #111827; 
+            width: 100%; 
+            max-width: 400px; 
+            padding: 30px; 
+            border-radius: 0; 
+            font-family: 'Courier New', Courier, monospace; 
+            font-weight: 600; 
+            box-shadow: var(--shadow-lg); 
+        }
+        
         .receipt-box hr { border: 1px dashed #D1D5DB; margin: 20px 0; }
         .receipt-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; align-items: flex-start; }
     </style>
 </head>
 <body>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase SDK (Modular Integration) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
@@ -300,57 +522,101 @@
         const secondaryApp = initializeApp(firebaseConfig, "Secondary");
         const secondaryAuth = getAuth(secondaryApp);
 
-        window.firebaseAuth = auth;
-        window.firebaseDB = db;
+        window.firebaseAuth = auth; 
+        window.firebaseDB = db; 
         window.secondaryAuth = secondaryAuth;
-        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword; 
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword; 
         window.signOut = signOut;
-        window.doc = doc;
-        window.setDoc = setDoc;
-        window.getDoc = getDoc;
-        window.collection = collection;
-        window.getDocs = getDocs;
-        window.deleteDoc = deleteDoc;
-        window.updateDoc = updateDoc;
+        window.doc = doc; 
+        window.setDoc = setDoc; 
+        window.getDoc = getDoc; 
+        window.collection = collection; 
+        window.getDocs = getDocs; 
+        window.deleteDoc = deleteDoc; 
+        window.updateDoc = updateDoc; 
         window.onSnapshot = onSnapshot; 
     </script>
 
     <!-- 1. AUTHENTICATION SCREENS -->
     <div id="loginSection" class="container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
-        <div class="card" style="max-width: 400px; padding: 40px 30px; border-radius: 20px; box-shadow: var(--shadow-lg);">
+        <div class="card" style="max-width: 400px; padding: 40px 30px; border-radius: 20px; box-shadow: var(--shadow-lg); position:relative;">
+            
+            <button class="theme-toggle" onclick="toggleTheme()" style="position:absolute; top:20px; right:20px;" id="loginThemeBtn">🌙 Dark</button>
+            
             <div id="formLogin">
-                <div style="text-align: center; margin-bottom: 30px;">
+                <div style="text-align: center; margin-bottom: 30px; margin-top:20px;">
                     <div style="background: var(--primary-gradient); width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">🏥</div>
                     <h2>Clinic System</h2>
                     <p style="color: var(--gray-600); font-size: 14px; font-weight: 500; margin: 0;">Authorized Personnel Only</p>
                 </div>
+                
                 <div id="loginErrorMsg" class="hidden" style="background: #FEE2E2; color: #DC2626; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center; border: 1px solid #FCA5A5;"></div>
-                <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="e.g. staff@clinic.com" required></div>
-                <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••" required></div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="e.g. staff@clinic.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                
                 <button class="btn btn-primary" id="btnLogin" style="margin-top: 10px; padding: 14px;" onclick="handleLogin()">Secure Login</button>
-                <div style="text-align: center; margin-top: 16px;"><button class="btn btn-outline" onclick="toggleAuthForm('register')">Request Staff Account</button></div>
-                <div style="text-align: center; margin-top: 30px;"><a href="#" onclick="promptSystemSetup()" style="color: var(--gray-300); font-size: 11px; text-decoration: none; font-weight:600;">System Setup</a></div>
+                <div style="text-align: center; margin-top: 16px;">
+                    <button class="btn btn-outline" onclick="toggleAuthForm('register')">Request Staff Account</button>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="#" onclick="promptSystemSetup()" style="color: var(--gray-300); font-size: 11px; text-decoration: none; font-weight:600;">System Setup Configuration</a>
+                </div>
             </div>
 
             <div id="formRegister" class="hidden">
-                <div style="text-align: center; margin-bottom: 30px;"><h2>Request Account</h2><p style="color: var(--warning); font-size: 13px; font-weight: 600; margin: 0;">Requires Admin Approval in System</p></div>
+                <div style="text-align: center; margin-bottom: 30px; margin-top:20px;">
+                    <h2 style="font-size: 26px;">Request Account</h2>
+                    <p style="color: var(--warning); font-size: 13px; font-weight: 600; margin: 0;">Requires Admin Approval in System</p>
+                </div>
                 <div id="regStatusMsg" class="hidden" style="padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center;"></div>
-                <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Juan Dela Cruz"></div>
-                <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="juan@clinic.com"></div>
-                <div class="form-group"><label>Password (Min 6)</label><input type="password" id="regPassword" placeholder="••••••••"></div>
-                <button class="btn btn-warning" id="btnRegister" style="margin-top: 10px; padding: 14px; color: white;" onclick="handlePublicRegister()">Submit Request</button>
-                <div style="text-align: center; margin-top: 16px;"><button class="btn btn-outline" onclick="toggleAuthForm('login')">Back to Login</button></div>
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="regName" placeholder="Juan Dela Cruz">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="regEmail" placeholder="juan@clinic.com">
+                </div>
+                <div class="form-group">
+                    <label>Password (Min 6)</label>
+                    <input type="password" id="regPassword" placeholder="••••••••">
+                </div>
+                <button class="btn btn-warning" id="btnRegister" style="margin-top: 10px; padding: 14px; color: white; font-size: 16px;" onclick="handlePublicRegister()">Submit Request</button>
+                <div style="text-align: center; margin-top: 16px;">
+                    <button class="btn btn-outline" onclick="toggleAuthForm('login')">Back to Login</button>
+                </div>
             </div>
 
             <div id="formInitAdmin" class="hidden">
-                <div style="text-align: center; margin-bottom: 30px;"><h2>Master Setup</h2><p style="color: var(--info); font-size: 13px; font-weight: 600; margin: 0;">Create First Administrator Account</p></div>
+                <div style="text-align: center; margin-bottom: 30px; margin-top:20px;">
+                    <h2 style="font-size: 26px;">Master Setup</h2>
+                    <p style="color: var(--info); font-size: 13px; font-weight: 600; margin: 0;">Create First Administrator Account</p>
+                </div>
                 <div id="initStatusMsg" class="hidden" style="padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center;"></div>
-                <div class="form-group"><label>Admin Name</label><input type="text" id="initName" placeholder="Master Admin"></div>
-                <div class="form-group"><label>Admin Email</label><input type="email" id="initEmail" placeholder="admin@clinic.com"></div>
-                <div class="form-group"><label>Password (Min 6)</label><input type="password" id="initPassword" placeholder="••••••••"></div>
-                <button class="btn btn-dark" id="btnInitAdmin" style="margin-top: 10px; padding: 14px;" onclick="handleInitAdmin()">Create Master Admin</button>
-                <div style="text-align: center; margin-top: 16px;"><button class="btn btn-outline" onclick="toggleAuthForm('login')">Cancel</button></div>
+                <div class="form-group">
+                    <label>Admin Name</label>
+                    <input type="text" id="initName" placeholder="Master Admin">
+                </div>
+                <div class="form-group">
+                    <label>Admin Email</label>
+                    <input type="email" id="initEmail" placeholder="admin@clinic.com">
+                </div>
+                <div class="form-group">
+                    <label>Password (Min 6)</label>
+                    <input type="password" id="initPassword" placeholder="••••••••">
+                </div>
+                <button class="btn btn-dark" id="btnInitAdmin" style="margin-top: 10px; padding: 14px; font-size: 16px;" onclick="handleInitAdmin()">Create Master Admin</button>
+                <div style="text-align: center; margin-top: 16px;">
+                    <button class="btn btn-outline" onclick="toggleAuthForm('login')">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
@@ -363,11 +629,12 @@
                 <h2>Clinic Management Hub</h2>
                 <div class="live-clock" id="liveClock">Loading Date & Time...</div>
             </div>
-            <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center;">
-                <span id="syncStatus" style="font-size: 12px; font-weight: bold; color: var(--secondary); margin-right: 10px;">🟢 Live Sync Active</span>
-                <span class="badge badge-role" id="currentUserRole">Admin</span>
-                <span class="badge badge-user" id="currentUserName">Name</span>
-                <button class="btn btn-danger btn-sm" style="margin: 0;" onclick="handleLogout()">Logout</button>
+            <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center;">
+                <button class="theme-toggle" onclick="toggleTheme()" id="appThemeBtn">🌙 Dark Theme</button>
+                <span id="syncStatus" style="font-size: 13px; font-weight: 800; color: var(--secondary); margin-left: 10px;">🟢 Live Sync</span>
+                <span class="badge badge-role" id="currentUserRole" style="font-size:14px; padding: 8px 16px;">Admin</span>
+                <span class="badge badge-user" id="currentUserName" style="font-size:14px; padding: 8px 16px;">Name</span>
+                <button class="btn btn-danger btn-sm" style="margin: 0; padding: 8px 16px; font-size: 14px;" onclick="handleLogout()">Logout</button>
             </div>
         </div>
 
@@ -383,52 +650,52 @@
         <!-- TAB: DASHBOARD -->
         <div id="tab-dashboard" class="tab-pane active admin-only hidden">
             
-            <div class="header-bar" style="margin-bottom: 24px; padding: 16px; display: flex; justify-content: space-between; align-items: center; border-radius: 12px; background: var(--surface); box-shadow: 0 2px 4px rgba(0,0,0,0.05); border: 1px solid var(--gray-300);">
-                <h3 style="margin: 0; color: var(--primary);">📅 Dashboard Filter</h3>
-                <div><input type="date" id="dashDateFilter" style="padding: 10px 14px; border: 1px solid var(--gray-300); border-radius: 8px; font-weight: 700; color: var(--dark); margin: 0; width: 100%;" onchange="renderUI()"></div>
+            <div class="header-bar" style="margin-bottom: 24px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); border: 1px solid var(--gray-300);">
+                <h3 style="margin: 0; color: var(--primary); font-size: 20px;">📅 Dashboard Filter</h3>
+                <div style="flex:1; max-width:300px; margin-left:20px;">
+                    <input type="date" id="dashDateFilter" style="padding: 14px 18px; border: 2px solid var(--primary); border-radius: 10px; font-weight: 800; color: var(--primary); margin: 0; width: 100%; font-size:16px; background: var(--surface);" onchange="renderUI()">
+                </div>
             </div>
 
-            <!-- ANALYTICS BREAKDOWN -->
             <div class="grid-2">
                 <div class="card">
                     <h3 id="lblSales" style="margin-bottom: 15px; color: var(--dark);">🛍️ Sales Analytics</h3>
-                    <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 20px;">Breakdown of Products vs Services based on the selected date.</p>
-                    <div class="grid-2 mobile-grid-2">
-                        <div class="stat-box" style="border-left-color: var(--info); padding: 16px;">
+                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 24px;">Breakdown of Products vs Services.</p>
+                    
+                    <div class="grid-2">
+                        <div class="stat-box" style="border-left-color: var(--info); padding: 20px;">
                             <h4 style="color: var(--info);">📦 Products Sold</h4>
-                            <p class="main-stat" id="statProdQty" style="font-size: 26px; margin-bottom: 5px;">0</p>
-                            <p class="profit-text" id="statProdRev" style="font-size: 14px; margin:0; color: var(--info);">Rev: ₱0.00</p>
+                            <p class="main-stat" id="statProdQty" style="font-size: 32px; margin-bottom: 5px;">0</p>
+                            <p class="profit-text" id="statProdRev" style="font-size: 15px; margin:0; color: var(--info);">Rev: ₱0.00</p>
                         </div>
-                        <div class="stat-box" style="border-left-color: var(--warning); padding: 16px;">
+                        <div class="stat-box" style="border-left-color: var(--warning); padding: 20px;">
                             <h4 style="color: var(--warning);">🩺 Services Availed</h4>
-                            <p class="main-stat" id="statServQty" style="font-size: 26px; margin-bottom: 5px;">0</p>
-                            <p class="profit-text" id="statServRev" style="font-size: 14px; margin:0; color: var(--warning);">Rev: ₱0.00</p>
+                            <p class="main-stat" id="statServQty" style="font-size: 32px; margin-bottom: 5px;">0</p>
+                            <p class="profit-text" id="statServRev" style="font-size: 15px; margin:0; color: var(--warning);">Rev: ₱0.00</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="card">
                     <h3 id="lblTopItems" style="margin-bottom: 15px; color: var(--dark);">🏆 Top 5 Selling Items</h3>
-                    <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Most popular items based on quantity sold for the selected date.</p>
+                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 20px;">Most popular items based on quantity sold.</p>
                     <div id="topItemsContainer"></div>
                 </div>
             </div>
 
-            <!-- DEMOGRAPHICS -->
             <div class="card">
-                <h3 id="lblDemographics" style="margin-bottom: 20px; color: var(--dark);">👥 Patient Demographics</h3>
-                <div class="grid-4 mobile-grid-2">
-                    <div class="stat-box" style="border-left-color: var(--info); padding: 16px;"><h4>New Patient</h4><p class="main-stat" id="countNew">0</p></div>
-                    <div class="stat-box" style="border-left-color: var(--primary); padding: 16px;"><h4>Old Patient</h4><p class="main-stat" id="countOld">0</p></div>
-                    <div class="stat-box" style="border-left-color: var(--warning); padding: 16px;"><h4>PWD</h4><p class="main-stat" id="countPWD">0</p></div>
-                    <div class="stat-box" style="border-left-color: var(--secondary); padding: 16px;"><h4>Senior Citizen</h4><p class="main-stat" id="countSenior">0</p></div>
+                <h3 id="lblDemographics" style="margin-bottom: 24px; color: var(--dark);">👥 Patient Demographics</h3>
+                <div class="grid-4">
+                    <div class="stat-box" style="border-left-color: var(--info); padding: 20px;"><h4>New Patient</h4><p class="main-stat" id="countNew">0</p></div>
+                    <div class="stat-box" style="border-left-color: var(--primary); padding: 20px;"><h4>Old Patient</h4><p class="main-stat" id="countOld">0</p></div>
+                    <div class="stat-box" style="border-left-color: var(--warning); padding: 20px;"><h4>PWD</h4><p class="main-stat" id="countPWD">0</p></div>
+                    <div class="stat-box" style="border-left-color: var(--secondary); padding: 20px;"><h4>Senior Citizen</h4><p class="main-stat" id="countSenior">0</p></div>
                 </div>
             </div>
             
-            <!-- STAFF PERFORMANCE -->
             <div class="card">
                 <h3 id="lblStaffPerf" style="margin-bottom: 15px; color: var(--dark);">👩‍⚕️ Staff Performance</h3>
-                <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Revenue generated by each personnel based on the selected date.</p>
+                <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 20px;">Revenue generated by each personnel.</p>
                 <div class="table-wrapper">
                     <table id="staffPerfTable">
                         <thead><tr><th>Staff Name</th><th>Selected Daily Rev</th><th>Selected Monthly Rev</th><th>Selected Yearly Rev</th></tr></thead>
@@ -437,36 +704,35 @@
                 </div>
             </div>
 
-            <!-- FINANCIAL OVERVIEW -->
             <div class="grid-3">
                 <div class="stat-box">
                     <h4 id="hdrDaily">Selected Date</h4><p class="main-stat" id="reportDaily">₱0.00</p><p class="expense-text" id="expDaily">Exp: ₱0.00</p>
-                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 12px 0;"><p class="profit-text" id="profitDaily">True: ₱0.00</p>
+                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 16px 0;"><p class="profit-text" id="profitDaily">True: ₱0.00</p>
                 </div>
                 <div class="stat-box">
                     <h4 id="hdrMonthly">Selected Month</h4><p class="main-stat" id="reportMonthly">₱0.00</p><p class="expense-text" id="expMonthly">Exp: ₱0.00</p>
-                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 12px 0;"><p class="profit-text" id="profitMonthly">True: ₱0.00</p>
+                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 16px 0;"><p class="profit-text" id="profitMonthly">True: ₱0.00</p>
                 </div>
                 <div class="stat-box">
                     <h4 id="hdrYearly">Selected Year</h4><p class="main-stat" id="reportYearly">₱0.00</p><p class="expense-text" id="expYearly">Exp: ₱0.00</p>
-                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 12px 0;"><p class="profit-text" id="profitYearly">True: ₱0.00</p>
+                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 16px 0;"><p class="profit-text" id="profitYearly">True: ₱0.00</p>
                 </div>
             </div>
             
             <div class="card" style="margin-top: 24px;">
                 <h3 style="margin-bottom: 5px;">📈 Monthly Performance Overview</h3>
-                <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-bottom: 10px;">Visual representation based on Selected Year.</p>
+                <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-bottom: 15px;">Visual representation based on Selected Year.</p>
                 <div class="chart-container"><canvas id="monthlyChart"></canvas></div>
             </div>
             
-            <div class="card" style="margin-top: 24px;"><button class="btn btn-warning" id="exportBtn" style="padding: 16px; font-size: 16px;" onclick="prepareExport()">⬇️ Generate Full System Report (CSV)</button></div>
+            <div class="card" style="margin-top: 24px;"><button class="btn btn-warning" id="exportBtn" style="padding: 18px; font-size: 16px;" onclick="prepareExport()">⬇️ Generate Full System Report (CSV)</button></div>
         </div>
 
         <!-- TAB: TRANSACT -->
         <div id="tab-transact" class="tab-pane">
             <div class="grid-2">
                 <div class="card">
-                    <h3 style="margin-bottom: 20px;">📋 New Transaction</h3>
+                    <h3 style="margin-bottom: 24px;">📋 New Transaction</h3>
                     
                     <div class="form-group"><label>Transaction Date (Can be backdated):</label><input type="date" id="transDate"></div>
 
@@ -475,34 +741,35 @@
                         <select id="transCategory"><option value="New">New Patient</option><option value="Old">Old Patient</option><option value="PWD">PWD</option><option value="Senior">Senior Citizen</option></select>
                     </div>
                     
-                    <!-- NEW MULTI-SELECT UI WITH INLINE QUANTITY & DROPDOWN -->
-                    <div class="form-group">
-                        <label>Select Product(s) / Service(s) and Specify Quantity / ML:</label>
+                    <div class="form-group" style="margin-top: 24px;">
+                        <label style="font-size: 15px; color: var(--primary);">Select Product(s) / Service(s):</label>
+                        <p style="color: var(--gray-600); font-size: 12px; font-weight: 600; margin-top: -5px; margin-bottom: 12px;">Check the box to expand and specify Quantity or Serial Number.</p>
+                        
                         <div class="product-list" id="transProductList">
                             <!-- Populated Automatically via renderUI -->
                         </div>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group" style="margin-top: 24px;">
                         <label>Global Discount (Applies to all selected items):</label>
                         <select id="transDiscount"><option value="0">None</option><option value="0.20">20% (Senior/PWD)</option><option value="1">100% Free</option></select>
                     </div>
                     
                     <div class="form-group"><label>Payment Method:</label><select id="transMethod"><option value="CASH">CASH</option><option value="GCASH">GCASH</option><option value="MariBANK">MariBANK</option><option value="BANK_Transfer">BANK Transfer</option></select></div>
                     
-                    <button class="btn btn-success" style="padding: 14px; margin-top: 8px;" onclick="processTransaction()">✅ Process & Print Receipt</button>
+                    <button class="btn btn-success" style="padding: 18px; margin-top: 14px; font-size:16px;" onclick="processTransaction()">✅ Process & Print Receipt</button>
                 </div>
 
                 <div class="card">
                     <h3 style="margin-bottom: 5px;">💰 Till Summary</h3>
-                    <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-bottom: 20px;">Current cash & digital footprint.</p>
+                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-bottom: 24px;">Current cash & digital footprint.</p>
                     <div class="table-wrapper">
                         <table>
-                            <tr><td>💵 CASH</td><td class="text-right" id="fin-CASH" style="font-weight: 700;">₱0.00</td></tr>
-                            <tr><td>📱 GCASH</td><td class="text-right" id="fin-GCASH" style="font-weight: 700;">₱0.00</td></tr>
-                            <tr><td>🏦 MariBANK</td><td class="text-right" id="fin-MariBANK" style="font-weight: 700;">₱0.00</td></tr>
-                            <tr><td>💻 BANK Transfer</td><td class="text-right" id="fin-BANK_Transfer" style="font-weight: 700;">₱0.00</td></tr>
-                            <tr style="background-color: #F8FAFC;"><td style="font-weight: 800; color: var(--dark);">TOTAL REVENUE</td><td class="text-right" id="fin-TOTAL" style="color: var(--primary); font-size: 18px; font-weight: 800;">₱0.00</td></tr>
+                            <tr><td>💵 CASH</td><td class="text-right" id="fin-CASH" style="font-weight: 800; font-size: 16px;">₱0.00</td></tr>
+                            <tr><td>📱 GCASH</td><td class="text-right" id="fin-GCASH" style="font-weight: 800; font-size: 16px;">₱0.00</td></tr>
+                            <tr><td>🏦 MariBANK</td><td class="text-right" id="fin-MariBANK" style="font-weight: 800; font-size: 16px;">₱0.00</td></tr>
+                            <tr><td>💻 BANK Transfer</td><td class="text-right" id="fin-BANK_Transfer" style="font-weight: 800; font-size: 16px;">₱0.00</td></tr>
+                            <tr style="background-color: var(--table-header);"><td style="font-weight: 900; font-size: 16px; color: var(--dark);">TOTAL REVENUE</td><td class="text-right" id="fin-TOTAL" style="color: var(--primary); font-size: 22px; font-weight: 900;">₱0.00</td></tr>
                         </table>
                     </div>
                 </div>
@@ -512,21 +779,21 @@
         <!-- TAB: EXPENSES -->
         <div id="tab-expenses" class="tab-pane admin-only hidden">
             <div class="card">
-                <h3 style="margin-bottom: 20px;">💸 Log Expense</h3>
-                <div class="grid-2" style="margin-bottom: 16px;">
+                <h3 style="margin-bottom: 24px;">💸 Log Expense</h3>
+                <div class="grid-2" style="margin-bottom: 20px;">
                     <div class="form-group" style="margin-bottom: 0;"><label>Expense Date (Can be backdated)</label><input type="date" id="expDate"></div>
                     <div class="form-group" style="margin-bottom: 0;"><label>Category</label><select id="expCategory"><option>Salary</option><option>Electric Bill</option><option>Clinic Supply</option><option>Miscellaneous</option></select></div>
                 </div>
                 <div class="grid-3" style="align-items: flex-end;">
                     <div class="form-group" style="margin-bottom: 0;"><label>Note</label><input type="text" id="expNote" placeholder="e.g. Internet"></div>
                     <div class="form-group" style="margin-bottom: 0;"><label>Amount</label><input type="number" id="expAmount" placeholder="0.00"></div>
-                    <button class="btn btn-danger" onclick="addExpense()">➖ Deduct</button>
+                    <button class="btn btn-danger" onclick="addExpense()" style="padding: 14px;">➖ Deduct</button>
                 </div>
             </div>
             
             <div class="card">
-                <h3>🧾 Expense History</h3>
-                <div class="table-wrapper" style="max-height: 400px;">
+                <h3 style="margin-bottom: 20px;">🧾 Expense History</h3>
+                <div class="table-wrapper" style="max-height: 450px;">
                     <table id="expenseTable">
                         <thead><tr><th>Date</th><th>Category</th><th>Note</th><th>By</th><th class="text-right">Amount</th><th class="text-center">Action</th></tr></thead>
                         <tbody></tbody>
@@ -535,45 +802,22 @@
             </div>
         </div>
 
-        <!-- TAB: INVENTORY & SERVICES (SPLIT) -->
+        <!-- TAB: INVENTORY & SERVICES -->
         <div id="tab-inventory" class="tab-pane">
             
             <div class="card">
-                <h3 style="margin-bottom: 15px;">📦 Products Inventory</h3>
-                <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Items with physical stock. Includes whole items and multi-dose vials.</p>
-                <div class="table-wrapper" style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 15px; font-size: 22px;">📦 Products Inventory</h3>
+                <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 24px;">Main storage for Whole items and Unopened Vials.</p>
+                <div class="table-wrapper">
                     <table id="inventoryTable">
                         <thead><tr><th>Type</th><th>Product Name</th><th class="admin-only hidden">Cost</th><th>SRP</th><th class="admin-only hidden">Profit</th><th>Main Stock</th><th class="admin-only hidden text-center">Actions</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
-
-            <!-- ACTIVE VIALS TRACKER -->
-            <div class="card">
-                <h3 style="margin-bottom: 15px; color: var(--primary);">🧪 Currently Opened Vials Tracker</h3>
-                <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Shows all vials currently being used per serial number. Main inventory stock is deducted only when remaining ML reaches 0.</p>
-                <div class="table-wrapper">
-                    <table id="activeVialsTable">
-                        <thead><tr><th>Product Name</th><th>Serial Number</th><th>Used ML</th><th>Remaining ML</th></tr></thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3 style="margin-bottom: 15px;">🩺 Services Catalog</h3>
-                <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Professional services offered.</p>
-                <div class="table-wrapper">
-                    <table id="servicesTable">
-                        <thead><tr><th>Service Name</th><th>Price (Fee)</th><th class="admin-only hidden text-center">Actions</th></tr></thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-            </div>
             
             <div class="card admin-only hidden">
-                <h3 style="margin-bottom: 16px;">➕ Register New Item</h3>
+                <h3 style="margin-bottom: 20px; font-size: 22px;">➕ Register New Item</h3>
                 <div class="grid-3">
                     <div class="form-group">
                         <label>Item Type</label>
@@ -587,17 +831,65 @@
                     <div class="form-group" id="costField"><label id="lblCost">Cost (₱)</label><input type="number" id="newProdCost"></div>
                     <div class="form-group"><label id="lblPrice">Selling Price (₱)</label><input type="number" id="newProdPrice"></div>
                     <div class="form-group" id="stockField"><label>Initial Stock (Vials / Pcs)</label><input type="number" id="newProdStock"></div>
-                    <div class="form-group hidden" id="mlField"><label>Total ML per Vial</label><input type="number" id="newProdML"></div>
+                    <div class="form-group hidden" id="mlField"><label>Total Capacity (ML per Vial)</label><input type="number" id="newProdML"></div>
+                    
+                    <!-- NEW: INITIAL SERIAL NUMBER (Only active for Vials) -->
+                    <div class="form-group hidden" id="serialField">
+                        <label>Initial Serial No. (Optional)</label>
+                        <input type="text" id="newProdSerial" placeholder="Auto-opens 1 vial immediately">
+                    </div>
                 </div>
-                <button class="btn btn-primary" onclick="addItem()">Save to Database</button>
+                <button class="btn btn-primary" style="margin-top: 16px;" onclick="addItem()">Save to Database</button>
             </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 15px; color: var(--primary); font-size: 22px;">🧪 Active Vials Management</h3>
+                <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 24px;">Manage serial numbers of currently opened vials.</p>
+                <div class="table-wrapper" style="margin-bottom: 24px;">
+                    <table id="activeVialsTable">
+                        <thead><tr><th>Product Name</th><th>Serial Number</th><th>Used ML</th><th>Remaining ML</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                
+                <div class="admin-only hidden" style="background: var(--gray-100); padding: 24px; border-radius: 12px; border: 1px solid var(--gray-300);">
+                    <h4 style="margin-bottom: 16px; color: var(--primary);">➕ Manually Open a Vial (Input Serial)</h4>
+                    <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-top: -10px; margin-bottom: 20px;">Pre-open a vial to make its serial number available in the Transact Tab dropdown.</p>
+                    
+                    <div class="grid-3">
+                        <div class="form-group" style="margin: 0;">
+                            <label>Select Vial Product</label>
+                            <select id="manualOpenVialSelect"></select>
+                        </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label>Serial Number</label>
+                            <input type="text" id="manualOpenVialSerial" placeholder="Enter Serial No.">
+                        </div>
+                        <div class="form-group" style="display:flex; align-items:flex-end; margin: 0;">
+                            <button class="btn btn-primary" onclick="manuallyOpenVial()">Open Vial</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 15px; font-size: 22px;">🩺 Services Catalog</h3>
+                <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 24px;">Professional services offered.</p>
+                <div class="table-wrapper">
+                    <table id="servicesTable">
+                        <thead><tr><th>Service Name</th><th>Price (Fee)</th><th class="admin-only hidden text-center">Actions</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            
         </div>
 
         <!-- TAB: HISTORY -->
         <div id="tab-history" class="tab-pane admin-only hidden">
             <div class="card">
-                <h3 style="margin-bottom: 20px;">📝 Transaction Logs</h3>
-                <div class="table-wrapper" style="max-height: 500px;">
+                <h3 style="margin-bottom: 24px;">📝 Transaction Logs</h3>
+                <div class="table-wrapper" style="max-height: 600px;">
                     <table id="historyTable">
                         <thead><tr><th>Date</th><th>Type</th><th>Item</th><th>Qty/ML</th><th>Serial No.</th><th>Method</th><th>Revenue</th><th>Staff</th><th class="text-center">Action</th></tr></thead>
                         <tbody></tbody>
@@ -610,20 +902,20 @@
         <div id="tab-accounts" class="tab-pane admin-only hidden">
             <div class="grid-2">
                 <div class="card">
-                    <h3 style="margin-bottom: 5px;">🔐 Add Auto-Approved Staff</h3>
-                    <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-bottom: 20px;">Accounts created here bypass manual activation.</p>
-                    <div id="accStatusMsg" class="hidden" style="padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center;"></div>
+                    <h3 style="margin-bottom: 10px;">🔐 Add Auto-Approved Staff</h3>
+                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-bottom: 24px;">Accounts created here bypass manual activation.</p>
+                    <div id="accStatusMsg" class="hidden" style="padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 700; margin-bottom: 20px; text-align: center;"></div>
                     <div class="form-group"><label>Full Name</label><input type="text" id="newStaffName" placeholder="e.g. Ivy Santos"></div>
                     <div class="form-group"><label>Email (Username)</label><input type="email" id="newStaffEmail" placeholder="ivy@clinic.com"></div>
                     <div class="form-group"><label>Password (min 6 chars)</label><input type="password" id="newStaffPassword" placeholder="••••••••"></div>
                     <div class="form-group"><label>Assign Role</label><select id="newStaffRole"><option value="staff">Regular Staff</option><option value="admin">Administrator</option></select></div>
-                    <button class="btn btn-primary" onclick="createStaffAccount()" id="btnCreateUser" style="margin-top: 10px;">➕ Register Account</button>
+                    <button class="btn btn-primary" onclick="createStaffAccount()" id="btnCreateUser" style="margin-top: 14px;">➕ Register Account</button>
                 </div>
 
                 <div class="card">
-                    <h3 style="margin-bottom: 5px;">👥 User Accounts Database</h3>
-                    <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-bottom: 20px;">View details, passwords, and manage access.</p>
-                    <div class="table-wrapper" style="max-height: 400px;">
+                    <h3 style="margin-bottom: 10px;">👥 User Accounts Database</h3>
+                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-bottom: 24px;">View details, passwords, and manage access.</p>
+                    <div class="table-wrapper" style="max-height: 500px;">
                         <table id="accountsTable">
                             <thead><tr><th>User Name</th><th>Email / Pass</th><th>Status/Role</th><th class="text-center">Actions</th></tr></thead>
                             <tbody><tr><td colspan="4" class="text-center">Loading accounts...</td></tr></tbody>
@@ -633,96 +925,184 @@
             </div>
         </div>
 
+        <div style="text-align:center; padding: 40px; color: var(--gray-600); font-size: 14px; font-weight: 700;">System Created by Gelo Cutler</div>
     </div>
 
-    <!-- Receipt Modal -->
+    <!-- Receipt Modal Overlay -->
     <div id="receiptModalOverlay" class="hidden">
-        <div class="receipt-box">
-            <h3 class="text-center" style="margin-bottom: 5px; color: var(--dark); font-weight: 800;">CLINIC RECEIPT</h3>
-            <p class="text-center" style="margin-top: 0; font-size: 12px; color: var(--gray-600);" id="rcptDate"></p>
-            <hr>
-            <div class="receipt-row"><strong>Category:</strong> <span id="rcptCategory"></span></div>
-            <div class="receipt-row" style="flex-direction: column;"><strong>Items:</strong> <span id="rcptItem" style="text-align: right; margin-top: 4px; line-height: 1.5;"></span></div>
-            <div class="receipt-row" style="margin-top: 5px;"><strong>Payment:</strong> <span id="rcptMethod"></span></div>
-            <hr>
-            <div class="receipt-row" style="font-size: 18px;"><strong>TOTAL:</strong> <strong id="rcptTotal"></strong></div>
-            <div class="receipt-row" style="margin-top: 15px; font-size: 12px; color: var(--gray-600);"><strong>Staff:</strong> <span id="rcptUser"></span></div>
+        <div class="receipt-wrapper">
+            <div class="receipt-box" id="receiptContentToDownload">
+                <h3 class="text-center" style="margin-bottom: 5px; color: #111827; font-weight: 900; font-size: 22px;">CLINIC RECEIPT</h3>
+                <p class="text-center" style="margin-top: 0; font-size: 13px; color: #4B5563; font-weight: 700;" id="rcptDate"></p>
+                <hr>
+                <div class="receipt-row"><strong>Category:</strong> <span id="rcptCategory" style="color: #111827;"></span></div>
+                <div class="receipt-row" style="flex-direction: column;">
+                    <strong>Items:</strong> 
+                    <span id="rcptItem" style="text-align: right; margin-top: 8px; line-height: 1.6; color: #111827;"></span>
+                </div>
+                <div class="receipt-row" style="margin-top:15px;"><strong>Payment:</strong> <span id="rcptMethod" style="color: #111827;"></span></div>
+                <hr>
+                <div class="receipt-row" style="font-size: 20px; color: #111827; margin-top:10px;"><strong>TOTAL:</strong> <strong id="rcptTotal"></strong></div>
+                <div class="receipt-row" style="margin-top: 20px; font-size: 13px; color: #4B5563; font-weight: 700;"><strong>Processed By:</strong> <span id="rcptUser"></span></div>
+            </div>
             
-            <div class="grid-2 no-print" style="margin-top: 24px; gap: 10px;">
+            <div class="grid-2 no-print" style="margin-top: 15px; gap: 12px; width: 100%; max-width: 380px;">
+                <button class="btn btn-warning" onclick="downloadReceiptJPEG()">🖼️ Download JPEG</button>
                 <button class="btn btn-info" onclick="window.print()">🖨️ Print</button>
-                <button class="btn btn-danger" onclick="closeReceipt()">✖ Close</button>
+                <button class="btn btn-danger" style="grid-column: span 2;" onclick="closeReceipt()">✖ Close</button>
             </div>
         </div>
     </div>
 
+    <!-- JAVASCRIPT LOGIC -->
     <script>
+        // ==========================================
+        // 0. THEME SWITCHER LOGIC
+        // ==========================================
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('clinicTheme', newTheme);
+            
+            updateThemeButtons(newTheme);
+        }
+
+        function updateThemeButtons(theme) {
+            let txt = theme === 'dark' ? '☀️ Bright Theme' : '🌙 Black Theme';
+            if(document.getElementById('loginThemeBtn')) {
+                document.getElementById('loginThemeBtn').innerText = txt;
+            }
+            if(document.getElementById('appThemeBtn')) {
+                document.getElementById('appThemeBtn').innerText = txt;
+            }
+            if(dashboardChart) {
+                renderChart(lastChartData); 
+            }
+        }
+
+        const savedTheme = localStorage.getItem('clinicTheme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            updateThemeButtons(savedTheme);
+        });
+
         // ==========================================
         // 1. GLOBALS & INITIALIZATION
         // ==========================================
         let inventory = []; 
         let activeVials = []; 
         let services = []; 
-        let finance = { CASH: 0, GCASH: 0, MariBANK: 0, BANK_Transfer: 0 };
-        let txHistory = [];
+        let finance = { CASH: 0, GCASH: 0, MariBANK: 0, BANK_Transfer: 0 }; 
+        let txHistory = []; 
         let expHistory = [];
-        let currentUser = { name: '', role: '', uid: '' };
         
+        let currentUser = { name: '', role: '', uid: '' };
         let dashboardChart = null; 
+        let lastChartData = {}; 
         let isFirstLoad = true;
 
         function getLocalISODate() { 
-            let d = new Date(); return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, -1); 
+            let d = new Date(); 
+            return new Date(d - d.getTimezoneOffset() * 60000).toISOString().slice(0, -1); 
         }
 
         setInterval(() => { 
-            document.getElementById('liveClock').innerText = new Date().toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }); 
+            let clockEl = document.getElementById('liveClock');
+            if(clockEl) {
+                clockEl.innerText = new Date().toLocaleDateString('en-US', { 
+                    weekday:'long', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' 
+                }); 
+            }
         }, 1000);
         
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active')); 
             document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+            
+            document.getElementById(tabId).classList.add('active'); 
             event.currentTarget.classList.add('active');
-            renderUI();
-            if(tabId === 'tab-accounts' && currentUser.role === 'admin') loadAccounts();
+            
+            renderUI(); 
+            
+            if(tabId === 'tab-accounts' && currentUser.role === 'admin') {
+                loadAccounts();
+            }
         }
         
         function toggleAuthForm(type) {
-            document.getElementById('formLogin').classList.add('hidden');
-            document.getElementById('formRegister').classList.add('hidden');
+            document.getElementById('formLogin').classList.add('hidden'); 
+            document.getElementById('formRegister').classList.add('hidden'); 
             document.getElementById('formInitAdmin').classList.add('hidden');
-            if(type === 'register') document.getElementById('formRegister').classList.remove('hidden');
-            else if(type === 'init') document.getElementById('formInitAdmin').classList.remove('hidden');
-            else document.getElementById('formLogin').classList.remove('hidden');
+            
+            if(type === 'register') {
+                document.getElementById('formRegister').classList.remove('hidden'); 
+            } else if(type === 'init') {
+                document.getElementById('formInitAdmin').classList.remove('hidden'); 
+            } else {
+                document.getElementById('formLogin').classList.remove('hidden');
+            }
         }
 
         // ==========================================
         // 2. MASTER ADMIN SETUP 
         // ==========================================
-        function promptSystemSetup() {
-            let key = prompt("Enter Secret System Setup Key:");
-            if(key === "gelo2026") toggleAuthForm('init'); 
-            else if(key !== null) alert("Unauthorized Access."); 
+        function promptSystemSetup() { 
+            let key = prompt("Enter Secret System Setup Key:"); 
+            if(key === "gelo2026") {
+                toggleAuthForm('init'); 
+            } else if(key !== null) {
+                alert("Unauthorized Access."); 
+            }
         }
 
         async function handleInitAdmin() {
-            let name = document.getElementById('initName').value.trim(), email = document.getElementById('initEmail').value.trim(), pass = document.getElementById('initPassword').value;
-            let btn = document.getElementById('btnInitAdmin'), status = document.getElementById('initStatusMsg');
-            if(!name || !email || pass.length < 6) return alert("Fill all fields. Pass 6+ chars.");
-            btn.innerText = "Creating..."; btn.disabled = true; status.classList.add('hidden');
+            let name = document.getElementById('initName').value.trim();
+            let email = document.getElementById('initEmail').value.trim();
+            let pass = document.getElementById('initPassword').value;
+            let btn = document.getElementById('btnInitAdmin');
+            let status = document.getElementById('initStatusMsg');
+            
+            if(!name || !email || pass.length < 6) {
+                return alert("Fill all fields. Pass 6+ chars.");
+            }
+            
+            btn.innerText = "Creating..."; 
+            btn.disabled = true; 
+            status.classList.add('hidden');
+            
             try {
                 const newCred = await window.createUserWithEmailAndPassword(window.firebaseAuth, email, pass);
-                await window.setDoc(window.doc(window.firebaseDB, "users", newCred.user.uid), {
-                    name: name, email: email, role: "admin", status: "active", initialPassword: pass, createdAt: getLocalISODate(), createdBy: "System Setup"
+                await window.setDoc(window.doc(window.firebaseDB, "users", newCred.user.uid), { 
+                    name: name, 
+                    email: email, 
+                    role: "admin", 
+                    status: "active", 
+                    initialPassword: pass, 
+                    createdAt: getLocalISODate(), 
+                    createdBy: "System Setup" 
                 });
-                await window.signOut(window.firebaseAuth);
+                
+                await window.signOut(window.firebaseAuth); 
                 alert(`Master Admin ${name} created!`);
-                document.getElementById('initName').value = ''; document.getElementById('initEmail').value = ''; document.getElementById('initPassword').value = '';
+                
+                document.getElementById('initName').value = ''; 
+                document.getElementById('initEmail').value = ''; 
+                document.getElementById('initPassword').value = ''; 
+                
                 toggleAuthForm('login');
-            } catch(error) {
-                status.innerText = "Error: " + error.message; status.style.background = "#FEE2E2"; status.style.color = "#DC2626"; status.style.border = "1px solid #FCA5A5"; status.classList.remove('hidden');
+            } catch(error) { 
+                status.innerText = "Error: " + error.message; 
+                status.style.background = "#FEE2E2"; 
+                status.style.color = "#DC2626"; 
+                status.style.border = "1px solid #FCA5A5"; 
+                status.classList.remove('hidden'); 
             }
-            btn.innerText = "Create Master Admin"; btn.disabled = false;
+            
+            btn.innerText = "Create Master Admin"; 
+            btn.disabled = false;
         }
 
         // ==========================================
@@ -730,117 +1110,252 @@
         // ==========================================
         function listenToClinicData() {
             const docRef = window.doc(window.firebaseDB, "clinicData", "main");
+            
             window.onSnapshot(docRef, (docSnap) => {
                 document.getElementById('syncStatus').innerText = "🔄 Syncing...";
                 if (docSnap.exists()) {
                     let data = docSnap.data();
                     inventory = data.inventory || []; 
-                    activeVials = data.activeVials || [];
-                    services = data.services || [];
+                    activeVials = data.activeVials || []; 
+                    services = data.services || []; 
                     finance = data.finance || { CASH: 0, GCASH: 0, MariBANK: 0, BANK_Transfer: 0 };
                     txHistory = data.txHistory || []; 
-                    expHistory = data.expHistory || [];
+                    expHistory = data.expHistory || []; 
                     renderUI(); 
-                } else { if(isFirstLoad) pushLiveClinicData(); }
-                isFirstLoad = false;
+                } else { 
+                    if(isFirstLoad) {
+                        pushLiveClinicData(); 
+                    }
+                }
+                isFirstLoad = false; 
                 document.getElementById('syncStatus').innerText = "🟢 Live Sync Active";
-            }, (error) => { document.getElementById('syncStatus').innerText = "🔴 Sync Error"; });
+            }, (error) => { 
+                document.getElementById('syncStatus').innerText = "🔴 Sync Error"; 
+            });
         }
 
-        async function pushLiveClinicData() {
-            try {
-                const docRef = window.doc(window.firebaseDB, "clinicData", "main");
-                await window.setDoc(docRef, { inventory, activeVials, services, finance, txHistory, expHistory });
-            } catch (e) { console.error("Error writing: ", e); }
+        async function pushLiveClinicData() { 
+            try { 
+                const docRef = window.doc(window.firebaseDB, "clinicData", "main"); 
+                await window.setDoc(docRef, { inventory, activeVials, services, finance, txHistory, expHistory }); 
+            } catch (e) { 
+                console.error("Error writing: ", e); 
+            } 
         }
 
         // ==========================================
         // 4. AUTHENTICATION
         // ==========================================
         async function handleLogin() {
-            let email = document.getElementById('loginEmail').value.trim(), pass = document.getElementById('loginPassword').value;
-            let btn = document.getElementById('btnLogin'), err = document.getElementById('loginErrorMsg');
-            if(!email || !pass) return alert("Enter email and password.");
-            btn.innerText = "Authenticating..."; btn.disabled = true; err.classList.add('hidden');
+            let email = document.getElementById('loginEmail').value.trim();
+            let pass = document.getElementById('loginPassword').value;
+            let btn = document.getElementById('btnLogin');
+            let err = document.getElementById('loginErrorMsg');
+            
+            if(!email || !pass) {
+                return alert("Enter email and password.");
+            }
+            
+            btn.innerText = "Authenticating..."; 
+            btn.disabled = true; 
+            err.classList.add('hidden');
+            
             try {
                 const userCredential = await window.signInWithEmailAndPassword(window.firebaseAuth, email, pass);
                 const uid = userCredential.user.uid;
                 const docSnap = await window.getDoc(window.doc(window.firebaseDB, "users", uid));
+                
                 if (docSnap.exists()) {
                     let data = docSnap.data();
-                    if(data.status !== "active") {
-                        err.innerText = "Access Denied: Account pending/deleted."; err.classList.remove('hidden'); await window.signOut(window.firebaseAuth);
-                    } else {
-                        currentUser = { uid: uid, name: data.name, role: data.role }; enterApp();
+                    if(data.status !== "active") { 
+                        err.innerText = "Access Denied: Account is pending or deleted."; 
+                        err.classList.remove('hidden'); 
+                        await window.signOut(window.firebaseAuth); 
+                    } else { 
+                        currentUser = { uid: uid, name: data.name, role: data.role }; 
+                        enterApp(); 
                     }
-                } else {
-                    err.innerText = "Access Denied: Record not found."; err.classList.remove('hidden'); window.signOut(window.firebaseAuth);
+                } else { 
+                    err.innerText = "Access Denied: Record not found."; 
+                    err.classList.remove('hidden'); 
+                    window.signOut(window.firebaseAuth); 
                 }
-            } catch (error) { err.innerText = "Login Failed."; err.classList.remove('hidden'); }
-            btn.innerText = "Secure Login"; btn.disabled = false;
+            } catch (error) { 
+                err.innerText = "Login Failed."; 
+                err.classList.remove('hidden'); 
+            }
+            
+            btn.innerText = "Secure Login"; 
+            btn.disabled = false;
         }
 
         function enterApp() {
-            document.getElementById('loginSection').classList.add('hidden'); document.getElementById('mainApp').classList.remove('hidden');
-            document.getElementById('currentUserRole').innerText = currentUser.role.toUpperCase(); document.getElementById('currentUserName').innerText = currentUser.name;
-            document.querySelectorAll('.admin-only').forEach(el => { if(currentUser.role === 'admin') el.classList.remove('hidden'); else el.classList.add('hidden'); });
+            document.getElementById('loginSection').classList.add('hidden'); 
+            document.getElementById('mainApp').classList.remove('hidden');
+            document.getElementById('currentUserRole').innerText = currentUser.role.toUpperCase(); 
+            document.getElementById('currentUserName').innerText = currentUser.name;
+            
+            document.querySelectorAll('.admin-only').forEach(el => { 
+                if(currentUser.role === 'admin') {
+                    el.classList.remove('hidden'); 
+                } else {
+                    el.classList.add('hidden'); 
+                }
+            });
             
             let todayDate = getLocalISODate().split('T')[0];
-            document.getElementById('dashDateFilter').value = todayDate; document.getElementById('transDate').value = todayDate; document.getElementById('expDate').value = todayDate;
+            document.getElementById('dashDateFilter').value = todayDate; 
+            document.getElementById('transDate').value = todayDate; 
+            document.getElementById('expDate').value = todayDate;
             
-            listenToClinicData();
-            if(currentUser.role === 'admin') switchTab('tab-dashboard'); else switchTab('tab-transact');
+            listenToClinicData(); 
+            
+            if(currentUser.role === 'admin') {
+                switchTab('tab-dashboard'); 
+            } else {
+                switchTab('tab-transact');
+            }
         }
 
-        async function handleLogout() {
-            await window.signOut(window.firebaseAuth); currentUser = { name: '', role: '', uid: '' };
-            document.getElementById('loginPassword').value = ''; document.getElementById('mainApp').classList.add('hidden'); document.getElementById('loginSection').classList.remove('hidden');
+        async function handleLogout() { 
+            await window.signOut(window.firebaseAuth); 
+            currentUser = { name: '', role: '', uid: '' };
+            document.getElementById('loginPassword').value = ''; 
+            document.getElementById('mainApp').classList.add('hidden'); 
+            document.getElementById('loginSection').classList.remove('hidden'); 
         }
 
         // ==========================================
         // 5. ACCOUNT CREATION 
         // ==========================================
         async function handlePublicRegister() {
-            let name = document.getElementById('regName').value.trim(), email = document.getElementById('regEmail').value.trim(), pass = document.getElementById('regPassword').value;
-            let btn = document.getElementById('btnRegister'), status = document.getElementById('regStatusMsg');
-            if(!name || !email || pass.length < 6) return alert("Fill fields.");
-            btn.innerText = "Submitting..."; btn.disabled = true; status.classList.add('hidden');
+            let name = document.getElementById('regName').value.trim();
+            let email = document.getElementById('regEmail').value.trim();
+            let pass = document.getElementById('regPassword').value;
+            let btn = document.getElementById('btnRegister');
+            let status = document.getElementById('regStatusMsg');
+            
+            if(!name || !email || pass.length < 6) {
+                return alert("Fill fields.");
+            }
+            
+            btn.innerText = "Submitting..."; 
+            btn.disabled = true; 
+            status.classList.add('hidden');
+            
             try {
                 const newCred = await window.createUserWithEmailAndPassword(window.secondaryAuth, email, pass);
-                await window.setDoc(window.doc(window.firebaseDB, "users", newCred.user.uid), { name: name, email: email, role: "staff", status: "pending", initialPassword: pass, createdAt: getLocalISODate() });
+                await window.setDoc(window.doc(window.firebaseDB, "users", newCred.user.uid), { 
+                    name: name, 
+                    email: email, 
+                    role: "staff", 
+                    status: "pending", 
+                    initialPassword: pass, 
+                    createdAt: getLocalISODate() 
+                });
+                
                 await window.signOut(window.secondaryAuth);
-                status.innerText = "Request Sent! Admin needs to approve."; status.style.background = "#FEF3C7"; status.style.color = "#D97706"; status.style.border = "1px solid #FCD34D"; status.classList.remove('hidden');
-                document.getElementById('regName').value = ''; document.getElementById('regEmail').value = ''; document.getElementById('regPassword').value = '';
-            } catch(error) { status.innerText = "Error: " + error.message; status.style.background = "#FEE2E2"; status.style.color = "#DC2626"; status.style.border = "1px solid #FCA5A5"; status.classList.remove('hidden'); }
-            btn.innerText = "Submit Request"; btn.disabled = false;
+                
+                status.innerText = "Request Sent! Admin needs to approve."; 
+                status.style.background = "#FEF3C7"; 
+                status.style.color = "#D97706"; 
+                status.style.border = "1px solid #FCD34D"; 
+                status.classList.remove('hidden');
+                
+                document.getElementById('regName').value = ''; 
+                document.getElementById('regEmail').value = ''; 
+                document.getElementById('regPassword').value = '';
+            } catch(error) { 
+                status.innerText = "Error: " + error.message; 
+                status.style.background = "#FEE2E2"; 
+                status.style.color = "#DC2626"; 
+                status.style.border = "1px solid #FCA5A5"; 
+                status.classList.remove('hidden'); 
+            }
+            
+            btn.innerText = "Submit Request"; 
+            btn.disabled = false;
         }
 
         async function createStaffAccount() {
-            let name = document.getElementById('newStaffName').value.trim(), email = document.getElementById('newStaffEmail').value.trim(), pass = document.getElementById('newStaffPassword').value, role = document.getElementById('newStaffRole').value;
-            let btn = document.getElementById('btnCreateUser'), status = document.getElementById('accStatusMsg');
-            if(!name || !email || pass.length < 6) return alert("Fill all fields.");
-            btn.innerText = "Processing..."; btn.disabled = true; status.classList.add('hidden');
+            let name = document.getElementById('newStaffName').value.trim();
+            let email = document.getElementById('newStaffEmail').value.trim();
+            let pass = document.getElementById('newStaffPassword').value;
+            let role = document.getElementById('newStaffRole').value;
+            let btn = document.getElementById('btnCreateUser');
+            let status = document.getElementById('accStatusMsg');
+            
+            if(!name || !email || pass.length < 6) {
+                return alert("Fill all fields.");
+            }
+            
+            btn.innerText = "Processing..."; 
+            btn.disabled = true; 
+            status.classList.add('hidden');
+            
             try {
                 const newCred = await window.createUserWithEmailAndPassword(window.secondaryAuth, email, pass);
-                await window.setDoc(window.doc(window.firebaseDB, "users", newCred.user.uid), { name: name, email: email, role: role, status: "active", initialPassword: pass, createdAt: getLocalISODate(), createdBy: currentUser.name });
+                await window.setDoc(window.doc(window.firebaseDB, "users", newCred.user.uid), { 
+                    name: name, 
+                    email: email, 
+                    role: role, 
+                    status: "active", 
+                    initialPassword: pass, 
+                    createdAt: getLocalISODate(), 
+                    createdBy: currentUser.name 
+                });
+                
                 await window.signOut(window.secondaryAuth);
-                status.innerText = `Success! Account created.`; status.style.background = "#D1FAE5"; status.style.color = "#059669"; status.style.border = "1px solid #34D399"; status.classList.remove('hidden');
-                document.getElementById('newStaffName').value = ''; document.getElementById('newStaffEmail').value = ''; document.getElementById('newStaffPassword').value = ''; loadAccounts(); 
-            } catch(error) { status.innerText = "Error: " + error.message; status.style.background = "#FEE2E2"; status.style.color = "#DC2626"; status.style.border = "1px solid #FCA5A5"; status.classList.remove('hidden'); }
-            btn.innerText = "➕ Register Account"; btn.disabled = false;
+                
+                status.innerText = `Success! Account created.`; 
+                status.style.background = "#D1FAE5"; 
+                status.style.color = "#059669"; 
+                status.style.border = "1px solid #34D399"; 
+                status.classList.remove('hidden');
+                
+                document.getElementById('newStaffName').value = ''; 
+                document.getElementById('newStaffEmail').value = ''; 
+                document.getElementById('newStaffPassword').value = ''; 
+                
+                loadAccounts(); 
+            } catch(error) { 
+                status.innerText = "Error: " + error.message; 
+                status.style.background = "#FEE2E2"; 
+                status.style.color = "#DC2626"; 
+                status.style.border = "1px solid #FCA5A5"; 
+                status.classList.remove('hidden'); 
+            }
+            
+            btn.innerText = "➕ Register Account"; 
+            btn.disabled = false;
         }
 
         async function loadAccounts() {
-            let tbody = document.querySelector('#accountsTable tbody'); tbody.innerHTML = '<tr><td colspan="4" class="text-center">Loading accounts...</td></tr>';
+            let tbody = document.querySelector('#accountsTable tbody'); 
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center">Loading accounts...</td></tr>';
+            
             try {
                 const querySnapshot = await window.getDocs(window.collection(window.firebaseDB, "users"));
                 tbody.innerHTML = '';
+                
                 querySnapshot.forEach((docSnap) => {
-                    let d = docSnap.data(), uid = docSnap.id;
-                    let statBadge = d.status === 'active' ? `<span class="badge badge-user">Active</span>` : `<span class="badge badge-role">Pending</span>`;
+                    let d = docSnap.data();
+                    let uid = docSnap.id;
+                    
+                    let statBadge = d.status === 'active' 
+                        ? `<span class="badge badge-user">Active</span>` 
+                        : `<span class="badge badge-role">Pending</span>`;
+                        
                     let actions = '';
-                    if(d.status === 'pending') actions += `<button class="btn btn-sm btn-success" style="margin-right:4px;" onclick="approveUser('${uid}')">Approve</button>`;
-                    if(currentUser.uid !== uid) actions += `<button class="btn btn-sm btn-danger" onclick="deleteUser('${uid}')">Delete</button>`; else actions += `<span style="font-size:11px; color:gray;">(You)</span>`;
+                    if(d.status === 'pending') {
+                        actions += `<button class="btn btn-sm btn-success" style="margin-right:4px;" onclick="window.approveUser('${uid}')">Approve</button>`;
+                    }
+                    if(currentUser.uid !== uid) {
+                        actions += `<button class="btn btn-sm btn-danger" onclick="window.deleteUser('${uid}')">Delete</button>`; 
+                    } else {
+                        actions += `<span style="font-size:11px; color:gray;">(You)</span>`;
+                    }
+                    
                     tbody.innerHTML += `<tr>
                         <td><strong>${d.name}</strong><br><span style="font-size:11px; color:gray;">${d.createdAt ? d.createdAt.split('T')[0] : ''}</span></td>
                         <td>${d.email}<br><span style="font-size:11px; color:var(--primary); font-weight:700;">Pass: ${d.initialPassword || 'Hidden'}</span></td>
@@ -848,72 +1363,133 @@
                         <td class="text-center">${actions}</td>
                     </tr>`;
                 });
-            } catch(e) { tbody.innerHTML = `<tr><td colspan="4" class="text-center" style="color:var(--danger)">Error: ${e.message}</td></tr>`; }
+            } catch(e) { 
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center" style="color:var(--danger)">Error: ${e.message}</td></tr>`; 
+            }
         }
 
-        async function approveUser(uid) { if(confirm("Approve account?")) { try { await window.updateDoc(window.doc(window.firebaseDB, "users", uid), { status: "active" }); alert("Approved!"); loadAccounts(); } catch(e) { alert("Error: " + e.message); } } }
-        async function deleteUser(uid) { if(confirm("WARNING: Revoke access?")) { try { await window.deleteDoc(window.doc(window.firebaseDB, "users", uid)); alert("Deleted."); loadAccounts(); } catch(e) { alert("Error: " + e.message); } } }
+        window.approveUser = async function(uid) { 
+            if(confirm("Approve account?")) { 
+                try { 
+                    await window.updateDoc(window.doc(window.firebaseDB, "users", uid), { status: "active" }); 
+                    alert("Approved!"); 
+                    loadAccounts(); 
+                } catch(e) { 
+                    alert("Error: " + e.message); 
+                } 
+            } 
+        }
+
+        window.deleteUser = async function(uid) { 
+            if(confirm("WARNING: Revoke access?")) { 
+                try { 
+                    await window.deleteDoc(window.doc(window.firebaseDB, "users", uid)); 
+                    alert("Deleted."); 
+                    loadAccounts(); 
+                } catch(e) { 
+                    alert("Error: " + e.message); 
+                } 
+            } 
+        }
 
         // ==========================================
         // 6. CORE UI RENDERING
         // ==========================================
-        function toggleNewItemFields() {
+        window.toggleNewItemFields = function() {
             let type = document.getElementById('newItemType').value;
+            
             if(type === 'service') {
-                document.getElementById('costField').classList.add('hidden');
-                document.getElementById('stockField').classList.add('hidden');
-                document.getElementById('mlField').classList.add('hidden');
+                document.getElementById('costField').classList.add('hidden'); 
+                document.getElementById('stockField').classList.add('hidden'); 
+                document.getElementById('mlField').classList.add('hidden'); 
+                document.getElementById('serialField').classList.add('hidden'); 
                 document.getElementById('lblPrice').innerText = 'Fee (₱)';
             } else if (type === 'vial') {
-                document.getElementById('costField').classList.remove('hidden');
-                document.getElementById('stockField').classList.remove('hidden');
-                document.getElementById('mlField').classList.remove('hidden');
-                document.getElementById('lblCost').innerText = 'Cost per Vial (₱)';
+                document.getElementById('costField').classList.remove('hidden'); 
+                document.getElementById('stockField').classList.remove('hidden'); 
+                document.getElementById('mlField').classList.remove('hidden'); 
+                document.getElementById('serialField').classList.remove('hidden'); 
+                document.getElementById('lblCost').innerText = 'Cost per Vial (₱)'; 
                 document.getElementById('lblPrice').innerText = 'SRP per ML (₱)';
             } else {
-                document.getElementById('costField').classList.remove('hidden');
-                document.getElementById('stockField').classList.remove('hidden');
-                document.getElementById('mlField').classList.add('hidden');
-                document.getElementById('lblCost').innerText = 'Cost (₱)';
+                document.getElementById('costField').classList.remove('hidden'); 
+                document.getElementById('stockField').classList.remove('hidden'); 
+                document.getElementById('mlField').classList.add('hidden'); 
+                document.getElementById('serialField').classList.add('hidden'); 
+                document.getElementById('lblCost').innerText = 'Cost (₱)'; 
                 document.getElementById('lblPrice').innerText = 'Selling Price (₱)';
             }
         }
 
         window.toggleInputs = function(checkbox, type, id) {
-            if(type === 'prod_whole') {
-                let input = document.getElementById(`qty_whole_${id}`);
-                input.disabled = !checkbox.checked;
-                if(checkbox.checked) input.focus(); else input.value = 1;
-            } else if (type === 'prod_vial') {
-                let inputDiv = document.getElementById(`inputs_vial_${id}`);
-                if(checkbox.checked) {
-                    inputDiv.classList.remove('hidden');
-                } else {
-                    inputDiv.classList.add('hidden');
+            let wrapper = checkbox.closest('.product-item-wrapper');
+            let body = wrapper.querySelector('.item-body');
+            
+            if(checkbox.checked) {
+                body.classList.remove('hidden');
+            } else {
+                body.classList.add('hidden');
+                
+                if (type === 'prod_vial') {
                     document.getElementById(`ml_vial_${id}`).value = 1;
                     
                     let selObj = document.getElementById(`select_serial_vial_${id}`);
-                    if(selObj && selObj.options.length > 0) selObj.selectedIndex = 0;
+                    if(selObj && selObj.options.length > 0) {
+                        selObj.selectedIndex = 0;
+                    }
                     
                     let newSerObj = document.getElementById(`new_serial_container_${id}`);
-                    if(newSerObj) {
-                        if(selObj && selObj.value === 'NEW') newSerObj.style.display = 'flex';
-                        else if (!selObj) newSerObj.style.display = 'flex';
-                        else newSerObj.style.display = 'none';
+                    if(newSerObj) { 
+                        if(selObj && selObj.value === 'NEW') {
+                            newSerObj.style.display = 'block'; 
+                        } else if (!selObj) {
+                            newSerObj.style.display = 'block'; 
+                        } else {
+                            newSerObj.style.display = 'none'; 
+                        }
                     }
+                } else {
+                    document.getElementById(`qty_${type.split('_')[1]}_${id}`).value = 1;
                 }
-            } else if (type === 'serv') {
-                let input = document.getElementById(`qty_serv_${id}`);
-                input.disabled = !checkbox.checked;
-                if(checkbox.checked) input.focus(); else input.value = 1;
             }
         }
 
         window.handleSerialSelect = function(id) {
             let sel = document.getElementById(`select_serial_vial_${id}`).value;
             let container = document.getElementById(`new_serial_container_${id}`);
-            if(sel === 'NEW') container.style.display = 'flex';
-            else container.style.display = 'none';
+            
+            if(sel === 'NEW') {
+                container.style.display = 'block'; 
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        window.manuallyOpenVial = function() {
+            let pId = parseInt(document.getElementById('manualOpenVialSelect').value);
+            let serial = document.getElementById('manualOpenVialSerial').value.trim().toUpperCase();
+            
+            if(!pId || !serial) {
+                return alert("Select product and enter serial number.");
+            }
+            
+            let p = inventory.find(i => i.id === pId);
+            if(!p) return;
+            
+            if(p.stock <= 0) {
+                return alert("No stock available to open.");
+            }
+            
+            if(activeVials.some(v => v.serial === serial && v.productId === pId)) {
+                return alert("This Serial Number is already active.");
+            }
+            
+            p.stock -= 1;
+            activeVials.push({ serial: serial, productId: p.id, usedML: 0, maxML: p.mlPerVial });
+            pushLiveClinicData();
+            
+            alert("Vial opened successfully! It is now available in the Transact Tab.");
+            document.getElementById('manualOpenVialSerial').value = '';
         }
 
         function renderUI() {
@@ -929,72 +1505,74 @@
                     let activeForThis = activeVials.filter(v => v.productId === i.id);
                     let disabled = (i.stock <= 0 && activeForThis.length === 0) ? 'disabled' : '';
                     let opacityClass = disabled ? 'opacity-50' : '';
-                    
-                    let serialOptions = '';
+                    let serialOptions = ''; 
                     let defaultIsNew = false;
                     
                     if (activeForThis.length > 0) {
-                        activeForThis.forEach(v => {
-                            let rem = v.maxML - v.usedML;
-                            serialOptions += `<option value="${v.serial}">Use SN-${v.serial} (${rem.toFixed(1)} ML left)</option>`;
+                        activeForThis.forEach(v => { 
+                            let rem = v.maxML - v.usedML; 
+                            serialOptions += `<option value="${v.serial}">Use SN-${v.serial} (${rem.toFixed(1)} ML left)</option>`; 
                         });
-                        if (i.stock > 0) serialOptions += `<option value="NEW">+ Open New Vial</option>`;
-                        defaultIsNew = false;
-                    } else {
                         if (i.stock > 0) {
-                            serialOptions = `<option value="NEW">+ Open New Vial</option>`;
-                            defaultIsNew = true;
+                            serialOptions += `<option value="NEW">+ Open New Vial</option>`;
+                        }
+                    } else {
+                        if (i.stock > 0) { 
+                            serialOptions = `<option value="NEW">+ Open New Vial</option>`; 
+                            defaultIsNew = true; 
                         }
                     }
 
                     pl.innerHTML += `
-                        <label class="product-item ${opacityClass}" style="flex-direction:column; align-items:flex-start;">
-                            <div class="item-left">
-                                <div style="display:flex; align-items:center;">
-                                    <input type="checkbox" name="selectedItems" value="prod_vial_${i.id}" ${disabled} onchange="toggleInputs(this, 'prod_vial', ${i.id})">
-                                    <div class="product-info">
-                                        <span class="product-name">${i.name}</span>
-                                        <span class="product-meta">₱${i.price.toFixed(2)}/ML | Main Stock: ${i.stock} vials | Capacity: ${i.mlPerVial} ML per Vial</span>
+                        <div class="product-item-wrapper ${opacityClass}">
+                            <label class="product-item-header">
+                                <input type="checkbox" name="selectedItems" value="prod_vial_${i.id}" ${disabled} onchange="window.toggleInputs(this, 'prod_vial', ${i.id})">
+                                <div class="product-info">
+                                    <span class="product-name">${i.name}</span>
+                                    <span class="product-meta" style="color:var(--primary);">Capacity: ${i.mlPerVial} ML per Vial</span>
+                                    <span class="product-meta">₱${i.price.toFixed(2)}/ML | Main Stock: ${i.stock} vials</span>
+                                </div>
+                            </label>
+                            <div class="item-body hidden" id="inputs_vial_${i.id}">
+                                <div class="responsive-input-grid">
+                                    <div class="form-group" style="margin:0;">
+                                        <label>ML Used:</label>
+                                        <input type="number" id="ml_vial_${i.id}" class="spacious-input" value="1" min="0.1" step="0.1">
+                                    </div>
+                                    <div class="form-group" style="margin:0;">
+                                        <label>Select Serial:</label>
+                                        <select id="select_serial_vial_${i.id}" class="spacious-input" onchange="window.handleSerialSelect(${i.id})">
+                                            ${serialOptions}
+                                        </select>
+                                    </div>
+                                    <div class="form-group" id="new_serial_container_${i.id}" style="display:${defaultIsNew ? 'block' : 'none'}; margin:0;">
+                                        <label style="color:var(--primary);">Type New Serial:</label>
+                                        <input type="text" id="new_serial_vial_${i.id}" class="spacious-input" placeholder="e.g. SN-10293">
                                     </div>
                                 </div>
                             </div>
-                            <div class="item-inputs hidden" id="inputs_vial_${i.id}">
-                                <div style="display: flex; gap: 10px; align-items: center;">
-                                    <label style="margin:0; white-space:nowrap; font-size:12px;">ML Used:</label>
-                                    <input type="number" id="ml_vial_${i.id}" class="inline-qty-input" value="1" min="0.1" step="0.1" onclick="event.stopPropagation()" style="flex:1;">
-                                </div>
-                                <div style="display: flex; gap: 10px; align-items: center;">
-                                    <label style="margin:0; white-space:nowrap; font-size:12px;">Serial No:</label>
-                                    <select id="select_serial_vial_${i.id}" style="flex:2; padding:10px; font-size:13px; font-weight:bold;" onclick="event.stopPropagation()" onchange="handleSerialSelect(${i.id})">
-                                        ${serialOptions}
-                                    </select>
-                                </div>
-                                <div id="new_serial_container_${i.id}" style="display:${defaultIsNew ? 'flex' : 'none'}; gap: 10px; align-items: center;">
-                                    <label style="margin:0; white-space:nowrap; font-size:12px; color:var(--primary);">New Serial:</label>
-                                    <input type="text" id="new_serial_vial_${i.id}" class="inline-serial-input" placeholder="Type new serial..." onclick="event.stopPropagation()" style="flex:1;">
-                                </div>
-                            </div>
-                        </label>`;
+                        </div>`;
                 });
             }
 
             if(hasWhole) {
                 pl.innerHTML += `<div class="list-header">📦 Whole Products</div>`;
                 inventory.filter(i => i.type !== 'vial').forEach(i => {
-                    let disabled = (i.stock <= 0) ? 'disabled' : '';
+                    let disabled = (i.stock <= 0) ? 'disabled' : ''; 
                     let opacityClass = disabled ? 'opacity-50' : '';
                     pl.innerHTML += `
-                        <label class="product-item ${opacityClass}">
-                            <div class="item-left">
-                                <input type="checkbox" name="selectedItems" value="prod_whole_${i.id}" ${disabled} onchange="toggleInputs(this, 'prod_whole', ${i.id})">
-                                <div class="product-info">
-                                    <span class="product-name">${i.name}</span><span class="product-meta">₱${i.price.toFixed(2)} | Stock: ${i.stock}</span>
+                        <div class="product-item-wrapper ${opacityClass}">
+                            <label class="product-item-header">
+                                <input type="checkbox" name="selectedItems" value="prod_whole_${i.id}" ${disabled} onchange="window.toggleInputs(this, 'prod_whole', ${i.id})">
+                                <div class="product-info"><span class="product-name">${i.name}</span><span class="product-meta">₱${i.price.toFixed(2)} | Stock: ${i.stock}</span></div>
+                            </label>
+                            <div class="item-body hidden" id="inputs_whole_${i.id}">
+                                <div class="form-group" style="margin:0;">
+                                    <label>Quantity:</label>
+                                    <input type="number" id="qty_whole_${i.id}" class="spacious-input" value="1" min="1">
                                 </div>
                             </div>
-                            <div class="item-inputs hidden" id="inputs_whole_${i.id}" style="width:auto; margin:0; background:transparent; border:none; padding:0;">
-                                <input type="number" id="qty_whole_${i.id}" class="inline-qty-input" value="1" min="1" disabled onclick="event.stopPropagation()">
-                            </div>
-                        </label>`;
+                        </div>`;
                 });
             }
             
@@ -1002,40 +1580,52 @@
                 pl.innerHTML += `<div class="list-header">🩺 Services</div>`;
                 services.forEach(s => {
                     pl.innerHTML += `
-                        <label class="product-item">
-                            <div class="item-left">
-                                <input type="checkbox" name="selectedItems" value="serv_${s.id}" onchange="toggleInputs(this, 'serv', ${s.id})">
-                                <div class="product-info">
-                                    <span class="product-name">${s.name}</span><span class="product-meta">Fee: ₱${s.price.toFixed(2)}</span>
+                        <div class="product-item-wrapper">
+                            <label class="product-item-header">
+                                <input type="checkbox" name="selectedItems" value="serv_${s.id}" onchange="window.toggleInputs(this, 'serv', ${s.id})">
+                                <div class="product-info"><span class="product-name">${s.name}</span><span class="product-meta">Fee: ₱${s.price.toFixed(2)}</span></div>
+                            </label>
+                            <div class="item-body hidden" id="inputs_serv_${s.id}">
+                                <div class="form-group" style="margin:0;">
+                                    <label>Quantity / Session:</label>
+                                    <input type="number" id="qty_serv_${s.id}" class="spacious-input" value="1" min="1">
                                 </div>
                             </div>
-                            <div class="item-inputs hidden" id="inputs_serv_${s.id}" style="width:auto; margin:0; background:transparent; border:none; padding:0;">
-                                <input type="number" id="qty_serv_${s.id}" class="inline-qty-input" value="1" min="1" disabled onclick="event.stopPropagation()">
-                            </div>
-                        </label>`;
+                        </div>`;
                 });
             }
 
+            // Populate Manual Open Vial Dropdown
+            let manualVialSel = document.getElementById('manualOpenVialSelect');
+            manualVialSel.innerHTML = '';
+            inventory.filter(i => i.type === 'vial').forEach(i => {
+                manualVialSel.innerHTML += `<option value="${i.id}">${i.name} (Stock: ${i.stock})</option>`;
+            });
+
             // Render Inventory Table
-            let invTb = document.querySelector('#inventoryTable tbody'); invTb.innerHTML = '';
+            let invTb = document.querySelector('#inventoryTable tbody'); 
+            invTb.innerHTML = '';
+            
             inventory.forEach(i => {
                 let badgeTxt = i.type === 'vial' ? '🧪 Vial' : '📦 Whole';
                 invTb.innerHTML += `<tr>
-                    <td><span class="badge" style="background:var(--gray-300); color:var(--dark); margin:0;">${badgeTxt}</span></td>
+                    <td><span class="badge" style="background:var(--primary); color:white; margin:0;">${badgeTxt}</span></td>
                     <td><strong>${i.name}</strong></td>
                     <td class="admin-only ${currentUser.role==='admin'?'':'hidden'}">₱${i.cost}</td>
-                    <td style="color:var(--primary); font-weight:700;">₱${i.price} ${i.type==='vial'?'/ ML':''}</td>
-                    <td class="admin-only ${currentUser.role==='admin'?'':'hidden'}" style="color:var(--secondary); font-weight:700;">₱${i.price - (i.type==='vial'?(i.cost/i.mlPerVial):i.cost)}</td>
-                    <td><span class="badge badge-user">${i.stock} ${i.type==='vial'?'Vials':'Pcs'}</span></td>
+                    <td style="color:var(--primary); font-weight:800;">₱${i.price} ${i.type==='vial'?'/ ML':''}</td>
+                    <td class="admin-only ${currentUser.role==='admin'?'':'hidden'}" style="color:var(--secondary); font-weight:800;">₱${i.price - (i.type==='vial'?(i.cost/i.mlPerVial):i.cost)}</td>
+                    <td><span class="badge badge-user" style="font-size:13px; padding:8px 12px;">${i.stock} ${i.type==='vial'?'Vials':'Pcs'}</span></td>
                     <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-center">
-                        <button class="btn btn-sm btn-info" onclick="addStock(${i.id})">➕</button>
-                        <button class="btn btn-sm btn-warning" onclick="editProduct(${i.id})">✏️</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteProduct(${i.id})">🗑️</button>
+                        <button class="btn btn-sm btn-info" onclick="window.addStock(${i.id})">➕</button>
+                        <button class="btn btn-sm btn-warning" onclick="window.editProduct(${i.id})">✏️</button>
+                        <button class="btn btn-sm btn-danger" onclick="window.deleteProduct(${i.id})">🗑️</button>
                     </td></tr>`;
             });
             
             // Render Active Vials Table
-            let actVialTb = document.querySelector('#activeVialsTable tbody'); actVialTb.innerHTML = '';
+            let actVialTb = document.querySelector('#activeVialsTable tbody'); 
+            actVialTb.innerHTML = '';
+            
             if(activeVials.length === 0) {
                 actVialTb.innerHTML = '<tr><td colspan="4" class="text-center">No currently opened vials.</td></tr>';
             } else {
@@ -1044,37 +1634,52 @@
                     let remaining = v.maxML - v.usedML;
                     actVialTb.innerHTML += `<tr>
                         <td><strong>${pName}</strong></td>
-                        <td style="color:var(--primary); font-weight:bold;">${v.serial}</td>
-                        <td style="color:var(--warning);">${v.usedML} ML</td>
-                        <td style="color:var(--secondary); font-weight:bold;">${remaining.toFixed(1)} ML</td>
+                        <td style="color:var(--primary); font-weight:800; font-size:16px;">${v.serial}</td>
+                        <td style="color:var(--warning); font-weight:bold;">${v.usedML} ML</td>
+                        <td style="color:var(--secondary); font-weight:900; font-size:16px;">${remaining.toFixed(1)} ML</td>
                     </tr>`;
                 });
             }
 
             // Render Services Table
-            let srvTb = document.querySelector('#servicesTable tbody'); srvTb.innerHTML = '';
+            let srvTb = document.querySelector('#servicesTable tbody'); 
+            srvTb.innerHTML = '';
+            
             services.forEach(s => {
                 srvTb.innerHTML += `<tr>
                     <td><strong>${s.name}</strong></td>
-                    <td style="color:var(--primary); font-weight:700;">₱${s.price}</td>
+                    <td style="color:var(--primary); font-weight:800;">₱${s.price}</td>
                     <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-center">
-                        <button class="btn btn-sm btn-warning" onclick="editService(${s.id})">✏️</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteService(${s.id})">🗑️</button>
+                        <button class="btn btn-sm btn-warning" onclick="window.editService(${s.id})">✏️</button>
+                        <button class="btn btn-sm btn-danger" onclick="window.deleteService(${s.id})">🗑️</button>
                     </td></tr>`;
             });
 
             // Till
-            let tot = 0; for(let k in finance){ document.getElementById(`fin-${k}`).innerText='₱'+finance[k].toFixed(2); tot+=finance[k]; }
+            let tot = 0; 
+            for(let k in finance){ 
+                document.getElementById(`fin-${k}`).innerText='₱'+finance[k].toFixed(2); 
+                tot+=finance[k]; 
+            }
             document.getElementById('fin-TOTAL').innerText = '₱'+tot.toFixed(2);
 
-            if(currentUser.role === 'admin') { calculateReports(); renderHistory(); }
+            if(currentUser.role === 'admin') { 
+                window.calculateReports(); 
+                window.renderHistory(); 
+            }
         }
 
-        function processTransaction() {
+        window.processTransaction = function() {
             let checkboxes = document.querySelectorAll('input[name="selectedItems"]:checked');
-            if(checkboxes.length === 0) return alert('Select at least one product or service.');
+            
+            if(checkboxes.length === 0) {
+                return alert('Select at least one product or service.');
+            }
 
-            let rawDate = document.getElementById('transDate').value, method = document.getElementById('transMethod').value, disc = parseFloat(document.getElementById('transDiscount').value), cat = document.getElementById('transCategory').value;
+            let rawDate = document.getElementById('transDate').value;
+            let method = document.getElementById('transMethod').value;
+            let disc = parseFloat(document.getElementById('transDiscount').value);
+            let cat = document.getElementById('transCategory').value;
             
             let txOperations = [];
 
@@ -1083,8 +1688,8 @@
                 let parts = cb.value.split('_'); 
                 
                 if (parts[0] === 'prod') {
-                    let typeStr = parts[1];
-                    let id = parseInt(parts[2]);
+                    let typeStr = parts[1]; 
+                    let id = parseInt(parts[2]); 
                     let p = inventory.find(i => i.id === id);
                     
                     if (typeStr === 'vial') {
@@ -1094,35 +1699,54 @@
                         
                         if (serialSel === 'NEW') {
                             serial = document.getElementById(`new_serial_vial_${id}`).value.trim().toUpperCase();
-                            if(!serial) return alert(`Please enter the New Serial Number for ${p.name}`);
+                            if(!serial) {
+                                return alert(`Please enter the New Serial Number for ${p.name}`);
+                            }
                             
                             let existingVial = activeVials.find(v => v.serial === serial && v.productId === id);
-                            if(existingVial) return alert(`Serial number ${serial} is already actively opened! Please select it from the dropdown instead.`);
+                            if(existingVial) {
+                                return alert(`Serial number ${serial} is already actively opened! Select it from dropdown.`);
+                            }
                             
-                            if(p.stock <= 0) return alert(`No main stock left to open a new vial for ${p.name}.`);
-                            if (mlUsed > p.mlPerVial) return alert(`Input ML (${mlUsed}) exceeds the total capacity of a new vial (${p.mlPerVial} ML).`);
+                            if(p.stock <= 0) {
+                                return alert(`No main stock left to open a new vial for ${p.name}.`);
+                            }
+                            if (mlUsed > p.mlPerVial) {
+                                return alert(`Input ML (${mlUsed}) exceeds the capacity of a new vial (${p.mlPerVial} ML).`);
+                            }
                         } else {
                             serial = serialSel;
                             let v = activeVials.find(v => v.serial === serial && v.productId === id);
-                            if (v) {
-                                let remaining = v.maxML - v.usedML;
-                                if (mlUsed > remaining) return alert(`Serial ${serial} only has ${remaining.toFixed(1)} ML left. Transaction stopped.`);
+                            if (v) { 
+                                let remaining = v.maxML - v.usedML; 
+                                if (mlUsed > remaining) {
+                                    return alert(`Serial ${serial} only has ${remaining.toFixed(1)} ML left.`); 
+                                }
                             }
                         }
                         
-                        if(isNaN(mlUsed) || mlUsed <= 0) return alert(`Invalid ML for ${p.name}`);
+                        if(isNaN(mlUsed) || mlUsed <= 0) {
+                            return alert(`Invalid ML for ${p.name}`);
+                        }
+                        
                         txOperations.push({ type: 'vial', ref: p, mlUsed: mlUsed, serial: serial });
                         
                     } else if (typeStr === 'whole') {
                         let qty = parseInt(document.getElementById(`qty_whole_${id}`).value);
-                        if(isNaN(qty) || qty <= 0) return alert(`Invalid qty for ${p.name}`);
-                        if(p.stock < qty) return alert(`Not enough stock for ${p.name}. Available: ${p.stock}`);
+                        if(isNaN(qty) || qty <= 0) {
+                            return alert(`Invalid qty for ${p.name}`);
+                        }
+                        if(p.stock < qty) {
+                            return alert(`Not enough stock for ${p.name}. Available: ${p.stock}`);
+                        }
                         txOperations.push({ type: 'whole', ref: p, qty: qty });
                     }
                 } else if (parts[0] === 'serv') {
                     let s = services.find(i => i.id === parseInt(parts[1])); 
                     let qty = parseInt(document.getElementById(`qty_serv_${s.id}`).value);
-                    if(isNaN(qty) || qty <= 0) return alert(`Invalid qty for ${s.name}`);
+                    if(isNaN(qty) || qty <= 0) {
+                        return alert(`Invalid qty for ${s.name}`);
+                    }
                     txOperations.push({ type: 'serv', ref: s, qty: qty });
                 }
             }
@@ -1130,91 +1754,191 @@
             // EXECUTION PHASE
             let timePart = getLocalISODate().split('T')[1] || "12:00:00";
             let finalDate = rawDate ? (rawDate + "T" + timePart) : getLocalISODate();
-            let totalAmt = 0; let receiptItemsHTML = [];
+            let totalAmt = 0; 
+            let receiptItemsHTML = [];
 
             txOperations.forEach(op => {
                 if (op.type === 'vial') {
                     let itemAmt = (op.ref.price * op.mlUsed) * (1 - disc); 
-                    totalAmt += itemAmt; finance[method] += itemAmt;
+                    totalAmt += itemAmt; 
+                    finance[method] += itemAmt;
                     
                     let costPerMl = op.ref.cost / op.ref.mlPerVial;
                     let totalCost = costPerMl * op.mlUsed;
 
-                    // Handle Tracker
                     let v = activeVials.find(v => v.serial === op.serial && v.productId === op.ref.id);
-                    if (!v) {
-                        op.ref.stock -= 1; // Open new vial
-                        v = { serial: op.serial, productId: op.ref.id, usedML: 0, maxML: op.ref.mlPerVial };
-                        activeVials.push(v);
+                    if (!v) { 
+                        op.ref.stock -= 1; 
+                        v = { serial: op.serial, productId: op.ref.id, usedML: 0, maxML: op.ref.mlPerVial }; 
+                        activeVials.push(v); 
                     }
                     
                     v.usedML += op.mlUsed;
                     
-                    // If empty, remove from tracker
-                    if(v.usedML >= v.maxML) {
-                        activeVials = activeVials.filter(av => !(av.serial === op.serial && av.productId === op.ref.id));
+                    if(v.usedML >= v.maxML) { 
+                        activeVials = activeVials.filter(av => !(av.serial === op.serial && av.productId === op.ref.id)); 
                     }
                     
-                    txHistory.push({ id: Date.now() + Math.random(), date: finalDate, category: cat, item: op.ref.name, isVial: true, qty: op.mlUsed, serial: op.serial, method: method, amount: itemAmt, totalCost: totalCost, processedBy: currentUser.name }); 
-                    receiptItemsHTML.push(`<strong>${op.ref.name}</strong> (${op.mlUsed} ML) <span style="font-size:10px;">[SN:${op.serial}]</span><br>₱${itemAmt.toFixed(2)}`);
+                    txHistory.push({ 
+                        id: Date.now() + Math.random(), 
+                        date: finalDate, 
+                        category: cat, 
+                        item: op.ref.name, 
+                        isVial: true, 
+                        qty: op.mlUsed, 
+                        serial: op.serial, 
+                        method: method, 
+                        amount: itemAmt, 
+                        totalCost: totalCost, 
+                        processedBy: currentUser.name 
+                    }); 
+                    
+                    receiptItemsHTML.push(`<strong>${op.ref.name}</strong> (${op.mlUsed} ML) <br><span style="font-size:11px; color:#4F46E5;">[SN: ${op.serial}]</span><br>₱${itemAmt.toFixed(2)}`);
 
                 } else if (op.type === 'whole') {
-                    op.ref.stock -= op.qty;
+                    op.ref.stock -= op.qty; 
                     let itemAmt = (op.ref.price * op.qty) * (1 - disc); 
-                    totalAmt += itemAmt; finance[method] += itemAmt;
+                    totalAmt += itemAmt; 
+                    finance[method] += itemAmt;
                     
-                    txHistory.push({ id: Date.now() + Math.random(), date: finalDate, category: cat, item: op.ref.name, isVial: false, qty: op.qty, method: method, amount: itemAmt, totalCost: (op.ref.cost*op.qty), processedBy: currentUser.name }); 
+                    txHistory.push({ 
+                        id: Date.now() + Math.random(), 
+                        date: finalDate, 
+                        category: cat, 
+                        item: op.ref.name, 
+                        isVial: false, 
+                        qty: op.qty, 
+                        method: method, 
+                        amount: itemAmt, 
+                        totalCost: (op.ref.cost*op.qty), 
+                        processedBy: currentUser.name 
+                    }); 
+                    
                     receiptItemsHTML.push(`<strong>${op.ref.name}</strong> (x${op.qty})<br>₱${itemAmt.toFixed(2)}`);
 
                 } else if (op.type === 'serv') {
                     let itemAmt = (op.ref.price * op.qty) * (1 - disc); 
-                    totalAmt += itemAmt; finance[method] += itemAmt;
+                    totalAmt += itemAmt; 
+                    finance[method] += itemAmt;
                     
-                    txHistory.push({ id: Date.now() + Math.random(), date: finalDate, category: cat, item: op.ref.name, isService: true, qty: op.qty, method: method, amount: itemAmt, totalCost: 0, processedBy: currentUser.name }); 
+                    txHistory.push({ 
+                        id: Date.now() + Math.random(), 
+                        date: finalDate, 
+                        category: cat, 
+                        item: op.ref.name, 
+                        isService: true, 
+                        qty: op.qty, 
+                        method: method, 
+                        amount: itemAmt, 
+                        totalCost: 0, 
+                        processedBy: currentUser.name 
+                    }); 
+                    
                     receiptItemsHTML.push(`<strong>${op.ref.name}</strong> (x${op.qty})<br>₱${itemAmt.toFixed(2)}`);
                 }
             });
 
             pushLiveClinicData(); 
             
-            document.getElementById('rcptDate').innerText = new Date(finalDate).toLocaleString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }); 
-            document.getElementById('rcptCategory').innerText = cat; document.getElementById('rcptItem').innerHTML = receiptItemsHTML.join('<br><br>'); 
+            checkboxes.forEach(cb => { 
+                cb.checked = false; 
+                window.toggleInputs(cb, cb.value.replace(`_${cb.value.split('_')[2]}`, ''), cb.value.split('_')[2]); 
+            }); 
+            
+            document.getElementById('rcptDate').innerText = new Date(finalDate).toLocaleString('en-US', { 
+                weekday:'short', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' 
+            }); 
+            document.getElementById('rcptCategory').innerText = cat; 
+            document.getElementById('rcptItem').innerHTML = receiptItemsHTML.join('<br><br>'); 
             document.getElementById('rcptMethod').innerText = method; 
-            document.getElementById('rcptTotal').innerText = '₱' + totalAmt.toFixed(2); document.getElementById('rcptUser').innerText = currentUser.name; 
+            document.getElementById('rcptTotal').innerText = '₱' + totalAmt.toFixed(2); 
+            document.getElementById('rcptUser').innerText = currentUser.name; 
+            
             document.getElementById('receiptModalOverlay').classList.remove('hidden');
         }
 
-        function closeReceipt() { document.getElementById('receiptModalOverlay').classList.add('hidden'); }
-
-        function addExpense() {
-            let rawDate = document.getElementById('expDate').value, cat = document.getElementById('expCategory').value, note = document.getElementById('expNote').value, amt = parseFloat(document.getElementById('expAmount').value);
-            if(isNaN(amt) || amt <= 0) return alert('Valid amount needed.');
-            let timePart = getLocalISODate().split('T')[1] || "12:00:00"; let finalDate = rawDate ? (rawDate + "T" + timePart) : getLocalISODate();
-            expHistory.push({ id: Date.now(), date: finalDate, category: cat, note: note || 'N/A', amount: amt, user: currentUser.name }); 
-            document.getElementById('expAmount').value = ''; document.getElementById('expNote').value = ''; pushLiveClinicData();
+        window.closeReceipt = function() { 
+            document.getElementById('receiptModalOverlay').classList.add('hidden'); 
+        }
+        
+        window.downloadReceiptJPEG = function() {
+            const receiptEl = document.getElementById('receiptContentToDownload');
+            html2canvas(receiptEl, { scale: 2, backgroundColor: "#FFFFFF" }).then(canvas => {
+                let link = document.createElement('a');
+                link.download = 'Clinic_Receipt_' + Date.now() + '.jpg';
+                link.href = canvas.toDataURL('image/jpeg', 1.0);
+                link.click();
+            });
         }
 
-        function renderHistory() {
-            let txb = document.querySelector('#historyTable tbody'); txb.innerHTML = '';
+        window.addExpense = function() {
+            let rawDate = document.getElementById('expDate').value;
+            let cat = document.getElementById('expCategory').value;
+            let note = document.getElementById('expNote').value;
+            let amt = parseFloat(document.getElementById('expAmount').value);
+            
+            if(isNaN(amt) || amt <= 0) {
+                return alert('Valid amount needed.');
+            }
+            
+            let timePart = getLocalISODate().split('T')[1] || "12:00:00"; 
+            let finalDate = rawDate ? (rawDate + "T" + timePart) : getLocalISODate();
+            
+            expHistory.push({ 
+                id: Date.now(), 
+                date: finalDate, 
+                category: cat, 
+                note: note || 'N/A', 
+                amount: amt, 
+                user: currentUser.name 
+            }); 
+            
+            document.getElementById('expAmount').value = ''; 
+            document.getElementById('expNote').value = ''; 
+            
+            pushLiveClinicData();
+        }
+
+        window.renderHistory = function() {
+            let txb = document.querySelector('#historyTable tbody'); 
+            txb.innerHTML = '';
+            
             [...txHistory].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(t => {
                 let badgeStr = t.isService ? 'Service' : (t.isVial ? 'Vial' : 'Product');
                 let displayQty = t.isVial ? `${t.qty} ML` : `${t.qty} Pcs`;
+                
                 txb.innerHTML += `<tr>
                     <td>${t.date.split('T')[0]}</td>
-                    <td><span class="badge" style="background:#E0E7FF;color:#4338CA;">${t.category}</span> <span class="badge" style="background:var(--gray-300); color:var(--dark); margin-left:4px;">${badgeStr}</span></td>
+                    <td>
+                        <span class="badge" style="background:#E0E7FF;color:#4338CA;">${t.category}</span> 
+                        <span class="badge" style="background:var(--gray-300); color:var(--dark); margin-left:4px;">${badgeStr}</span>
+                    </td>
                     <td>${t.item}</td>
                     <td>${displayQty}</td>
                     <td>${t.serial || 'N/A'}</td>
                     <td>${t.method}</td>
                     <td style="font-weight:800; color:var(--primary);">₱${t.amount.toFixed(2)}</td>
                     <td>${t.processedBy}</td>
-                    <td class="text-center"><button class="btn btn-sm btn-danger" onclick="delTx(${t.id})">Revert</button></td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-danger" onclick="window.delTx(${t.id})">Revert</button>
+                    </td>
                 </tr>`;
             });
             
-            let exb = document.querySelector('#expenseTable tbody'); exb.innerHTML = '';
+            let exb = document.querySelector('#expenseTable tbody'); 
+            exb.innerHTML = '';
+            
             [...expHistory].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(e => {
-                exb.innerHTML += `<tr><td>${e.date.split('T')[0]}</td><td>${e.category}</td><td>${e.note}</td><td>${e.user}</td><td class="text-right" style="color:var(--danger); font-weight:800;">₱${e.amount.toFixed(2)}</td><td class="text-center"><button class="btn btn-sm btn-danger" onclick="delExp(${e.id})">🗑️</button></td></tr>`;
+                exb.innerHTML += `<tr>
+                    <td>${e.date.split('T')[0]}</td>
+                    <td>${e.category}</td>
+                    <td>${e.note}</td>
+                    <td>${e.user}</td>
+                    <td class="text-right" style="color:var(--danger); font-weight:800;">₱${e.amount.toFixed(2)}</td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-danger" onclick="window.delExp(${e.id})">🗑️</button>
+                    </td>
+                </tr>`;
             });
         }
 
@@ -1223,14 +1947,24 @@
         // ==========================================
         function updateProfitDisplay(elementId, netValue) {
             let el = document.getElementById(elementId);
-            if (netValue < 0) { el.innerText = 'Loss: -₱' + Math.abs(netValue).toFixed(2); el.style.color = 'var(--danger)'; } 
-            else { el.innerText = 'True: ₱' + netValue.toFixed(2); el.style.color = 'var(--secondary)'; }
+            if (netValue < 0) { 
+                el.innerText = 'Loss: -₱' + Math.abs(netValue).toFixed(2); 
+                el.style.color = 'var(--danger)'; 
+            } else { 
+                el.innerText = 'True: ₱' + netValue.toFixed(2); 
+                el.style.color = 'var(--secondary)'; 
+            }
         }
         
-        function calculateReports() {
+        window.calculateReports = function() {
             let dateInput = document.getElementById('dashDateFilter');
-            if (!dateInput.value) dateInput.value = getLocalISODate().split('T')[0];
-            let td = dateInput.value, tm = td.substring(0,7), ty = td.substring(0,4);
+            if (!dateInput.value) {
+                dateInput.value = getLocalISODate().split('T')[0];
+            }
+            
+            let td = dateInput.value;
+            let tm = td.substring(0,7);
+            let ty = td.substring(0,4);
             
             let selDateObj = new Date(td);
             let fDate = selDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -1250,50 +1984,114 @@
             let catsDaily = { New: 0, Old: 0, PWD: 0, Senior: 0 };
             let chartData = {};
             let prodQty = 0, servQty = 0, prodRev = 0, servRev = 0;
-            let itemStats = {};
-            let staffStats = {};
+            let itemStats = {}; 
+            let staffStats = {}; 
             let dailyPatientTimestamps = new Set();
             
             txHistory.forEach(t => { 
-                let d = t.date.split('T')[0]; let monthStr = t.date.substring(0,7); let prof = t.amount - t.totalCost; 
+                let d = t.date.split('T')[0]; 
+                let monthStr = t.date.substring(0,7); 
+                let prof = t.amount - t.totalCost; 
                 
-                if(!staffStats[t.processedBy]) staffStats[t.processedBy] = { d: 0, m: 0, y: 0 };
+                if(!staffStats[t.processedBy]) {
+                    staffStats[t.processedBy] = { d: 0, m: 0, y: 0 };
+                }
                 
                 if(d === td) {
                     let exactTime = t.date.split('T')[1] || t.id;
-                    if(!dailyPatientTimestamps.has(exactTime) && catsDaily[t.category] !== undefined) { catsDaily[t.category]++; dailyPatientTimestamps.add(exactTime); }
-                    dr += t.amount; dp += prof; 
+                    if(!dailyPatientTimestamps.has(exactTime) && catsDaily[t.category] !== undefined) { 
+                        catsDaily[t.category]++; 
+                        dailyPatientTimestamps.add(exactTime); 
+                    }
                     
-                    if(t.isService) { servQty += 1; servRev += t.amount; } else { prodQty += t.isVial ? 1 : t.qty; prodRev += t.amount; }
-                    if(!itemStats[t.item]) itemStats[t.item] = { qty: 0, rev: 0 };
-                    itemStats[t.item].qty += t.isService || t.isVial ? 1 : t.qty; itemStats[t.item].rev += t.amount;
+                    dr += t.amount; 
+                    dp += prof; 
+                    
+                    if(t.isService) { 
+                        servQty += 1; 
+                        servRev += t.amount; 
+                    } else { 
+                        prodQty += t.isVial ? 1 : t.qty; 
+                        prodRev += t.amount; 
+                    }
+                    
+                    if(!itemStats[t.item]) {
+                        itemStats[t.item] = { qty: 0, rev: 0 };
+                    }
+                    
+                    itemStats[t.item].qty += t.isService || t.isVial ? 1 : t.qty; 
+                    itemStats[t.item].rev += t.amount;
                     
                     staffStats[t.processedBy].d += t.amount;
                 } 
-                if(d.startsWith(tm)) { mr += t.amount; mp += prof; staffStats[t.processedBy].m += t.amount; } 
-                if(d.startsWith(ty)) { yr += t.amount; yp += prof; staffStats[t.processedBy].y += t.amount; } 
+                if(d.startsWith(tm)) { 
+                    mr += t.amount; 
+                    mp += prof; 
+                    staffStats[t.processedBy].m += t.amount; 
+                } 
+                if(d.startsWith(ty)) { 
+                    yr += t.amount; 
+                    yp += prof; 
+                    staffStats[t.processedBy].y += t.amount; 
+                } 
                 
                 if(d.startsWith(ty)) {
-                    if(!chartData[monthStr]) chartData[monthStr] = { rev: 0, prof: 0, exp: 0 };
-                    chartData[monthStr].rev += t.amount; chartData[monthStr].prof += prof;
+                    if(!chartData[monthStr]) {
+                        chartData[monthStr] = { rev: 0, prof: 0, exp: 0 };
+                    }
+                    chartData[monthStr].rev += t.amount; 
+                    chartData[monthStr].prof += prof;
                 }
             });
             
             expHistory.forEach(e => { 
-                let d = e.date.split('T')[0]; let monthStr = e.date.substring(0,7);
-                if(d === td) de += e.amount; if(d.startsWith(tm)) me += e.amount; if(d.startsWith(ty)) ye += e.amount; 
-                if(d.startsWith(ty)) { if(!chartData[monthStr]) chartData[monthStr] = { rev: 0, prof: 0, exp: 0 }; chartData[monthStr].exp += e.amount; }
+                let d = e.date.split('T')[0]; 
+                let monthStr = e.date.substring(0,7);
+                
+                if(d === td) de += e.amount; 
+                if(d.startsWith(tm)) me += e.amount; 
+                if(d.startsWith(ty)) ye += e.amount; 
+                
+                if(d.startsWith(ty)) { 
+                    if(!chartData[monthStr]) {
+                        chartData[monthStr] = { rev: 0, prof: 0, exp: 0 }; 
+                    }
+                    chartData[monthStr].exp += e.amount; 
+                }
             });
 
-            document.getElementById('statProdQty').innerText = prodQty; document.getElementById('statProdRev').innerText = 'Rev: ₱' + prodRev.toFixed(2);
-            document.getElementById('statServQty').innerText = servQty; document.getElementById('statServRev').innerText = 'Rev: ₱' + servRev.toFixed(2);
+            document.getElementById('statProdQty').innerText = prodQty; 
+            document.getElementById('statProdRev').innerText = 'Rev: ₱' + prodRev.toFixed(2);
+            document.getElementById('statServQty').innerText = servQty; 
+            document.getElementById('statServRev').innerText = 'Rev: ₱' + servRev.toFixed(2);
 
-            let topContainer = document.getElementById('topItemsContainer'); topContainer.innerHTML = '';
-            let sortedItems = Object.keys(itemStats).map(k => ({ name: k, qty: itemStats[k].qty, rev: itemStats[k].rev })).sort((a, b) => b.qty - a.qty); 
-            if(sortedItems.length === 0) topContainer.innerHTML = '<p style="color: var(--gray-600); font-size: 13px; text-align: center; margin-top: 30px;">No sales recorded.</p>';
-            else { sortedItems.slice(0, 5).forEach(item => { topContainer.innerHTML += `<div class="top-item-row"><div><div class="top-item-name">${item.name}</div><div class="top-item-qty">Sold/Availed Count: ${item.qty}</div></div><div class="top-item-rev">₱${item.rev.toFixed(2)}</div></div>`; }); }
+            let topContainer = document.getElementById('topItemsContainer'); 
+            topContainer.innerHTML = '';
+            
+            let sortedItems = Object.keys(itemStats).map(k => ({ 
+                name: k, 
+                qty: itemStats[k].qty, 
+                rev: itemStats[k].rev 
+            })).sort((a, b) => b.qty - a.qty); 
+            
+            if(sortedItems.length === 0) {
+                topContainer.innerHTML = '<p style="color: var(--gray-600); font-size: 13px; text-align: center; margin-top: 30px;">No sales recorded.</p>';
+            } else { 
+                sortedItems.slice(0, 5).forEach(item => { 
+                    topContainer.innerHTML += `
+                        <div class="top-item-row">
+                            <div>
+                                <div class="top-item-name">${item.name}</div>
+                                <div class="top-item-qty">Sold/Availed Count: ${item.qty}</div>
+                            </div>
+                            <div class="top-item-rev">₱${item.rev.toFixed(2)}</div>
+                        </div>`; 
+                }); 
+            }
 
-            let stBody = document.querySelector('#staffPerfTable tbody'); stBody.innerHTML = '';
+            let stBody = document.querySelector('#staffPerfTable tbody'); 
+            stBody.innerHTML = '';
+            
             if(Object.keys(staffStats).length === 0) {
                 stBody.innerHTML = '<tr><td colspan="4" class="text-center">No staff transactions recorded.</td></tr>';
             } else {
@@ -1307,58 +2105,175 @@
                 }
             }
 
-            document.getElementById('countNew').innerText = catsDaily.New; document.getElementById('countOld').innerText = catsDaily.Old; document.getElementById('countPWD').innerText = catsDaily.PWD; document.getElementById('countSenior').innerText = catsDaily.Senior;
-            document.getElementById('reportDaily').innerText = '₱' + dr.toFixed(2); document.getElementById('expDaily').innerText = 'Exp: ₱' + de.toFixed(2); updateProfitDisplay('profitDaily', dp - de);
-            document.getElementById('reportMonthly').innerText = '₱' + mr.toFixed(2); document.getElementById('expMonthly').innerText = 'Exp: ₱' + me.toFixed(2); updateProfitDisplay('profitMonthly', mp - me);
-            document.getElementById('reportYearly').innerText = '₱' + yr.toFixed(2); document.getElementById('expYearly').innerText = 'Exp: ₱' + ye.toFixed(2); updateProfitDisplay('profitYearly', yp - ye);
+            document.getElementById('countNew').innerText = catsDaily.New; 
+            document.getElementById('countOld').innerText = catsDaily.Old; 
+            document.getElementById('countPWD').innerText = catsDaily.PWD; 
+            document.getElementById('countSenior').innerText = catsDaily.Senior;
             
-            for(let key in chartData) chartData[key].prof -= chartData[key].exp; 
-            renderChart(chartData);
+            document.getElementById('reportDaily').innerText = '₱' + dr.toFixed(2); 
+            document.getElementById('expDaily').innerText = 'Exp: ₱' + de.toFixed(2); 
+            updateProfitDisplay('profitDaily', dp - de);
+            
+            document.getElementById('reportMonthly').innerText = '₱' + mr.toFixed(2); 
+            document.getElementById('expMonthly').innerText = 'Exp: ₱' + me.toFixed(2); 
+            updateProfitDisplay('profitMonthly', mp - me);
+            
+            document.getElementById('reportYearly').innerText = '₱' + yr.toFixed(2); 
+            document.getElementById('expYearly').innerText = 'Exp: ₱' + ye.toFixed(2); 
+            updateProfitDisplay('profitYearly', yp - ye);
+            
+            for(let key in chartData) {
+                chartData[key].prof -= chartData[key].exp; 
+            }
+            lastChartData = chartData; 
+            
+            window.renderChart(chartData);
         }
 
-        function renderChart(dataMap) {
+        window.renderChart = function(dataMap) {
             let ctx = document.getElementById('monthlyChart').getContext('2d');
             let labels = Object.keys(dataMap).sort(); 
-            let revData = labels.map(l => dataMap[l].rev), profData = labels.map(l => dataMap[l].prof);
+            let revData = labels.map(l => dataMap[l].rev);
+            let profData = labels.map(l => dataMap[l].prof);
             let displayLabels = labels.map(l => new Date(l + "-01").toLocaleDateString('en-US', { month: 'short', year: 'numeric' }));
-            if(dashboardChart) dashboardChart.destroy(); 
+            
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const tickColor = isDark ? '#E2E8F0' : '#4B5563';
+            
+            if(dashboardChart) {
+                dashboardChart.destroy(); 
+            }
+            
             dashboardChart = new Chart(ctx, {
                 type: 'bar',
-                data: { labels: displayLabels.length > 0 ? displayLabels : ["No Data"], datasets: [{ label: 'Revenue', data: revData.length > 0 ? revData : [0], backgroundColor: '#4F46E5', borderRadius: 4 }, { label: 'Net Profit/Loss', data: profData.length > 0 ? profData : [0], backgroundColor: profData.map(v => v < 0 ? '#EF4444' : '#10B981'), borderRadius: 4 }] },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: v => '₱' + v } } }, plugins: { tooltip: { callbacks: { label: function(c) { let l = c.dataset.label || ''; if(l) l += ': '; if(c.parsed.y !== null) l += '₱' + c.parsed.y.toFixed(2); return l; } } } } }
+                data: { 
+                    labels: displayLabels.length > 0 ? displayLabels : ["No Data"], 
+                    datasets: [
+                        { label: 'Revenue', data: revData.length > 0 ? revData : [0], backgroundColor: '#4F46E5', borderRadius: 4 }, 
+                        { label: 'Net Profit/Loss', data: profData.length > 0 ? profData : [0], backgroundColor: profData.map(v => v < 0 ? '#EF4444' : '#10B981'), borderRadius: 4 }
+                    ] 
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    scales: { 
+                        x: { ticks: { color: tickColor } },
+                        y: { beginAtZero: true, ticks: { color: tickColor, callback: v => '₱' + v } } 
+                    }, 
+                    plugins: { 
+                        legend: { labels: { color: tickColor } },
+                        tooltip: { 
+                            callbacks: { 
+                                label: function(c) { 
+                                    let l = c.dataset.label || ''; 
+                                    if(l) l += ': '; 
+                                    if(c.parsed.y !== null) l += '₱' + c.parsed.y.toFixed(2); 
+                                    return l; 
+                                } 
+                            } 
+                        } 
+                    } 
+                }
             });
         }
 
         // ==========================================
         // 8. DATA MANAGEMENT
         // ==========================================
-        function addItem() {
+        window.addItem = function() {
             let type = document.getElementById('newItemType').value;
-            let n = document.getElementById('newProdName').value, p = parseFloat(document.getElementById('newProdPrice').value);
+            let n = document.getElementById('newProdName').value;
+            let p = parseFloat(document.getElementById('newProdPrice').value);
             
             if(type === 'vial') {
-                let c = parseFloat(document.getElementById('newProdCost').value), s = parseInt(document.getElementById('newProdStock').value), ml = parseFloat(document.getElementById('newProdML').value);
-                if(!n || isNaN(c) || isNaN(p) || isNaN(s) || isNaN(ml)) return alert('Complete all details.');
-                inventory.push({ id: Date.now(), name: n, type: 'vial', cost: c, price: p, stock: s, mlPerVial: ml });
+                let c = parseFloat(document.getElementById('newProdCost').value);
+                let s = parseInt(document.getElementById('newProdStock').value);
+                let ml = parseFloat(document.getElementById('newProdML').value);
+                let initialSerial = document.getElementById('newProdSerial').value.trim().toUpperCase();
+                
+                if(!n || isNaN(c) || isNaN(p) || isNaN(s) || isNaN(ml)) {
+                    return alert('Complete all mandatory details.');
+                }
+                
+                let finalStock = s;
+                let newId = Date.now();
+                
+                // Process the auto-open if an initial serial was provided
+                if (initialSerial) {
+                    if (s <= 0) return alert('Cannot open a vial with 0 initial stock.');
+                    finalStock -= 1;
+                    activeVials.push({ serial: initialSerial, productId: newId, usedML: 0, maxML: ml });
+                }
+                
+                inventory.push({ id: newId, name: n, type: 'vial', cost: c, price: p, stock: finalStock, mlPerVial: ml });
+                
+                if(initialSerial) {
+                    alert(`Item registered AND Serial ${initialSerial} successfully opened!`);
+                }
+                
             } else if(type === 'whole') {
-                let c = parseFloat(document.getElementById('newProdCost').value), s = parseInt(document.getElementById('newProdStock').value);
-                if(!n || isNaN(c) || isNaN(p) || isNaN(s)) return alert('Complete all details.');
+                let c = parseFloat(document.getElementById('newProdCost').value);
+                let s = parseInt(document.getElementById('newProdStock').value);
+                
+                if(!n || isNaN(c) || isNaN(p) || isNaN(s)) {
+                    return alert('Complete all details.');
+                }
+                
                 inventory.push({ id: Date.now(), name: n, type: 'whole', cost: c, price: p, stock: s });
             } else {
-                if(!n || isNaN(p)) return alert('Complete all details.');
+                if(!n || isNaN(p)) {
+                    return alert('Complete all details.');
+                }
+                
                 services.push({ id: Date.now(), name: n, price: p });
             }
+            
             pushLiveClinicData();
-            document.getElementById('newProdName').value = ''; document.getElementById('newProdCost').value = ''; document.getElementById('newProdPrice').value = ''; document.getElementById('newProdStock').value = ''; document.getElementById('newProdML').value = '';
+            
+            document.getElementById('newProdName').value = ''; 
+            document.getElementById('newProdCost').value = ''; 
+            document.getElementById('newProdPrice').value = ''; 
+            document.getElementById('newProdStock').value = ''; 
+            document.getElementById('newProdML').value = '';
+            if(document.getElementById('newProdSerial')) document.getElementById('newProdSerial').value = '';
         }
 
-        function addStock(id) { let q = parseInt(prompt("Quantity to add:")); if(!isNaN(q) && q > 0) { inventory.find(i => i.id === id).stock += q; pushLiveClinicData(); } }
-        function editProduct(id) { let p = inventory.find(i => i.id === id); p.price = parseFloat(prompt("New SRP:", p.price)) || p.price; p.cost = parseFloat(prompt("New Cost:", p.cost)) || p.cost; pushLiveClinicData(); }
-        function editService(id) { let s = services.find(i => i.id === id); s.price = parseFloat(prompt("New Fee:", s.price)) || s.price; pushLiveClinicData(); }
-        function deleteProduct(id) { if(confirm('Delete product?')) { inventory = inventory.filter(i => i.id !== id); pushLiveClinicData(); } }
-        function deleteService(id) { if(confirm('Delete service?')) { services = services.filter(i => i.id !== id); pushLiveClinicData(); } }
+        window.addStock = function(id) { 
+            let q = parseInt(prompt("Quantity to add:")); 
+            if(!isNaN(q) && q > 0) { 
+                inventory.find(i => i.id === id).stock += q; 
+                pushLiveClinicData(); 
+            } 
+        }
+
+        window.editProduct = function(id) { 
+            let p = inventory.find(i => i.id === id); 
+            p.price = parseFloat(prompt("New SRP:", p.price)) || p.price; 
+            p.cost = parseFloat(prompt("New Cost:", p.cost)) || p.cost; 
+            pushLiveClinicData(); 
+        }
+
+        window.editService = function(id) { 
+            let s = services.find(i => i.id === id); 
+            s.price = parseFloat(prompt("New Fee:", s.price)) || s.price; 
+            pushLiveClinicData(); 
+        }
+
+        window.deleteProduct = function(id) { 
+            if(confirm('Delete product?')) { 
+                inventory = inventory.filter(i => i.id !== id); 
+                pushLiveClinicData(); 
+            } 
+        }
+
+        window.deleteService = function(id) { 
+            if(confirm('Delete service?')) { 
+                services = services.filter(i => i.id !== id); 
+                pushLiveClinicData(); 
+            } 
+        }
         
-        function delTx(id) { 
+        window.delTx = function(id) { 
             if(confirm('Revert? Revenue will be deducted and ML/Stock will be restored.')) { 
                 let x = txHistory.find(t => t.id === id); 
                 finance[x.method] -= x.amount; 
@@ -1376,47 +2291,111 @@
                         }
                     }
                 } else if (!x.isService) {
-                    let p = inventory.find(i => i.name === x.item); if(p) p.stock += x.qty; 
+                    let p = inventory.find(i => i.name === x.item); 
+                    if(p) {
+                        p.stock += x.qty; 
+                    }
                 }
                 
-                txHistory = txHistory.filter(t => t.id !== id); pushLiveClinicData(); 
+                txHistory = txHistory.filter(t => t.id !== id); 
+                pushLiveClinicData(); 
             } 
         }
-        function delExp(id) { if(confirm('Delete expense?')) { expHistory = expHistory.filter(e => e.id !== id); pushLiveClinicData(); } }
+
+        window.delExp = function(id) { 
+            if(confirm('Delete expense?')) { 
+                expHistory = expHistory.filter(e => e.id !== id); 
+                pushLiveClinicData(); 
+            } 
+        }
 
         // CSV Export
         let currentBlobUrl = null;
-        function prepareExport() {
-            let btn = document.getElementById('exportBtn'); btn.disabled = true; let counter = 3; btn.innerText = `⏳ Preparing Data... ${counter}`;
-            let interval = setInterval(() => { counter--; if (counter > 0) btn.innerText = `⏳ Preparing Data... ${counter}`; else { clearInterval(interval); generateBlob(); btn.innerText = '✅ Click Here to Download CSV'; btn.classList.replace('btn-warning', 'btn-success'); btn.disabled = false; btn.onclick = triggerDownload; } }, 1000);
+        window.prepareExport = function() {
+            let btn = document.getElementById('exportBtn'); 
+            btn.disabled = true; 
+            let counter = 3; 
+            btn.innerText = `⏳ Preparing Data... ${counter}`;
+            
+            let interval = setInterval(() => { 
+                counter--; 
+                if (counter > 0) {
+                    btn.innerText = `⏳ Preparing Data... ${counter}`; 
+                } else { 
+                    clearInterval(interval); 
+                    generateBlob(); 
+                    btn.innerText = '✅ Click Here to Download CSV'; 
+                    btn.classList.replace('btn-warning', 'btn-success'); 
+                    btn.disabled = false; 
+                    btn.onclick = triggerDownload; 
+                } 
+            }, 1000);
         }
+
         function generateBlob() {
-            let csv = "--- CLINIC SYSTEM FULL REPORT ---\n\n1. PAYMENT TILL SUMMARY\nMethod,Amount\n"; let totalTill = 0;
-            for(let key in finance) { csv += `${key.replace('_', ' ')},${finance[key]}\n`; totalTill += finance[key]; } csv += `TOTAL TILL,${totalTill}\n\n`;
+            let csv = "--- CLINIC SYSTEM FULL REPORT ---\n\n1. PAYMENT TILL SUMMARY\nMethod,Amount\n"; 
+            let totalTill = 0;
+            
+            for(let key in finance) { 
+                csv += `${key.replace('_', ' ')},${finance[key]}\n`; 
+                totalTill += finance[key]; 
+            } 
+            csv += `TOTAL TILL,${totalTill}\n\n`;
             
             csv += "2. PATIENT DEMOGRAPHICS (All-Time)\nCategory,Total Visits\n";
-            let cats = { 'New': 0, 'Old': 0, 'PWD': 0, 'Senior': 0 }; let timestamps = new Set();
-            txHistory.forEach(tx => { let t = tx.date.split('T')[1] || tx.id; if(!timestamps.has(t) && cats[tx.category] !== undefined) { cats[tx.category]++; timestamps.add(t); }});
-            for(let k in cats) csv += `${k},${cats[k]}\n`; 
+            let cats = { 'New': 0, 'Old': 0, 'PWD': 0, 'Senior': 0 }; 
+            let timestamps = new Set();
+            
+            txHistory.forEach(tx => { 
+                let t = tx.date.split('T')[1] || tx.id; 
+                if(!timestamps.has(t) && cats[tx.category] !== undefined) { 
+                    cats[tx.category]++; 
+                    timestamps.add(t); 
+                }
+            });
+            for(let k in cats) {
+                csv += `${k},${cats[k]}\n`; 
+            }
             
             csv += "\n3. INVENTORY (Products & Vials)\nProduct Name,Type,Cost,SRP,Main Stock,ML per Vial\n";
-            inventory.forEach(item => { csv += `${item.name},${item.type},${item.cost},${item.price},${item.stock},${item.type==='vial'?item.mlPerVial:'N/A'}\n`; });
+            inventory.forEach(item => { 
+                csv += `${item.name},${item.type},${item.cost},${item.price},${item.stock},${item.type==='vial'?item.mlPerVial:'N/A'}\n`; 
+            });
             
             csv += "\n4. SERVICES CATALOG\nService Name,Fee\n";
-            services.forEach(item => { csv += `${item.name},${item.price}\n`; });
+            services.forEach(item => { 
+                csv += `${item.name},${item.price}\n`; 
+            });
             
             csv += "\n5. EXPENSES LOG\nDate,Category,Note,Amount,Logged By\n";
-            expHistory.forEach(exp => { csv += `${exp.date.split('T')[0]},${exp.category},${exp.note},${exp.amount},${exp.user}\n`; });
+            expHistory.forEach(exp => { 
+                csv += `${exp.date.split('T')[0]},${exp.category},${exp.note},${exp.amount},${exp.user}\n`; 
+            });
             
             csv += "\n6. TRANSACTION HISTORY\nDate,Category,Type,Item,Quantity/ML,Serial,Payment Method,Total Cost,Total Revenue,Processed By\n";
-            txHistory.forEach(tx => { csv += `${tx.date.split('T')[0]},${tx.category || 'N/A'},${tx.isService ? 'Service':(tx.isVial?'Vial':'Whole')},${tx.item},${tx.qty},${tx.serial||'N/A'},${tx.method.replace('_', ' ')},${tx.totalCost || 0},${tx.amount},${tx.processedBy}\n`; });
+            txHistory.forEach(tx => { 
+                csv += `${tx.date.split('T')[0]},${tx.category || 'N/A'},${tx.isService ? 'Service':(tx.isVial?'Vial':'Whole')},${tx.item},${tx.qty},${tx.serial||'N/A'},${tx.method.replace('_', ' ')},${tx.totalCost || 0},${tx.amount},${tx.processedBy}\n`; 
+            });
 
             let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            if(currentBlobUrl) URL.revokeObjectURL(currentBlobUrl); currentBlobUrl = URL.createObjectURL(blob);
+            if(currentBlobUrl) {
+                URL.revokeObjectURL(currentBlobUrl); 
+            }
+            currentBlobUrl = URL.createObjectURL(blob);
         }
-        function triggerDownload() {
-            let link = document.createElement("a"); link.href = currentBlobUrl; link.download = "Clinic_Master_Report.csv"; document.body.appendChild(link); link.click(); document.body.removeChild(link);
-            let btn = document.getElementById('exportBtn'); btn.innerText = '⬇️ Generate Full System Report (CSV)'; btn.classList.replace('btn-success', 'btn-warning'); btn.onclick = prepareExport;
+
+        window.triggerDownload = function() {
+            let link = document.createElement("a"); 
+            link.href = currentBlobUrl; 
+            link.download = "Clinic_Master_Report.csv"; 
+            document.body.appendChild(link); 
+            link.click(); 
+            document.body.removeChild(link);
+            
+            let btn = document.getElementById('exportBtn'); 
+            btn.innerText = '⬇️ Generate Full System Report (CSV)'; 
+            btn.classList.replace('btn-success', 'btn-warning'); 
+            btn.onclick = prepareExport;
         }
     </script>
 </body>
