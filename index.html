@@ -107,7 +107,7 @@
         
         /* Premium Custom Multi-Select with Inline Quantity & Serial */
         .product-list {
-            max-height: 300px;
+            max-height: 400px;
             overflow-y: auto;
             border: 1px solid var(--gray-300);
             border-radius: 8px;
@@ -131,27 +131,41 @@
         
         .product-item {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
+            flex-direction: column;
+            padding: 16px;
             border-bottom: 1px solid var(--gray-100);
             transition: background 0.2s;
             margin: 0;
+            cursor: pointer;
         }
         .product-item:last-child { border-bottom: none; }
         .product-item:hover { background: #F8FAFC; }
         
-        .item-left { display: flex; align-items: center; flex: 1; }
+        .item-left { display: flex; align-items: center; width: 100%; justify-content: space-between;}
         .item-left input[type="checkbox"] {
             width: 22px; height: 22px; margin-right: 14px; cursor: pointer; accent-color: var(--primary);
         }
-        .product-info { display: flex; flex-direction: column; }
+        .product-info { display: flex; flex-direction: column; flex: 1; }
         .product-name { font-weight: 700; color: var(--dark); font-size: 14px; }
         .product-meta { font-size: 12px; color: var(--gray-600); font-weight: 600; margin-top: 2px;}
         
-        .item-inputs { display: flex; gap: 8px; align-items: center; }
-        .inline-qty-input { width: 70px !important; padding: 8px !important; text-align: center; font-weight: bold !important; }
-        .inline-serial-input { width: 120px !important; padding: 8px !important; font-weight: bold !important; text-align: center; font-size: 13px !important; }
+        /* Advanced Nested Form Styling for Checked Items */
+        .item-inputs {
+            background: #F8FAFC;
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid var(--gray-300);
+            margin-top: 12px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-left: 36px;
+            width: calc(100% - 36px);
+        }
+        
+        .inline-qty-input { width: 90px !important; padding: 10px !important; text-align: center; font-weight: bold !important; font-size: 14px !important; }
+        .inline-serial-input { flex: 1 !important; padding: 10px !important; font-weight: bold !important; font-size: 14px !important; }
         
         .inline-qty-input:disabled, .inline-serial-input:disabled { background: var(--gray-100); opacity: 0.5; border: 1px dashed var(--gray-300); }
         .opacity-50 { opacity: 0.5; pointer-events: none; }
@@ -252,8 +266,7 @@
             .card { padding: 16px; }
             .form-group { margin-bottom: 12px; }
             .chart-container { height: 280px; padding: 10px; }
-            .product-item { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .item-inputs { width: 100%; justify-content: flex-start; }
+            .item-inputs { margin-left: 0; width: 100%; }
         }
 
         #receiptModalOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(17, 24, 39, 0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); padding: 20px; }
@@ -264,7 +277,7 @@
 </head>
 <body>
 
-    <!-- Firebase SDK (Modular Integration) -->
+    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
@@ -306,19 +319,15 @@
     <!-- 1. AUTHENTICATION SCREENS -->
     <div id="loginSection" class="container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
         <div class="card" style="max-width: 400px; padding: 40px 30px; border-radius: 20px; box-shadow: var(--shadow-lg);">
-            
             <div id="formLogin">
                 <div style="text-align: center; margin-bottom: 30px;">
                     <div style="background: var(--primary-gradient); width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">🏥</div>
                     <h2>Clinic System</h2>
                     <p style="color: var(--gray-600); font-size: 14px; font-weight: 500; margin: 0;">Authorized Personnel Only</p>
                 </div>
-                
                 <div id="loginErrorMsg" class="hidden" style="background: #FEE2E2; color: #DC2626; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center; border: 1px solid #FCA5A5;"></div>
-
                 <div class="form-group"><label>Email Address</label><input type="email" id="loginEmail" placeholder="e.g. staff@clinic.com" required></div>
                 <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••" required></div>
-                
                 <button class="btn btn-primary" id="btnLogin" style="margin-top: 10px; padding: 14px;" onclick="handleLogin()">Secure Login</button>
                 <div style="text-align: center; margin-top: 16px;"><button class="btn btn-outline" onclick="toggleAuthForm('register')">Request Staff Account</button></div>
                 <div style="text-align: center; margin-top: 30px;"><a href="#" onclick="promptSystemSetup()" style="color: var(--gray-300); font-size: 11px; text-decoration: none; font-weight:600;">System Setup</a></div>
@@ -343,7 +352,6 @@
                 <button class="btn btn-dark" id="btnInitAdmin" style="margin-top: 10px; padding: 14px;" onclick="handleInitAdmin()">Create Master Admin</button>
                 <div style="text-align: center; margin-top: 16px;"><button class="btn btn-outline" onclick="toggleAuthForm('login')">Cancel</button></div>
             </div>
-
         </div>
     </div>
 
@@ -367,7 +375,7 @@
             <button class="nav-btn active admin-only hidden" onclick="switchTab('tab-dashboard')">📊 Dashboard</button>
             <button class="nav-btn" onclick="switchTab('tab-transact')">📋 Transact</button>
             <button class="nav-btn admin-only hidden" onclick="switchTab('tab-expenses')">💸 Expenses</button>
-            <button class="nav-btn" onclick="switchTab('tab-inventory')">📦 Inventory & Services</button>
+            <button class="nav-btn" onclick="switchTab('tab-inventory')">📦 Products & Services</button>
             <button class="nav-btn admin-only hidden" onclick="switchTab('tab-history')">📝 History</button>
             <button class="nav-btn admin-only hidden" onclick="switchTab('tab-accounts')">🔐 Accounts</button>
         </div>
@@ -385,7 +393,6 @@
                 <div class="card">
                     <h3 id="lblSales" style="margin-bottom: 15px; color: var(--dark);">🛍️ Sales Analytics</h3>
                     <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 20px;">Breakdown of Products vs Services based on the selected date.</p>
-                    
                     <div class="grid-2 mobile-grid-2">
                         <div class="stat-box" style="border-left-color: var(--info); padding: 16px;">
                             <h4 style="color: var(--info);">📦 Products Sold</h4>
@@ -468,7 +475,7 @@
                         <select id="transCategory"><option value="New">New Patient</option><option value="Old">Old Patient</option><option value="PWD">PWD</option><option value="Senior">Senior Citizen</option></select>
                     </div>
                     
-                    <!-- NEW MULTI-SELECT UI WITH INLINE QUANTITY -->
+                    <!-- NEW MULTI-SELECT UI WITH INLINE QUANTITY & DROPDOWN -->
                     <div class="form-group">
                         <label>Select Product(s) / Service(s) and Specify Quantity / ML:</label>
                         <div class="product-list" id="transProductList">
@@ -542,7 +549,7 @@
                 </div>
             </div>
 
-            <!-- NEW: ACTIVE VIALS TRACKER -->
+            <!-- ACTIVE VIALS TRACKER -->
             <div class="card">
                 <h3 style="margin-bottom: 15px; color: var(--primary);">🧪 Currently Opened Vials Tracker</h3>
                 <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Shows all vials currently being used per serial number. Main inventory stock is deducted only when remaining ML reaches 0.</p>
@@ -636,7 +643,7 @@
             <hr>
             <div class="receipt-row"><strong>Category:</strong> <span id="rcptCategory"></span></div>
             <div class="receipt-row" style="flex-direction: column;"><strong>Items:</strong> <span id="rcptItem" style="text-align: right; margin-top: 4px; line-height: 1.5;"></span></div>
-            <div class="receipt-row"><strong>Payment:</strong> <span id="rcptMethod"></span></div>
+            <div class="receipt-row" style="margin-top: 5px;"><strong>Payment:</strong> <span id="rcptMethod"></span></div>
             <hr>
             <div class="receipt-row" style="font-size: 18px;"><strong>TOTAL:</strong> <strong id="rcptTotal"></strong></div>
             <div class="receipt-row" style="margin-top: 15px; font-size: 12px; color: var(--gray-600);"><strong>Staff:</strong> <span id="rcptUser"></span></div>
@@ -652,8 +659,8 @@
         // ==========================================
         // 1. GLOBALS & INITIALIZATION
         // ==========================================
-        let inventory = []; // holds both 'whole' and 'vial' products
-        let activeVials = []; // holds tracking for opened vials {serial, productId, usedML, maxML}
+        let inventory = []; 
+        let activeVials = []; 
         let services = []; 
         let finance = { CASH: 0, GCASH: 0, MariBANK: 0, BANK_Transfer: 0 };
         let txHistory = [];
@@ -872,23 +879,41 @@
             }
         }
 
-        // Toggles inputs dynamically when checkbox is clicked
-        function toggleInputs(checkbox, type, id) {
+        window.toggleInputs = function(checkbox, type, id) {
             if(type === 'prod_whole') {
                 let input = document.getElementById(`qty_whole_${id}`);
                 input.disabled = !checkbox.checked;
                 if(checkbox.checked) input.focus(); else input.value = 1;
             } else if (type === 'prod_vial') {
-                let mlInput = document.getElementById(`ml_vial_${id}`);
-                let serialInput = document.getElementById(`serial_vial_${id}`);
-                mlInput.disabled = !checkbox.checked;
-                serialInput.disabled = !checkbox.checked;
-                if(checkbox.checked) mlInput.focus(); else { mlInput.value = 1; serialInput.value = ''; }
+                let inputDiv = document.getElementById(`inputs_vial_${id}`);
+                if(checkbox.checked) {
+                    inputDiv.classList.remove('hidden');
+                } else {
+                    inputDiv.classList.add('hidden');
+                    document.getElementById(`ml_vial_${id}`).value = 1;
+                    
+                    let selObj = document.getElementById(`select_serial_vial_${id}`);
+                    if(selObj && selObj.options.length > 0) selObj.selectedIndex = 0;
+                    
+                    let newSerObj = document.getElementById(`new_serial_container_${id}`);
+                    if(newSerObj) {
+                        if(selObj && selObj.value === 'NEW') newSerObj.style.display = 'flex';
+                        else if (!selObj) newSerObj.style.display = 'flex';
+                        else newSerObj.style.display = 'none';
+                    }
+                }
             } else if (type === 'serv') {
                 let input = document.getElementById(`qty_serv_${id}`);
                 input.disabled = !checkbox.checked;
                 if(checkbox.checked) input.focus(); else input.value = 1;
             }
+        }
+
+        window.handleSerialSelect = function(id) {
+            let sel = document.getElementById(`select_serial_vial_${id}`).value;
+            let container = document.getElementById(`new_serial_container_${id}`);
+            if(sel === 'NEW') container.style.display = 'flex';
+            else container.style.display = 'none';
         }
 
         function renderUI() {
@@ -901,20 +926,53 @@
             if(hasVials) {
                 pl.innerHTML += `<div class="list-header">🧪 Vials (Fractional Use)</div>`;
                 inventory.filter(i => i.type === 'vial').forEach(i => {
-                    let disabled = (i.stock <= 0 && !activeVials.some(v => v.productId === i.id)) ? 'disabled' : '';
+                    let activeForThis = activeVials.filter(v => v.productId === i.id);
+                    let disabled = (i.stock <= 0 && activeForThis.length === 0) ? 'disabled' : '';
                     let opacityClass = disabled ? 'opacity-50' : '';
+                    
+                    let serialOptions = '';
+                    let defaultIsNew = false;
+                    
+                    if (activeForThis.length > 0) {
+                        activeForThis.forEach(v => {
+                            let rem = v.maxML - v.usedML;
+                            serialOptions += `<option value="${v.serial}">Use SN-${v.serial} (${rem.toFixed(1)} ML left)</option>`;
+                        });
+                        if (i.stock > 0) serialOptions += `<option value="NEW">+ Open New Vial</option>`;
+                        defaultIsNew = false;
+                    } else {
+                        if (i.stock > 0) {
+                            serialOptions = `<option value="NEW">+ Open New Vial</option>`;
+                            defaultIsNew = true;
+                        }
+                    }
+
                     pl.innerHTML += `
-                        <label class="product-item ${opacityClass}">
+                        <label class="product-item ${opacityClass}" style="flex-direction:column; align-items:flex-start;">
                             <div class="item-left">
-                                <input type="checkbox" name="selectedItems" value="prod_vial_${i.id}" ${disabled} onchange="toggleInputs(this, 'prod_vial', ${i.id})">
-                                <div class="product-info">
-                                    <span class="product-name">${i.name}</span>
-                                    <span class="product-meta">₱${i.price.toFixed(2)}/ML | Main Stock: ${i.stock} vials</span>
+                                <div style="display:flex; align-items:center;">
+                                    <input type="checkbox" name="selectedItems" value="prod_vial_${i.id}" ${disabled} onchange="toggleInputs(this, 'prod_vial', ${i.id})">
+                                    <div class="product-info">
+                                        <span class="product-name">${i.name}</span>
+                                        <span class="product-meta">₱${i.price.toFixed(2)}/ML | Main Stock: ${i.stock} vials | Capacity: ${i.mlPerVial} ML per Vial</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="item-inputs">
-                                <input type="number" id="ml_vial_${i.id}" class="inline-qty-input" value="1" min="0.1" step="0.1" placeholder="ML" disabled onclick="event.stopPropagation()">
-                                <input type="text" id="serial_vial_${i.id}" class="inline-serial-input" placeholder="Serial No." disabled onclick="event.stopPropagation()">
+                            <div class="item-inputs hidden" id="inputs_vial_${i.id}">
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <label style="margin:0; white-space:nowrap; font-size:12px;">ML Used:</label>
+                                    <input type="number" id="ml_vial_${i.id}" class="inline-qty-input" value="1" min="0.1" step="0.1" onclick="event.stopPropagation()" style="flex:1;">
+                                </div>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <label style="margin:0; white-space:nowrap; font-size:12px;">Serial No:</label>
+                                    <select id="select_serial_vial_${i.id}" style="flex:2; padding:10px; font-size:13px; font-weight:bold;" onclick="event.stopPropagation()" onchange="handleSerialSelect(${i.id})">
+                                        ${serialOptions}
+                                    </select>
+                                </div>
+                                <div id="new_serial_container_${i.id}" style="display:${defaultIsNew ? 'flex' : 'none'}; gap: 10px; align-items: center;">
+                                    <label style="margin:0; white-space:nowrap; font-size:12px; color:var(--primary);">New Serial:</label>
+                                    <input type="text" id="new_serial_vial_${i.id}" class="inline-serial-input" placeholder="Type new serial..." onclick="event.stopPropagation()" style="flex:1;">
+                                </div>
                             </div>
                         </label>`;
                 });
@@ -933,7 +991,7 @@
                                     <span class="product-name">${i.name}</span><span class="product-meta">₱${i.price.toFixed(2)} | Stock: ${i.stock}</span>
                                 </div>
                             </div>
-                            <div class="item-inputs">
+                            <div class="item-inputs hidden" id="inputs_whole_${i.id}" style="width:auto; margin:0; background:transparent; border:none; padding:0;">
                                 <input type="number" id="qty_whole_${i.id}" class="inline-qty-input" value="1" min="1" disabled onclick="event.stopPropagation()">
                             </div>
                         </label>`;
@@ -951,7 +1009,7 @@
                                     <span class="product-name">${s.name}</span><span class="product-meta">Fee: ₱${s.price.toFixed(2)}</span>
                                 </div>
                             </div>
-                            <div class="item-inputs">
+                            <div class="item-inputs hidden" id="inputs_serv_${s.id}" style="width:auto; margin:0; background:transparent; border:none; padding:0;">
                                 <input type="number" id="qty_serv_${s.id}" class="inline-qty-input" value="1" min="1" disabled onclick="event.stopPropagation()">
                             </div>
                         </label>`;
@@ -1022,40 +1080,47 @@
 
             // VALIDATION PHASE
             for(let cb of checkboxes) {
-                let [typeStr, catStr, idStr] = cb.value.split('_');
+                let parts = cb.value.split('_'); 
                 
-                if (typeStr === 'prod') {
-                    let id = parseInt(idStr);
+                if (parts[0] === 'prod') {
+                    let typeStr = parts[1];
+                    let id = parseInt(parts[2]);
                     let p = inventory.find(i => i.id === id);
                     
-                    if (catStr === 'vial') {
+                    if (typeStr === 'vial') {
                         let mlUsed = parseFloat(document.getElementById(`ml_vial_${id}`).value);
-                        let serial = document.getElementById(`serial_vial_${id}`).value.trim().toUpperCase();
+                        let serialSel = document.getElementById(`select_serial_vial_${id}`).value;
+                        let serial = '';
                         
-                        if(isNaN(mlUsed) || mlUsed <= 0) return alert(`Invalid ML for ${p.name}`);
-                        if(!serial) return alert(`Please enter Serial Number for ${p.name}`);
-                        
-                        // Check Active Vials
-                        let v = activeVials.find(v => v.serial === serial && v.productId === id);
-                        if (v) {
-                            let remaining = v.maxML - v.usedML;
-                            if (mlUsed > remaining) return alert(`Serial ${serial} only has ${remaining} ML left. Transaction stopped.`);
-                        } else {
-                            // Needs to open new vial
-                            if (p.stock <= 0) return alert(`No main stock left to open a new vial for ${p.name}.`);
+                        if (serialSel === 'NEW') {
+                            serial = document.getElementById(`new_serial_vial_${id}`).value.trim().toUpperCase();
+                            if(!serial) return alert(`Please enter the New Serial Number for ${p.name}`);
+                            
+                            let existingVial = activeVials.find(v => v.serial === serial && v.productId === id);
+                            if(existingVial) return alert(`Serial number ${serial} is already actively opened! Please select it from the dropdown instead.`);
+                            
+                            if(p.stock <= 0) return alert(`No main stock left to open a new vial for ${p.name}.`);
                             if (mlUsed > p.mlPerVial) return alert(`Input ML (${mlUsed}) exceeds the total capacity of a new vial (${p.mlPerVial} ML).`);
+                        } else {
+                            serial = serialSel;
+                            let v = activeVials.find(v => v.serial === serial && v.productId === id);
+                            if (v) {
+                                let remaining = v.maxML - v.usedML;
+                                if (mlUsed > remaining) return alert(`Serial ${serial} only has ${remaining.toFixed(1)} ML left. Transaction stopped.`);
+                            }
                         }
                         
+                        if(isNaN(mlUsed) || mlUsed <= 0) return alert(`Invalid ML for ${p.name}`);
                         txOperations.push({ type: 'vial', ref: p, mlUsed: mlUsed, serial: serial });
                         
-                    } else if (catStr === 'whole') {
+                    } else if (typeStr === 'whole') {
                         let qty = parseInt(document.getElementById(`qty_whole_${id}`).value);
                         if(isNaN(qty) || qty <= 0) return alert(`Invalid qty for ${p.name}`);
                         if(p.stock < qty) return alert(`Not enough stock for ${p.name}. Available: ${p.stock}`);
                         txOperations.push({ type: 'whole', ref: p, qty: qty });
                     }
-                } else if (typeStr === 'serv') {
-                    let s = services.find(i => i.id === parseInt(catStr)); // For services, id is in index 1
+                } else if (parts[0] === 'serv') {
+                    let s = services.find(i => i.id === parseInt(parts[1])); 
                     let qty = parseInt(document.getElementById(`qty_serv_${s.id}`).value);
                     if(isNaN(qty) || qty <= 0) return alert(`Invalid qty for ${s.name}`);
                     txOperations.push({ type: 'serv', ref: s, qty: qty });
@@ -1199,9 +1264,9 @@
                     if(!dailyPatientTimestamps.has(exactTime) && catsDaily[t.category] !== undefined) { catsDaily[t.category]++; dailyPatientTimestamps.add(exactTime); }
                     dr += t.amount; dp += prof; 
                     
-                    if(t.isService) { servQty += 1; servRev += t.amount; } else { prodQty += t.qty; prodRev += t.amount; }
+                    if(t.isService) { servQty += 1; servRev += t.amount; } else { prodQty += t.isVial ? 1 : t.qty; prodRev += t.amount; }
                     if(!itemStats[t.item]) itemStats[t.item] = { qty: 0, rev: 0 };
-                    itemStats[t.item].qty += t.isService ? 1 : t.qty; itemStats[t.item].rev += t.amount;
+                    itemStats[t.item].qty += t.isService || t.isVial ? 1 : t.qty; itemStats[t.item].rev += t.amount;
                     
                     staffStats[t.processedBy].d += t.amount;
                 } 
@@ -1226,7 +1291,7 @@
             let topContainer = document.getElementById('topItemsContainer'); topContainer.innerHTML = '';
             let sortedItems = Object.keys(itemStats).map(k => ({ name: k, qty: itemStats[k].qty, rev: itemStats[k].rev })).sort((a, b) => b.qty - a.qty); 
             if(sortedItems.length === 0) topContainer.innerHTML = '<p style="color: var(--gray-600); font-size: 13px; text-align: center; margin-top: 30px;">No sales recorded.</p>';
-            else { sortedItems.slice(0, 5).forEach(item => { topContainer.innerHTML += `<div class="top-item-row"><div><div class="top-item-name">${item.name}</div><div class="top-item-qty">Sold: ${item.qty}</div></div><div class="top-item-rev">₱${item.rev.toFixed(2)}</div></div>`; }); }
+            else { sortedItems.slice(0, 5).forEach(item => { topContainer.innerHTML += `<div class="top-item-row"><div><div class="top-item-name">${item.name}</div><div class="top-item-qty">Sold/Availed Count: ${item.qty}</div></div><div class="top-item-rev">₱${item.rev.toFixed(2)}</div></div>`; }); }
 
             let stBody = document.querySelector('#staffPerfTable tbody'); stBody.innerHTML = '';
             if(Object.keys(staffStats).length === 0) {
@@ -1306,7 +1371,6 @@
                             vial.usedML -= x.qty;
                             if(vial.usedML < 0) vial.usedML = 0;
                         } else {
-                            // Vial was emptied and removed. Restore it to active and give back 1 stock!
                             p.stock += 1;
                             activeVials.push({ serial: x.serial, productId: p.id, usedML: p.mlPerVial - x.qty, maxML: p.mlPerVial });
                         }
