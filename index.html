@@ -105,9 +105,9 @@
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
         }
         
-        /* Premium Custom Multi-Select with Inline Quantity */
+        /* Premium Custom Multi-Select with Inline Quantity & Serial */
         .product-list {
-            max-height: 280px;
+            max-height: 300px;
             overflow-y: auto;
             border: 1px solid var(--gray-300);
             border-radius: 8px;
@@ -132,51 +132,33 @@
         .product-item {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             padding: 12px 16px;
             border-bottom: 1px solid var(--gray-100);
-            cursor: pointer;
             transition: background 0.2s;
             margin: 0;
         }
         .product-item:last-child { border-bottom: none; }
         .product-item:hover { background: #F8FAFC; }
-        .product-item input[type="checkbox"] {
-            width: 22px; 
-            height: 22px; 
-            margin-right: 14px;
-            cursor: pointer;
-            accent-color: var(--primary);
+        
+        .item-left { display: flex; align-items: center; flex: 1; }
+        .item-left input[type="checkbox"] {
+            width: 22px; height: 22px; margin-right: 14px; cursor: pointer; accent-color: var(--primary);
         }
-        .product-info { display: flex; flex-direction: column; flex: 1; }
+        .product-info { display: flex; flex-direction: column; }
         .product-name { font-weight: 700; color: var(--dark); font-size: 14px; }
         .product-meta { font-size: 12px; color: var(--gray-600); font-weight: 600; margin-top: 2px;}
         
-        /* Inline Quantity Input */
-        .inline-qty-input {
-            width: 70px !important;
-            padding: 8px !important;
-            text-align: center;
-            font-weight: bold !important;
-            margin-left: 10px;
-        }
-        .inline-qty-input:disabled { background: var(--gray-100); opacity: 0.5; border: 1px dashed var(--gray-300); }
+        .item-inputs { display: flex; gap: 8px; align-items: center; }
+        .inline-qty-input { width: 70px !important; padding: 8px !important; text-align: center; font-weight: bold !important; }
+        .inline-serial-input { width: 120px !important; padding: 8px !important; font-weight: bold !important; text-align: center; font-size: 13px !important; }
         
+        .inline-qty-input:disabled, .inline-serial-input:disabled { background: var(--gray-100); opacity: 0.5; border: 1px dashed var(--gray-300); }
         .opacity-50 { opacity: 0.5; pointer-events: none; }
 
         .btn { 
-            padding: 12px 20px; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            color: white; 
-            font-weight: 700;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
+            padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: 700; font-size: 14px;
+            transition: all 0.2s ease; display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
         }
         
         .btn:active { transform: translateY(1px); }
@@ -194,12 +176,8 @@
         .btn-outline:hover { background-color: var(--gray-100); }
         
         .table-wrapper {
-            width: 100%; 
-            overflow-x: auto; 
-            -webkit-overflow-scrolling: touch;
-            border-radius: 8px; 
-            border: 1px solid var(--gray-300); 
-            background: var(--surface);
+            width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;
+            border-radius: 8px; border: 1px solid var(--gray-300); background: var(--surface);
         }
         
         table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 600px; }
@@ -216,15 +194,8 @@
         .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
         
         .header-bar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: var(--surface); 
-            padding: 20px 24px; 
-            border-radius: var(--radius);
-            margin-bottom: 24px; 
-            box-shadow: var(--shadow); 
-            border: 1px solid var(--gray-300);
+            display: flex; justify-content: space-between; align-items: center; background: var(--surface); 
+            padding: 20px 24px; border-radius: var(--radius); margin-bottom: 24px; box-shadow: var(--shadow); border: 1px solid var(--gray-300);
         }
         
         .header-bar h2 { margin: 0; font-size: 20px; }
@@ -234,32 +205,13 @@
         .badge-user { background-color: #D1FAE5; color: #059669; }
 
         .nav-tabs {
-            display: flex; 
-            gap: 12px; 
-            background: var(--surface); 
-            padding: 12px;
-            border-radius: var(--radius); 
-            margin-bottom: 24px; 
-            overflow-x: auto;
-            box-shadow: var(--shadow); 
-            border: 1px solid var(--gray-300);
-            -webkit-overflow-scrolling: touch;
+            display: flex; gap: 12px; background: var(--surface); padding: 12px; border-radius: var(--radius); 
+            margin-bottom: 24px; overflow-x: auto; box-shadow: var(--shadow); border: 1px solid var(--gray-300); -webkit-overflow-scrolling: touch;
         }
         
         .nav-btn {
-            flex: 1; 
-            padding: 12px 20px; 
-            text-align: center; 
-            background: transparent;
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            white-space: nowrap;
-            font-weight: 700; 
-            color: var(--gray-600); 
-            transition: all 0.2s; 
-            min-width: fit-content; 
-            font-size: 14px;
+            flex: 1; padding: 12px 20px; text-align: center; background: transparent; border: none; border-radius: 8px; cursor: pointer; 
+            white-space: nowrap; font-weight: 700; color: var(--gray-600); transition: all 0.2s; min-width: fit-content; font-size: 14px;
         }
         
         .nav-btn:hover { background: var(--gray-100); color: var(--dark); }
@@ -270,39 +222,24 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         .stat-box {
-            background: var(--surface); 
-            border: 1px solid var(--gray-300);
-            border-radius: 12px; 
-            padding: 24px; 
-            position: relative; 
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s;
+            background: var(--surface); border: 1px solid var(--gray-300); border-radius: 12px; padding: 24px; 
+            position: relative; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); transition: transform 0.2s;
         }
         .stat-box:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
         
-        .stat-box::before { 
-            content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--primary); border-radius: 12px 0 0 12px;
-        }
-        
+        .stat-box::before { content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--primary); border-radius: 12px 0 0 12px; }
         .stat-box h4 { margin: 0; color: var(--gray-600); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
         .stat-box p.main-stat { margin: 12px 0 8px 0; font-size: 32px; font-weight: 800; color: var(--dark); letter-spacing: -0.02em; }
         .stat-box .profit-text { font-size: 16px; font-weight: 700; margin: 12px 0 0 0; }
         .stat-box .expense-text { color: var(--danger); font-size: 15px; font-weight: 600; margin: 4px 0; }
 
-        .top-item-row {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 14px 0; border-bottom: 1px solid var(--gray-100);
-        }
+        .top-item-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--gray-100); }
         .top-item-row:last-child { border-bottom: none; }
         .top-item-name { font-weight: 700; color: var(--dark); font-size: 14px; }
         .top-item-qty { font-size: 12px; color: var(--gray-600); font-weight: 600; margin-top: 4px; }
         .top-item-rev { font-weight: 800; color: var(--primary); font-size: 16px; }
 
-        .chart-container {
-            position: relative; height: 350px; width: 100%; margin-top: 10px; padding: 20px;
-            background: #fff; border: 1px solid var(--gray-300); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
+        .chart-container { position: relative; height: 350px; width: 100%; margin-top: 10px; padding: 20px; background: #fff; border: 1px solid var(--gray-300); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         
         @media (max-width: 768px) {
             .container { padding: 12px; }
@@ -315,20 +252,12 @@
             .card { padding: 16px; }
             .form-group { margin-bottom: 12px; }
             .chart-container { height: 280px; padding: 10px; }
+            .product-item { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .item-inputs { width: 100%; justify-content: flex-start; }
         }
 
-        #receiptModalOverlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(17, 24, 39, 0.85); display: flex; justify-content: center; align-items: center;
-            z-index: 1000; backdrop-filter: blur(5px); padding: 20px;
-        }
-        
-        .receipt-box {
-            background: white; width: 100%; max-width: 380px; padding: 30px; border-radius: 16px;
-            font-family: 'Courier New', Courier, monospace; font-weight: 600;
-            max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg);
-        }
-        
+        #receiptModalOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(17, 24, 39, 0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(5px); padding: 20px; }
+        .receipt-box { background: white; width: 100%; max-width: 380px; padding: 30px; border-radius: 16px; font-family: 'Courier New', Courier, monospace; font-weight: 600; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow-lg); }
         .receipt-box hr { border: 1px dashed #D1D5DB; margin: 20px 0; }
         .receipt-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; align-items: flex-start; }
     </style>
@@ -438,7 +367,7 @@
             <button class="nav-btn active admin-only hidden" onclick="switchTab('tab-dashboard')">📊 Dashboard</button>
             <button class="nav-btn" onclick="switchTab('tab-transact')">📋 Transact</button>
             <button class="nav-btn admin-only hidden" onclick="switchTab('tab-expenses')">💸 Expenses</button>
-            <button class="nav-btn" onclick="switchTab('tab-inventory')">📦 Products & Services</button>
+            <button class="nav-btn" onclick="switchTab('tab-inventory')">📦 Inventory & Services</button>
             <button class="nav-btn admin-only hidden" onclick="switchTab('tab-history')">📝 History</button>
             <button class="nav-btn admin-only hidden" onclick="switchTab('tab-accounts')">🔐 Accounts</button>
         </div>
@@ -495,7 +424,7 @@
                 <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Revenue generated by each personnel based on the selected date.</p>
                 <div class="table-wrapper">
                     <table id="staffPerfTable">
-                        <thead><tr><th>Staff Name</th><th>Daily Revenue</th><th>Monthly Revenue</th><th>Yearly Revenue</th></tr></thead>
+                        <thead><tr><th>Staff Name</th><th>Selected Daily Rev</th><th>Selected Monthly Rev</th><th>Selected Yearly Rev</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -541,7 +470,7 @@
                     
                     <!-- NEW MULTI-SELECT UI WITH INLINE QUANTITY -->
                     <div class="form-group">
-                        <label>Select Product(s) / Service(s) and Specify Quantity:</label>
+                        <label>Select Product(s) / Service(s) and Specify Quantity / ML:</label>
                         <div class="product-list" id="transProductList">
                             <!-- Populated Automatically via renderUI -->
                         </div>
@@ -604,10 +533,22 @@
             
             <div class="card">
                 <h3 style="margin-bottom: 15px;">📦 Products Inventory</h3>
-                <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Items with physical stock and cost.</p>
-                <div class="table-wrapper">
+                <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Items with physical stock. Includes whole items and multi-dose vials.</p>
+                <div class="table-wrapper" style="margin-bottom: 20px;">
                     <table id="inventoryTable">
-                        <thead><tr><th>Product Name</th><th class="admin-only hidden">Cost Price</th><th>SRP</th><th class="admin-only hidden">Profit/Item</th><th>Stock</th><th class="admin-only hidden text-center">Actions</th></tr></thead>
+                        <thead><tr><th>Type</th><th>Product Name</th><th class="admin-only hidden">Cost</th><th>SRP</th><th class="admin-only hidden">Profit</th><th>Main Stock</th><th class="admin-only hidden text-center">Actions</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- NEW: ACTIVE VIALS TRACKER -->
+            <div class="card">
+                <h3 style="margin-bottom: 15px; color: var(--primary);">🧪 Currently Opened Vials Tracker</h3>
+                <p style="color: var(--gray-600); font-size: 13px; font-weight: 500; margin-top: -10px; margin-bottom: 15px;">Shows all vials currently being used per serial number. Main inventory stock is deducted only when remaining ML reaches 0.</p>
+                <div class="table-wrapper">
+                    <table id="activeVialsTable">
+                        <thead><tr><th>Product Name</th><th>Serial Number</th><th>Used ML</th><th>Remaining ML</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -626,18 +567,20 @@
             
             <div class="card admin-only hidden">
                 <h3 style="margin-bottom: 16px;">➕ Register New Item</h3>
-                <div class="grid-4">
+                <div class="grid-3">
                     <div class="form-group">
                         <label>Item Type</label>
                         <select id="newItemType" onchange="toggleNewItemFields()">
-                            <option value="product">Product (Has Stock)</option>
+                            <option value="whole">Product (Whole)</option>
+                            <option value="vial">Product (Vial / Fractional ML)</option>
                             <option value="service">Service (No Stock)</option>
                         </select>
                     </div>
                     <div class="form-group"><label>Name</label><input type="text" id="newProdName"></div>
-                    <div class="form-group" id="costField"><label>Cost (₱)</label><input type="number" id="newProdCost"></div>
-                    <div class="form-group"><label>Selling Price / Fee (₱)</label><input type="number" id="newProdPrice"></div>
-                    <div class="form-group" id="stockField"><label>Initial Stock</label><input type="number" id="newProdStock"></div>
+                    <div class="form-group" id="costField"><label id="lblCost">Cost (₱)</label><input type="number" id="newProdCost"></div>
+                    <div class="form-group"><label id="lblPrice">Selling Price (₱)</label><input type="number" id="newProdPrice"></div>
+                    <div class="form-group" id="stockField"><label>Initial Stock (Vials / Pcs)</label><input type="number" id="newProdStock"></div>
+                    <div class="form-group hidden" id="mlField"><label>Total ML per Vial</label><input type="number" id="newProdML"></div>
                 </div>
                 <button class="btn btn-primary" onclick="addItem()">Save to Database</button>
             </div>
@@ -649,7 +592,7 @@
                 <h3 style="margin-bottom: 20px;">📝 Transaction Logs</h3>
                 <div class="table-wrapper" style="max-height: 500px;">
                     <table id="historyTable">
-                        <thead><tr><th>Date</th><th>Type</th><th>Item</th><th>Qty</th><th>Method</th><th>Revenue</th><th>Staff</th><th class="text-center">Action</th></tr></thead>
+                        <thead><tr><th>Date</th><th>Type</th><th>Item</th><th>Qty/ML</th><th>Serial No.</th><th>Method</th><th>Revenue</th><th>Staff</th><th class="text-center">Action</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -682,9 +625,6 @@
                 </div>
             </div>
         </div>
-        
-        <!-- SYSTEM FOOTER -->
-        <div style="text-align:center; padding: 30px; color: var(--gray-600); font-size: 13px; font-weight: 600;">System Created by Gelo Cutler</div>
 
     </div>
 
@@ -712,7 +652,8 @@
         // ==========================================
         // 1. GLOBALS & INITIALIZATION
         // ==========================================
-        let inventory = []; 
+        let inventory = []; // holds both 'whole' and 'vial' products
+        let activeVials = []; // holds tracking for opened vials {serial, productId, usedML, maxML}
         let services = []; 
         let finance = { CASH: 0, GCASH: 0, MariBANK: 0, BANK_Transfer: 0 };
         let txHistory = [];
@@ -787,6 +728,7 @@
                 if (docSnap.exists()) {
                     let data = docSnap.data();
                     inventory = data.inventory || []; 
+                    activeVials = data.activeVials || [];
                     services = data.services || [];
                     finance = data.finance || { CASH: 0, GCASH: 0, MariBANK: 0, BANK_Transfer: 0 };
                     txHistory = data.txHistory || []; 
@@ -801,7 +743,7 @@
         async function pushLiveClinicData() {
             try {
                 const docRef = window.doc(window.firebaseDB, "clinicData", "main");
-                await window.setDoc(docRef, { inventory, services, finance, txHistory, expHistory });
+                await window.setDoc(docRef, { inventory, activeVials, services, finance, txHistory, expHistory });
             } catch (e) { console.error("Error writing: ", e); }
         }
 
@@ -913,41 +855,87 @@
             if(type === 'service') {
                 document.getElementById('costField').classList.add('hidden');
                 document.getElementById('stockField').classList.add('hidden');
+                document.getElementById('mlField').classList.add('hidden');
+                document.getElementById('lblPrice').innerText = 'Fee (₱)';
+            } else if (type === 'vial') {
+                document.getElementById('costField').classList.remove('hidden');
+                document.getElementById('stockField').classList.remove('hidden');
+                document.getElementById('mlField').classList.remove('hidden');
+                document.getElementById('lblCost').innerText = 'Cost per Vial (₱)';
+                document.getElementById('lblPrice').innerText = 'SRP per ML (₱)';
             } else {
                 document.getElementById('costField').classList.remove('hidden');
                 document.getElementById('stockField').classList.remove('hidden');
+                document.getElementById('mlField').classList.add('hidden');
+                document.getElementById('lblCost').innerText = 'Cost (₱)';
+                document.getElementById('lblPrice').innerText = 'Selling Price (₱)';
             }
         }
 
-        // Toggles the inline quantity input dynamically
-        function toggleQtyInput(checkbox, inputId) {
-            let qtyInput = document.getElementById(inputId);
-            if(checkbox.checked) {
-                qtyInput.disabled = false;
-                qtyInput.focus();
-            } else {
-                qtyInput.disabled = true;
-                qtyInput.value = 1;
+        // Toggles inputs dynamically when checkbox is clicked
+        function toggleInputs(checkbox, type, id) {
+            if(type === 'prod_whole') {
+                let input = document.getElementById(`qty_whole_${id}`);
+                input.disabled = !checkbox.checked;
+                if(checkbox.checked) input.focus(); else input.value = 1;
+            } else if (type === 'prod_vial') {
+                let mlInput = document.getElementById(`ml_vial_${id}`);
+                let serialInput = document.getElementById(`serial_vial_${id}`);
+                mlInput.disabled = !checkbox.checked;
+                serialInput.disabled = !checkbox.checked;
+                if(checkbox.checked) mlInput.focus(); else { mlInput.value = 1; serialInput.value = ''; }
+            } else if (type === 'serv') {
+                let input = document.getElementById(`qty_serv_${id}`);
+                input.disabled = !checkbox.checked;
+                if(checkbox.checked) input.focus(); else input.value = 1;
             }
         }
 
         function renderUI() {
-            // Render Transact Split Multi-Select List with Inline Quantity
             let pl = document.getElementById('transProductList'); 
             pl.innerHTML = '';
             
-            if(inventory.length > 0) {
-                pl.innerHTML += `<div class="list-header">📦 Products</div>`;
-                inventory.forEach(i => {
+            let hasWhole = inventory.some(i => i.type !== 'vial');
+            let hasVials = inventory.some(i => i.type === 'vial');
+            
+            if(hasVials) {
+                pl.innerHTML += `<div class="list-header">🧪 Vials (Fractional Use)</div>`;
+                inventory.filter(i => i.type === 'vial').forEach(i => {
+                    let disabled = (i.stock <= 0 && !activeVials.some(v => v.productId === i.id)) ? 'disabled' : '';
+                    let opacityClass = disabled ? 'opacity-50' : '';
+                    pl.innerHTML += `
+                        <label class="product-item ${opacityClass}">
+                            <div class="item-left">
+                                <input type="checkbox" name="selectedItems" value="prod_vial_${i.id}" ${disabled} onchange="toggleInputs(this, 'prod_vial', ${i.id})">
+                                <div class="product-info">
+                                    <span class="product-name">${i.name}</span>
+                                    <span class="product-meta">₱${i.price.toFixed(2)}/ML | Main Stock: ${i.stock} vials</span>
+                                </div>
+                            </div>
+                            <div class="item-inputs">
+                                <input type="number" id="ml_vial_${i.id}" class="inline-qty-input" value="1" min="0.1" step="0.1" placeholder="ML" disabled onclick="event.stopPropagation()">
+                                <input type="text" id="serial_vial_${i.id}" class="inline-serial-input" placeholder="Serial No." disabled onclick="event.stopPropagation()">
+                            </div>
+                        </label>`;
+                });
+            }
+
+            if(hasWhole) {
+                pl.innerHTML += `<div class="list-header">📦 Whole Products</div>`;
+                inventory.filter(i => i.type !== 'vial').forEach(i => {
                     let disabled = (i.stock <= 0) ? 'disabled' : '';
                     let opacityClass = disabled ? 'opacity-50' : '';
                     pl.innerHTML += `
                         <label class="product-item ${opacityClass}">
-                            <input type="checkbox" name="selectedItems" value="prod_${i.id}" ${disabled} onchange="toggleQtyInput(this, 'qty_prod_${i.id}')">
-                            <div class="product-info">
-                                <span class="product-name">${i.name}</span><span class="product-meta">₱${i.price.toFixed(2)} | Stock: ${i.stock}</span>
+                            <div class="item-left">
+                                <input type="checkbox" name="selectedItems" value="prod_whole_${i.id}" ${disabled} onchange="toggleInputs(this, 'prod_whole', ${i.id})">
+                                <div class="product-info">
+                                    <span class="product-name">${i.name}</span><span class="product-meta">₱${i.price.toFixed(2)} | Stock: ${i.stock}</span>
+                                </div>
                             </div>
-                            <input type="number" id="qty_prod_${i.id}" class="inline-qty-input" value="1" min="1" disabled onclick="event.stopPropagation()">
+                            <div class="item-inputs">
+                                <input type="number" id="qty_whole_${i.id}" class="inline-qty-input" value="1" min="1" disabled onclick="event.stopPropagation()">
+                            </div>
                         </label>`;
                 });
             }
@@ -957,11 +945,15 @@
                 services.forEach(s => {
                     pl.innerHTML += `
                         <label class="product-item">
-                            <input type="checkbox" name="selectedItems" value="serv_${s.id}" onchange="toggleQtyInput(this, 'qty_serv_${s.id}')">
-                            <div class="product-info">
-                                <span class="product-name">${s.name}</span><span class="product-meta">Fee: ₱${s.price.toFixed(2)}</span>
+                            <div class="item-left">
+                                <input type="checkbox" name="selectedItems" value="serv_${s.id}" onchange="toggleInputs(this, 'serv', ${s.id})">
+                                <div class="product-info">
+                                    <span class="product-name">${s.name}</span><span class="product-meta">Fee: ₱${s.price.toFixed(2)}</span>
+                                </div>
                             </div>
-                            <input type="number" id="qty_serv_${s.id}" class="inline-qty-input" value="1" min="1" disabled onclick="event.stopPropagation()">
+                            <div class="item-inputs">
+                                <input type="number" id="qty_serv_${s.id}" class="inline-qty-input" value="1" min="1" disabled onclick="event.stopPropagation()">
+                            </div>
                         </label>`;
                 });
             }
@@ -969,11 +961,14 @@
             // Render Inventory Table
             let invTb = document.querySelector('#inventoryTable tbody'); invTb.innerHTML = '';
             inventory.forEach(i => {
+                let badgeTxt = i.type === 'vial' ? '🧪 Vial' : '📦 Whole';
                 invTb.innerHTML += `<tr>
-                    <td><strong>${i.name}</strong></td><td class="admin-only ${currentUser.role==='admin'?'':'hidden'}">₱${i.cost}</td>
-                    <td style="color:var(--primary); font-weight:700;">₱${i.price}</td>
-                    <td class="admin-only ${currentUser.role==='admin'?'':'hidden'}" style="color:var(--secondary); font-weight:700;">₱${i.price - i.cost}</td>
-                    <td><span class="badge ${i.stock<=0?'badge-role':'badge-user'}">${i.stock}</span></td>
+                    <td><span class="badge" style="background:var(--gray-300); color:var(--dark); margin:0;">${badgeTxt}</span></td>
+                    <td><strong>${i.name}</strong></td>
+                    <td class="admin-only ${currentUser.role==='admin'?'':'hidden'}">₱${i.cost}</td>
+                    <td style="color:var(--primary); font-weight:700;">₱${i.price} ${i.type==='vial'?'/ ML':''}</td>
+                    <td class="admin-only ${currentUser.role==='admin'?'':'hidden'}" style="color:var(--secondary); font-weight:700;">₱${i.price - (i.type==='vial'?(i.cost/i.mlPerVial):i.cost)}</td>
+                    <td><span class="badge badge-user">${i.stock} ${i.type==='vial'?'Vials':'Pcs'}</span></td>
                     <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-center">
                         <button class="btn btn-sm btn-info" onclick="addStock(${i.id})">➕</button>
                         <button class="btn btn-sm btn-warning" onclick="editProduct(${i.id})">✏️</button>
@@ -981,6 +976,23 @@
                     </td></tr>`;
             });
             
+            // Render Active Vials Table
+            let actVialTb = document.querySelector('#activeVialsTable tbody'); actVialTb.innerHTML = '';
+            if(activeVials.length === 0) {
+                actVialTb.innerHTML = '<tr><td colspan="4" class="text-center">No currently opened vials.</td></tr>';
+            } else {
+                activeVials.forEach(v => {
+                    let pName = inventory.find(i => i.id === v.productId)?.name || 'Unknown';
+                    let remaining = v.maxML - v.usedML;
+                    actVialTb.innerHTML += `<tr>
+                        <td><strong>${pName}</strong></td>
+                        <td style="color:var(--primary); font-weight:bold;">${v.serial}</td>
+                        <td style="color:var(--warning);">${v.usedML} ML</td>
+                        <td style="color:var(--secondary); font-weight:bold;">${remaining.toFixed(1)} ML</td>
+                    </tr>`;
+                });
+            }
+
             // Render Services Table
             let srvTb = document.querySelector('#servicesTable tbody'); srvTb.innerHTML = '';
             services.forEach(s => {
@@ -1006,54 +1018,102 @@
 
             let rawDate = document.getElementById('transDate').value, method = document.getElementById('transMethod').value, disc = parseFloat(document.getElementById('transDiscount').value), cat = document.getElementById('transCategory').value;
             
-            let selectedItems = [];
+            let txOperations = [];
+
+            // VALIDATION PHASE
             for(let cb of checkboxes) {
-                let [type, idStr] = cb.value.split('_');
-                let id = parseInt(idStr);
+                let [typeStr, catStr, idStr] = cb.value.split('_');
                 
-                // Get Inline Quantity
-                let inlineQty = parseInt(document.getElementById(`qty_${cb.value}`).value);
-                if(isNaN(inlineQty) || inlineQty <= 0) return alert('Invalid quantity for one of the selected items.');
-                
-                if (type === 'prod') {
+                if (typeStr === 'prod') {
+                    let id = parseInt(idStr);
                     let p = inventory.find(i => i.id === id);
-                    if(p.stock < inlineQty) return alert(`Not enough stock for ${p.name}. Available: ${p.stock}`);
-                    selectedItems.push({ isService: false, ref: p, qty: inlineQty });
-                } else {
-                    let s = services.find(i => i.id === id);
-                    selectedItems.push({ isService: true, ref: s, qty: inlineQty });
+                    
+                    if (catStr === 'vial') {
+                        let mlUsed = parseFloat(document.getElementById(`ml_vial_${id}`).value);
+                        let serial = document.getElementById(`serial_vial_${id}`).value.trim().toUpperCase();
+                        
+                        if(isNaN(mlUsed) || mlUsed <= 0) return alert(`Invalid ML for ${p.name}`);
+                        if(!serial) return alert(`Please enter Serial Number for ${p.name}`);
+                        
+                        // Check Active Vials
+                        let v = activeVials.find(v => v.serial === serial && v.productId === id);
+                        if (v) {
+                            let remaining = v.maxML - v.usedML;
+                            if (mlUsed > remaining) return alert(`Serial ${serial} only has ${remaining} ML left. Transaction stopped.`);
+                        } else {
+                            // Needs to open new vial
+                            if (p.stock <= 0) return alert(`No main stock left to open a new vial for ${p.name}.`);
+                            if (mlUsed > p.mlPerVial) return alert(`Input ML (${mlUsed}) exceeds the total capacity of a new vial (${p.mlPerVial} ML).`);
+                        }
+                        
+                        txOperations.push({ type: 'vial', ref: p, mlUsed: mlUsed, serial: serial });
+                        
+                    } else if (catStr === 'whole') {
+                        let qty = parseInt(document.getElementById(`qty_whole_${id}`).value);
+                        if(isNaN(qty) || qty <= 0) return alert(`Invalid qty for ${p.name}`);
+                        if(p.stock < qty) return alert(`Not enough stock for ${p.name}. Available: ${p.stock}`);
+                        txOperations.push({ type: 'whole', ref: p, qty: qty });
+                    }
+                } else if (typeStr === 'serv') {
+                    let s = services.find(i => i.id === parseInt(catStr)); // For services, id is in index 1
+                    let qty = parseInt(document.getElementById(`qty_serv_${s.id}`).value);
+                    if(isNaN(qty) || qty <= 0) return alert(`Invalid qty for ${s.name}`);
+                    txOperations.push({ type: 'serv', ref: s, qty: qty });
                 }
             }
 
+            // EXECUTION PHASE
             let timePart = getLocalISODate().split('T')[1] || "12:00:00";
             let finalDate = rawDate ? (rawDate + "T" + timePart) : getLocalISODate();
             let totalAmt = 0; let receiptItemsHTML = [];
 
-            selectedItems.forEach(obj => {
-                let itemAmt = (obj.ref.price * obj.qty) * (1 - disc); 
-                totalAmt += itemAmt; finance[method] += itemAmt;
-                let cost = 0;
-                
-                if(!obj.isService) {
-                    obj.ref.stock -= obj.qty;
-                    cost = obj.ref.cost * obj.qty;
+            txOperations.forEach(op => {
+                if (op.type === 'vial') {
+                    let itemAmt = (op.ref.price * op.mlUsed) * (1 - disc); 
+                    totalAmt += itemAmt; finance[method] += itemAmt;
+                    
+                    let costPerMl = op.ref.cost / op.ref.mlPerVial;
+                    let totalCost = costPerMl * op.mlUsed;
+
+                    // Handle Tracker
+                    let v = activeVials.find(v => v.serial === op.serial && v.productId === op.ref.id);
+                    if (!v) {
+                        op.ref.stock -= 1; // Open new vial
+                        v = { serial: op.serial, productId: op.ref.id, usedML: 0, maxML: op.ref.mlPerVial };
+                        activeVials.push(v);
+                    }
+                    
+                    v.usedML += op.mlUsed;
+                    
+                    // If empty, remove from tracker
+                    if(v.usedML >= v.maxML) {
+                        activeVials = activeVials.filter(av => !(av.serial === op.serial && av.productId === op.ref.id));
+                    }
+                    
+                    txHistory.push({ id: Date.now() + Math.random(), date: finalDate, category: cat, item: op.ref.name, isVial: true, qty: op.mlUsed, serial: op.serial, method: method, amount: itemAmt, totalCost: totalCost, processedBy: currentUser.name }); 
+                    receiptItemsHTML.push(`<strong>${op.ref.name}</strong> (${op.mlUsed} ML) <span style="font-size:10px;">[SN:${op.serial}]</span><br>₱${itemAmt.toFixed(2)}`);
+
+                } else if (op.type === 'whole') {
+                    op.ref.stock -= op.qty;
+                    let itemAmt = (op.ref.price * op.qty) * (1 - disc); 
+                    totalAmt += itemAmt; finance[method] += itemAmt;
+                    
+                    txHistory.push({ id: Date.now() + Math.random(), date: finalDate, category: cat, item: op.ref.name, isVial: false, qty: op.qty, method: method, amount: itemAmt, totalCost: (op.ref.cost*op.qty), processedBy: currentUser.name }); 
+                    receiptItemsHTML.push(`<strong>${op.ref.name}</strong> (x${op.qty})<br>₱${itemAmt.toFixed(2)}`);
+
+                } else if (op.type === 'serv') {
+                    let itemAmt = (op.ref.price * op.qty) * (1 - disc); 
+                    totalAmt += itemAmt; finance[method] += itemAmt;
+                    
+                    txHistory.push({ id: Date.now() + Math.random(), date: finalDate, category: cat, item: op.ref.name, isService: true, qty: op.qty, method: method, amount: itemAmt, totalCost: 0, processedBy: currentUser.name }); 
+                    receiptItemsHTML.push(`<strong>${op.ref.name}</strong> (x${op.qty})<br>₱${itemAmt.toFixed(2)}`);
                 }
-                
-                txHistory.push({ 
-                    id: Date.now() + Math.random(), date: finalDate, category: cat, 
-                    item: obj.ref.name, isService: obj.isService, qty: obj.qty, method: method, 
-                    amount: itemAmt, totalCost: cost, processedBy: currentUser.name 
-                }); 
-                receiptItemsHTML.push(`<strong>${obj.ref.name}</strong> (x${obj.qty}) - ₱${itemAmt.toFixed(2)}`);
             });
 
             pushLiveClinicData(); 
             
-            checkboxes.forEach(cb => { cb.checked = false; toggleQtyInput(cb, `qty_${cb.value}`); }); 
-            
-            let receiptDateObj = new Date(finalDate);
-            document.getElementById('rcptDate').innerText = receiptDateObj.toLocaleString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }); 
-            document.getElementById('rcptCategory').innerText = cat; document.getElementById('rcptItem').innerHTML = receiptItemsHTML.join('<br>'); 
+            document.getElementById('rcptDate').innerText = new Date(finalDate).toLocaleString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }); 
+            document.getElementById('rcptCategory').innerText = cat; document.getElementById('rcptItem').innerHTML = receiptItemsHTML.join('<br><br>'); 
             document.getElementById('rcptMethod').innerText = method; 
             document.getElementById('rcptTotal').innerText = '₱' + totalAmt.toFixed(2); document.getElementById('rcptUser').innerText = currentUser.name; 
             document.getElementById('receiptModalOverlay').classList.remove('hidden');
@@ -1072,8 +1132,21 @@
         function renderHistory() {
             let txb = document.querySelector('#historyTable tbody'); txb.innerHTML = '';
             [...txHistory].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(t => {
-                txb.innerHTML += `<tr><td>${t.date.split('T')[0]}</td><td><span class="badge" style="background:#E0E7FF;color:#4338CA;">${t.category}</span></td><td>${t.item}</td><td>${t.qty}</td><td>${t.method}</td><td style="font-weight:800;">₱${t.amount.toFixed(2)}</td><td>${t.processedBy}</td><td class="text-center"><button class="btn btn-sm btn-danger" onclick="delTx(${t.id})">Revert</button></td></tr>`;
+                let badgeStr = t.isService ? 'Service' : (t.isVial ? 'Vial' : 'Product');
+                let displayQty = t.isVial ? `${t.qty} ML` : `${t.qty} Pcs`;
+                txb.innerHTML += `<tr>
+                    <td>${t.date.split('T')[0]}</td>
+                    <td><span class="badge" style="background:#E0E7FF;color:#4338CA;">${t.category}</span> <span class="badge" style="background:var(--gray-300); color:var(--dark); margin-left:4px;">${badgeStr}</span></td>
+                    <td>${t.item}</td>
+                    <td>${displayQty}</td>
+                    <td>${t.serial || 'N/A'}</td>
+                    <td>${t.method}</td>
+                    <td style="font-weight:800; color:var(--primary);">₱${t.amount.toFixed(2)}</td>
+                    <td>${t.processedBy}</td>
+                    <td class="text-center"><button class="btn btn-sm btn-danger" onclick="delTx(${t.id})">Revert</button></td>
+                </tr>`;
             });
+            
             let exb = document.querySelector('#expenseTable tbody'); exb.innerHTML = '';
             [...expHistory].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(e => {
                 exb.innerHTML += `<tr><td>${e.date.split('T')[0]}</td><td>${e.category}</td><td>${e.note}</td><td>${e.user}</td><td class="text-right" style="color:var(--danger); font-weight:800;">₱${e.amount.toFixed(2)}</td><td class="text-center"><button class="btn btn-sm btn-danger" onclick="delExp(${e.id})">🗑️</button></td></tr>`;
@@ -1094,20 +1167,19 @@
             if (!dateInput.value) dateInput.value = getLocalISODate().split('T')[0];
             let td = dateInput.value, tm = td.substring(0,7), ty = td.substring(0,4);
             
-            // Format dynamic date texts
             let selDateObj = new Date(td);
-            let formattedDate = selDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-            let formattedMonth = selDateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-            let formattedYear = selDateObj.toLocaleDateString('en-US', { year: 'numeric' });
+            let fDate = selDateObj.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            let fMonth = selDateObj.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+            let fYear = selDateObj.toLocaleDateString('en-US', { year: 'numeric' });
 
-            document.getElementById('lblSales').innerText = `🛍️ Sales Analytics (${formattedDate})`;
-            document.getElementById('lblTopItems').innerText = `🏆 Top 5 Selling Items (${formattedDate})`;
-            document.getElementById('lblDemographics').innerText = `👥 Patient Demographics (${formattedDate})`;
-            document.getElementById('lblStaffPerf').innerText = `👩‍⚕️ Staff Performance (${formattedDate})`;
+            document.getElementById('lblSales').innerText = `🛍️ Sales Analytics (${fDate})`;
+            document.getElementById('lblTopItems').innerText = `🏆 Top 5 Selling Items (${fDate})`;
+            document.getElementById('lblDemographics').innerText = `👥 Patient Demographics (${fDate})`;
+            document.getElementById('lblStaffPerf').innerText = `👩‍⚕️ Staff Performance (${fDate})`;
             
-            document.getElementById('hdrDaily').innerText = `Date: ${formattedDate}`;
-            document.getElementById('hdrMonthly').innerText = `Month: ${formattedMonth}`;
-            document.getElementById('hdrYearly').innerText = `Year: ${formattedYear}`;
+            document.getElementById('hdrDaily').innerText = `Date: ${fDate}`;
+            document.getElementById('hdrMonthly').innerText = `Month: ${fMonth}`;
+            document.getElementById('hdrYearly').innerText = `Year: ${fYear}`;
 
             let dr = 0, mr = 0, yr = 0, dp = 0, mp = 0, yp = 0, de = 0, me = 0, ye = 0; 
             let catsDaily = { New: 0, Old: 0, PWD: 0, Senior: 0 };
@@ -1120,7 +1192,6 @@
             txHistory.forEach(t => { 
                 let d = t.date.split('T')[0]; let monthStr = t.date.substring(0,7); let prof = t.amount - t.totalCost; 
                 
-                // Track Staff Stats
                 if(!staffStats[t.processedBy]) staffStats[t.processedBy] = { d: 0, m: 0, y: 0 };
                 
                 if(d === td) {
@@ -1128,9 +1199,9 @@
                     if(!dailyPatientTimestamps.has(exactTime) && catsDaily[t.category] !== undefined) { catsDaily[t.category]++; dailyPatientTimestamps.add(exactTime); }
                     dr += t.amount; dp += prof; 
                     
-                    if(t.isService) { servQty += t.qty; servRev += t.amount; } else { prodQty += t.qty; prodRev += t.amount; }
+                    if(t.isService) { servQty += 1; servRev += t.amount; } else { prodQty += t.qty; prodRev += t.amount; }
                     if(!itemStats[t.item]) itemStats[t.item] = { qty: 0, rev: 0 };
-                    itemStats[t.item].qty += t.qty; itemStats[t.item].rev += t.amount;
+                    itemStats[t.item].qty += t.isService ? 1 : t.qty; itemStats[t.item].rev += t.amount;
                     
                     staffStats[t.processedBy].d += t.amount;
                 } 
@@ -1157,7 +1228,6 @@
             if(sortedItems.length === 0) topContainer.innerHTML = '<p style="color: var(--gray-600); font-size: 13px; text-align: center; margin-top: 30px;">No sales recorded.</p>';
             else { sortedItems.slice(0, 5).forEach(item => { topContainer.innerHTML += `<div class="top-item-row"><div><div class="top-item-name">${item.name}</div><div class="top-item-qty">Sold: ${item.qty}</div></div><div class="top-item-rev">₱${item.rev.toFixed(2)}</div></div>`; }); }
 
-            // Render Staff Table
             let stBody = document.querySelector('#staffPerfTable tbody'); stBody.innerHTML = '';
             if(Object.keys(staffStats).length === 0) {
                 stBody.innerHTML = '<tr><td colspan="4" class="text-center">No staff transactions recorded.</td></tr>';
@@ -1190,7 +1260,7 @@
             dashboardChart = new Chart(ctx, {
                 type: 'bar',
                 data: { labels: displayLabels.length > 0 ? displayLabels : ["No Data"], datasets: [{ label: 'Revenue', data: revData.length > 0 ? revData : [0], backgroundColor: '#4F46E5', borderRadius: 4 }, { label: 'Net Profit/Loss', data: profData.length > 0 ? profData : [0], backgroundColor: profData.map(v => v < 0 ? '#EF4444' : '#10B981'), borderRadius: 4 }] },
-                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: v => '₱' + v } } } }
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: { callback: v => '₱' + v } } }, plugins: { tooltip: { callbacks: { label: function(c) { let l = c.dataset.label || ''; if(l) l += ': '; if(c.parsed.y !== null) l += '₱' + c.parsed.y.toFixed(2); return l; } } } } }
             });
         }
 
@@ -1201,16 +1271,20 @@
             let type = document.getElementById('newItemType').value;
             let n = document.getElementById('newProdName').value, p = parseFloat(document.getElementById('newProdPrice').value);
             
-            if(type === 'product') {
+            if(type === 'vial') {
+                let c = parseFloat(document.getElementById('newProdCost').value), s = parseInt(document.getElementById('newProdStock').value), ml = parseFloat(document.getElementById('newProdML').value);
+                if(!n || isNaN(c) || isNaN(p) || isNaN(s) || isNaN(ml)) return alert('Complete all details.');
+                inventory.push({ id: Date.now(), name: n, type: 'vial', cost: c, price: p, stock: s, mlPerVial: ml });
+            } else if(type === 'whole') {
                 let c = parseFloat(document.getElementById('newProdCost').value), s = parseInt(document.getElementById('newProdStock').value);
                 if(!n || isNaN(c) || isNaN(p) || isNaN(s)) return alert('Complete all details.');
-                inventory.push({ id: Date.now(), name: n, cost: c, price: p, stock: s });
+                inventory.push({ id: Date.now(), name: n, type: 'whole', cost: c, price: p, stock: s });
             } else {
                 if(!n || isNaN(p)) return alert('Complete all details.');
                 services.push({ id: Date.now(), name: n, price: p });
             }
             pushLiveClinicData();
-            document.getElementById('newProdName').value = ''; document.getElementById('newProdCost').value = ''; document.getElementById('newProdPrice').value = ''; document.getElementById('newProdStock').value = '';
+            document.getElementById('newProdName').value = ''; document.getElementById('newProdCost').value = ''; document.getElementById('newProdPrice').value = ''; document.getElementById('newProdStock').value = ''; document.getElementById('newProdML').value = '';
         }
 
         function addStock(id) { let q = parseInt(prompt("Quantity to add:")); if(!isNaN(q) && q > 0) { inventory.find(i => i.id === id).stock += q; pushLiveClinicData(); } }
@@ -1220,10 +1294,27 @@
         function deleteService(id) { if(confirm('Delete service?')) { services = services.filter(i => i.id !== id); pushLiveClinicData(); } }
         
         function delTx(id) { 
-            if(confirm('Revert? Revenue will be deducted and product stock returned.')) { 
+            if(confirm('Revert? Revenue will be deducted and ML/Stock will be restored.')) { 
                 let x = txHistory.find(t => t.id === id); 
                 finance[x.method] -= x.amount; 
-                if(!x.isService) { let p = inventory.find(i => i.name === x.item); if(p) p.stock += x.qty; }
+                
+                if (x.isVial) {
+                    let p = inventory.find(i => i.name === x.item);
+                    if(p) {
+                        let vial = activeVials.find(v => v.serial === x.serial && v.productId === p.id);
+                        if(vial) {
+                            vial.usedML -= x.qty;
+                            if(vial.usedML < 0) vial.usedML = 0;
+                        } else {
+                            // Vial was emptied and removed. Restore it to active and give back 1 stock!
+                            p.stock += 1;
+                            activeVials.push({ serial: x.serial, productId: p.id, usedML: p.mlPerVial - x.qty, maxML: p.mlPerVial });
+                        }
+                    }
+                } else if (!x.isService) {
+                    let p = inventory.find(i => i.name === x.item); if(p) p.stock += x.qty; 
+                }
+                
                 txHistory = txHistory.filter(t => t.id !== id); pushLiveClinicData(); 
             } 
         }
@@ -1239,16 +1330,22 @@
             let csv = "--- CLINIC SYSTEM FULL REPORT ---\n\n1. PAYMENT TILL SUMMARY\nMethod,Amount\n"; let totalTill = 0;
             for(let key in finance) { csv += `${key.replace('_', ' ')},${finance[key]}\n`; totalTill += finance[key]; } csv += `TOTAL TILL,${totalTill}\n\n`;
             
-            csv += "2. INVENTORY (Products)\nProduct Name,Cost Price,SRP,Stock\n";
-            inventory.forEach(item => { csv += `${item.name},${item.cost},${item.price},${item.stock}\n`; });
-            csv += "\n3. SERVICES CATALOG\nService Name,Fee\n";
+            csv += "2. PATIENT DEMOGRAPHICS (All-Time)\nCategory,Total Visits\n";
+            let cats = { 'New': 0, 'Old': 0, 'PWD': 0, 'Senior': 0 }; let timestamps = new Set();
+            txHistory.forEach(tx => { let t = tx.date.split('T')[1] || tx.id; if(!timestamps.has(t) && cats[tx.category] !== undefined) { cats[tx.category]++; timestamps.add(t); }});
+            for(let k in cats) csv += `${k},${cats[k]}\n`; 
+            
+            csv += "\n3. INVENTORY (Products & Vials)\nProduct Name,Type,Cost,SRP,Main Stock,ML per Vial\n";
+            inventory.forEach(item => { csv += `${item.name},${item.type},${item.cost},${item.price},${item.stock},${item.type==='vial'?item.mlPerVial:'N/A'}\n`; });
+            
+            csv += "\n4. SERVICES CATALOG\nService Name,Fee\n";
             services.forEach(item => { csv += `${item.name},${item.price}\n`; });
             
-            csv += "\n4. EXPENSES LOG\nDate,Category,Note,Amount,Logged By\n";
+            csv += "\n5. EXPENSES LOG\nDate,Category,Note,Amount,Logged By\n";
             expHistory.forEach(exp => { csv += `${exp.date.split('T')[0]},${exp.category},${exp.note},${exp.amount},${exp.user}\n`; });
             
-            csv += "\n5. TRANSACTION HISTORY\nDate,Category,Type,Item,Quantity,Payment Method,Total Cost,Total Revenue,Gross Profit,Processed By\n";
-            txHistory.forEach(tx => { csv += `${tx.date.split('T')[0]},${tx.category || 'N/A'},${tx.isService ? 'Service':'Product'},${tx.item},${tx.qty},${tx.method.replace('_', ' ')},${tx.totalCost || 0},${tx.amount},${tx.amount - (tx.totalCost || 0)},${tx.processedBy}\n`; });
+            csv += "\n6. TRANSACTION HISTORY\nDate,Category,Type,Item,Quantity/ML,Serial,Payment Method,Total Cost,Total Revenue,Processed By\n";
+            txHistory.forEach(tx => { csv += `${tx.date.split('T')[0]},${tx.category || 'N/A'},${tx.isService ? 'Service':(tx.isVial?'Vial':'Whole')},${tx.item},${tx.qty},${tx.serial||'N/A'},${tx.method.replace('_', ' ')},${tx.totalCost || 0},${tx.amount},${tx.processedBy}\n`; });
 
             let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             if(currentBlobUrl) URL.revokeObjectURL(currentBlobUrl); currentBlobUrl = URL.createObjectURL(blob);
