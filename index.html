@@ -1542,10 +1542,27 @@
             
             p.stock -= 1;
             activeVials.push({ serial: serial, productId: p.id, usedML: 0, maxML: p.mlPerVial });
+            
+            // Log the cost when manually opening to ensure Dashboard Profit is accurate!
+            txHistory.push({ 
+                id: Date.now() + Math.random(), 
+                date: getLocalISODate(), 
+                category: 'Internal', 
+                item: p.name, 
+                isVial: true, 
+                qty: 0, 
+                serial: serial, 
+                method: 'N/A', 
+                amount: 0, 
+                totalCost: p.cost, 
+                processedBy: currentUser.name 
+            });
+            
             pushLiveClinicData();
             
             alert("Vial opened successfully! It is now available in the Transact Tab.");
             document.getElementById('manualOpenVialSerial').value = '';
+            renderUI();
         }
 
         window.deleteActiveVial = function(serial, productId) {
@@ -1602,7 +1619,6 @@
                 if (activeForThis.length > 0) {
                     activeForThis.forEach(v => { 
                         let rem = (v.maxML - v.usedML);
-                        // Make sure we format remaining properly
                         serialOptions += `<option value="${v.serial}">Use SN-${v.serial} (${formatML(rem)} ML left)</option>`; 
                     });
                     if (i.stock > 0) serialOptions += `<option value="NEW">+ Open New Vial</option>`;
@@ -1678,7 +1694,7 @@
             txHistory.forEach(tx => {
                 if(tx.date.startsWith(matchStr)) {
                     if(till[tx.method] !== undefined) {
-                        till[tx.method] += tx.amount;
+                        till[tx.method] += tx.amount; // Internal logs won't affect this because method is 'N/A' and amount is 0
                     }
                     total += tx.amount;
                 }
@@ -1714,7 +1730,7 @@
             stfTb.innerHTML = '';
             let totalRev = 0;
             
-            let filteredTx = [...txHistory];
+            let filteredTx = [...txHistory].filter(t => t.category !== 'Internal'); // Hide manual opens from staff table
             if(matchStr) {
                 filteredTx = filteredTx.filter(t => t.date.startsWith(matchStr));
             }
@@ -1837,7 +1853,7 @@
                 });
             }
 
-            // Render Inventory Table
+            // Render Inventory Table - EXACT FORMULA FIX APPLIED HERE
             let invTb = document.querySelector('#inventoryTable tbody'); 
             if(invTb) {
                 invTb.innerHTML = '';
@@ -1848,7 +1864,7 @@
                         <td><strong>${i.name}</strong></td>
                         <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-right">₱${formatMoney(i.cost)}</td>
                         <td class="text-right" style="color:var(--primary); font-weight:900; font-feature-settings: 'tnum';">₱${formatMoney(i.price)}</td>
-                        <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-right" style="color:var(--secondary); font-weight:900; font-feature-settings: 'tnum';">₱${formatMoney(i.price - (i.type==='vial'?(i.cost/i.mlPerVial):i.cost))}</td>
+                        <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-right" style="color:var(--secondary); font-weight:900; font-feature-settings: 'tnum';">₱${formatMoney(i.price - i.cost)}</td>
                         <td><span class="badge badge-user" style="font-size:14px; padding:10px 14px;">${formatQty(i.stock)} ${i.type==='vial'?'Vials':'Pcs'}</span></td>
                         <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-center">
                             <button class="btn btn-sm btn-info" onclick="window.addStock(${i.id})">➕</button>
@@ -1942,7 +1958,6 @@
                         serial = serialSel;
                         let v = activeVials.find(v => v.serial === serial && v.productId === id);
                         if (v) { 
-                            // Fix precision for validation
                             let remaining = Math.round((v.maxML - v.usedML) * 100) / 100;
                             if (mlUsed > remaining) return alert(`Serial ${serial} only has ${formatML(remaining)} ML left.`); 
                         }
@@ -1979,17 +1994,17 @@
                     let itemAmt = op.manualPrice * (1 - disc); 
                     totalAmt += itemAmt; 
                     
-                    let costPerMl = op.ref.cost / op.ref.mlPerVial;
-                    let totalCost = costPerMl * op.mlUsed;
-
                     let v = activeVials.find(v => v.serial === op.serial && v.productId === op.ref.id);
+                    let costToDeduct = 0;
+
+                    // ACCOUNTING FIX: Deduct exactly 100% of vial cost ONLY during the opening transaction
                     if (!v) { 
                         op.ref.stock -= 1; 
                         v = { serial: op.serial, productId: op.ref.id, usedML: 0, maxML: op.ref.mlPerVial }; 
                         activeVials.push(v); 
+                        costToDeduct = op.ref.cost;
                     }
                     
-                    // Fixed floating precision issue during deduction
                     v.usedML = Math.round((v.usedML + op.mlUsed) * 100) / 100;
                     
                     if(v.usedML >= v.maxML) { 
@@ -2006,7 +2021,7 @@
                         serial: op.serial, 
                         method: method, 
                         amount: itemAmt, 
-                        totalCost: totalCost, 
+                        totalCost: costToDeduct, // Dashboard reads this
                         processedBy: currentUser.name 
                     }); 
                     
@@ -2026,7 +2041,7 @@
                         qty: op.qty, 
                         method: method, 
                         amount: itemAmt, 
-                        totalCost: (op.ref.cost*op.qty), 
+                        totalCost: (op.ref.cost * op.qty), 
                         processedBy: currentUser.name 
                     }); 
                     
@@ -2124,7 +2139,7 @@
             }
             
             filteredTx.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(t => {
-                let badgeStr = t.isService ? 'Service' : (t.isVial ? 'Vial' : 'Product');
+                let badgeStr = t.category === 'Internal' ? 'Internal Prep' : (t.isService ? 'Service' : (t.isVial ? 'Vial' : 'Product'));
                 let displayQty = t.isVial ? `${formatML(t.qty)} ML` : `${formatQty(t.qty)} Pcs`;
                 
                 txb.innerHTML += `<tr>
@@ -2148,7 +2163,7 @@
         }
 
         // ==========================================
-        // 7. DELETE & REVERT LOGICS (Newly added)
+        // 7. DELETE & REVERT LOGICS
         // ==========================================
         window.removeTx = function(id) {
             if(confirm('Are you sure you want to permanently DELETE this transaction log ONLY? (Hindi ibabalik ang stock o ML)')) {
@@ -2162,20 +2177,31 @@
                 let tx = txHistory.find(t => t.id === id);
                 if(tx) {
                     if (tx.isService) {
-                        // Walang stock na ibabalik para sa service
+                        // Walang stock na ibabalik
                     } else if (tx.isVial) {
                         let p = inventory.find(i => i.name === tx.item && i.type === 'vial');
                         if(p) {
                             let v = activeVials.find(av => av.serial === tx.serial && av.productId === p.id);
                             if(v) {
                                 v.usedML = Math.round((v.usedML - tx.qty) * 100) / 100;
+                                // Kung ito yung opening transaction, i-close ang active vial at ibalik sa main stock
+                                if(tx.totalCost > 0 && v.usedML <= 0) {
+                                    activeVials = activeVials.filter(av => !(av.serial === tx.serial && av.productId === p.id));
+                                    p.stock += 1;
+                                }
                             } else {
-                                activeVials.push({
-                                    serial: tx.serial,
-                                    productId: p.id,
-                                    usedML: Math.round((p.mlPerVial - tx.qty) * 100) / 100,
-                                    maxML: p.mlPerVial
-                                });
+                                // Re-activate empty vial dahil ini-revert
+                                let restoredML = Math.round((p.mlPerVial - tx.qty) * 100) / 100;
+                                if(tx.totalCost > 0 && restoredML <= 0) {
+                                     p.stock += 1; // It was an opening transaction, revert directly to stock
+                                } else {
+                                     activeVials.push({
+                                        serial: tx.serial,
+                                        productId: p.id,
+                                        usedML: restoredML,
+                                        maxML: p.mlPerVial
+                                    });
+                                }
                             }
                         }
                     } else {
@@ -2265,17 +2291,18 @@
                     if(t.isService) { 
                         servQty += 1; 
                         servRev += t.amount; 
-                    } else { 
+                    } else if (t.category !== 'Internal') { 
                         prodQty += t.isVial ? 1 : t.qty; 
                         prodRev += t.amount; 
                     }
                     
-                    if(!itemStats[t.item]) {
-                        itemStats[t.item] = { qty: 0, rev: 0 };
+                    if(t.category !== 'Internal') {
+                        if(!itemStats[t.item]) {
+                            itemStats[t.item] = { qty: 0, rev: 0 };
+                        }
+                        itemStats[t.item].qty += t.isService || t.isVial ? 1 : t.qty; 
+                        itemStats[t.item].rev += t.amount;
                     }
-                    
-                    itemStats[t.item].qty += t.isService || t.isVial ? 1 : t.qty; 
-                    itemStats[t.item].rev += t.amount;
                     
                     staffStats[t.processedBy].d += t.amount;
                 } 
@@ -2459,6 +2486,20 @@
                     if (s <= 0) return alert('Cannot open a vial with 0 initial stock.');
                     finalStock -= 1;
                     activeVials.push({ serial: initialSerial, productId: newId, usedML: 0, maxML: ml });
+                    
+                    txHistory.push({ 
+                        id: Date.now() + Math.random(), 
+                        date: getLocalISODate(), 
+                        category: 'Internal', 
+                        item: n, 
+                        isVial: true, 
+                        qty: 0, 
+                        serial: initialSerial, 
+                        method: 'N/A', 
+                        amount: 0, 
+                        totalCost: c, 
+                        processedBy: currentUser.name 
+                    });
                 }
                 
                 inventory.push({ id: newId, name: n, type: 'vial', cost: c, price: p, stock: finalStock, mlPerVial: ml });
@@ -2591,7 +2632,7 @@
             
             csv += "\n5. TRANSACTION HISTORY\nDate,Category,Type,Item,Quantity/ML,Serial,Payment Method,Total Cost,Total Revenue,Processed By\n";
             txHistory.forEach(tx => { 
-                csv += `${tx.date.split('T')[0]},${tx.category || 'N/A'},${tx.isService ? 'Service':(tx.isVial?'Vial':'Whole')},${tx.item},${tx.qty},${tx.serial||'N/A'},${tx.method.replace('_', ' ')},${tx.totalCost || 0},${tx.amount},${tx.processedBy}\n`; 
+                csv += `${tx.date.split('T')[0]},${tx.category || 'N/A'},${tx.category === 'Internal' ? 'Internal Prep':(tx.isService ? 'Service':(tx.isVial?'Vial':'Whole'))},${tx.item},${tx.qty},${tx.serial||'N/A'},${tx.method.replace('_', ' ')},${tx.totalCost || 0},${tx.amount},${tx.processedBy}\n`; 
             });
 
             let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -2649,7 +2690,7 @@
             else if (filterType === 'yearly') matchStr = document.getElementById('staffTxYearFilter').value;
             
             let methodFilter = document.getElementById('staffTxMethodFilter').value;
-            let filteredTx = [...txHistory];
+            let filteredTx = [...txHistory].filter(t => t.category !== 'Internal'); // Exclude prep logic from staff receipt
             if(matchStr) {
                 filteredTx = filteredTx.filter(t => t.date.startsWith(matchStr));
             }
