@@ -5,23 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Clinic Management System - Premium Cloud</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <style>
-        /* CSS VARIABLES FOR LIGHT & DARK THEME */
+        /* CSS VARIABLES FOR PREMIUM THEME */
         :root {
             --primary: #4F46E5;
-            --primary-gradient: linear-gradient(135deg, #4F46E5, #4338CA);
+            --primary-gradient: linear-gradient(135deg, #4F46E5 0%, #3730A3 100%);
             --secondary: #10B981;
-            --secondary-gradient: linear-gradient(135deg, #10B981, #059669);
+            --secondary-gradient: linear-gradient(135deg, #10B981 0%, #059669 100%);
             --danger: #EF4444;
             --danger-hover: #DC2626;
             --warning: #F59E0B;
             --info: #3B82F6;
             
-            /* LIGHT THEME DEFAULTS */
+            /* LIGHT THEME */
             --dark: #111827;
             --gray-900: #1F2937;
             --gray-600: #4B5563;
@@ -29,15 +29,17 @@
             --gray-100: #F3F4F6;
             --bg-color: #F8FAFC;
             --surface: #FFFFFF;
-            --table-header: #F1F5F9;
-            --table-hover: #F8FAFC;
+            --table-header: #F8FAFC;
+            --table-hover: #F1F5F9;
             
-            --radius: 12px;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 20px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --shadow-lg: 0 12px 24px -4px rgba(0, 0, 0, 0.08), 0 4px 10px -2px rgba(0, 0, 0, 0.04);
+            --shadow-card: 0 4px 20px rgba(0,0,0,0.03);
         }
 
-        /* DARK THEME OVERRIDES */
+        /* DARK THEME */
         [data-theme="dark"] {
             --dark: #F8FAFC;
             --gray-900: #E2E8F0;
@@ -50,6 +52,7 @@
             --table-hover: #334155;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
             --shadow-lg: 0 10px 20px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+            --shadow-card: 0 4px 20px rgba(0,0,0,0.4);
         }
 
         *, *::before, *::after { 
@@ -65,24 +68,25 @@
             padding: 0; 
             overflow-x: hidden; 
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             transition: background-color 0.3s, color 0.3s;
         }
 
         .container { 
-            max-width: 1200px; 
+            max-width: 1280px; 
             margin: 0 auto; 
-            padding: 20px; 
+            padding: 24px; 
             width: 100%; 
         }
         
         .card { 
             background: var(--surface); 
             border-radius: var(--radius); 
-            padding: 24px; 
-            margin-bottom: 24px; 
-            box-shadow: var(--shadow); 
+            padding: 28px; 
+            margin-bottom: 28px; 
+            box-shadow: var(--shadow-card); 
             width: 100%; 
-            border: 1px solid var(--gray-300); 
+            border: 1px solid var(--gray-100); 
             transition: all 0.3s ease;
         }
         
@@ -93,8 +97,8 @@
         h1, h2, h3, h4 { 
             color: var(--dark); 
             margin-top: 0; 
-            font-weight: 700; 
-            letter-spacing: -0.02em; 
+            font-weight: 800; 
+            letter-spacing: -0.03em; 
         }
         
         .form-group { 
@@ -106,24 +110,24 @@
             display: block; 
             font-size: 13.5px; 
             font-weight: 600; 
-            color: var(--gray-900); 
+            color: var(--gray-600); 
             margin-bottom: 8px; 
         }
         
         input:not([type="checkbox"]), select { 
             width: 100%; 
-            padding: 14px 16px; 
-            border: 1px solid var(--gray-300); 
-            border-radius: 8px; 
-            background-color: var(--gray-100); 
-            font-size: 14px; 
-            color: var(--gray-900); 
-            font-weight: 500;
+            padding: 14px 18px; 
+            border: 1.5px solid var(--gray-300); 
+            border-radius: var(--radius-sm); 
+            background-color: var(--surface); 
+            font-size: 15px; 
+            color: var(--dark); 
+            font-weight: 600;
             transition: all 0.2s ease; 
             font-family: 'Inter', sans-serif; 
             appearance: none; 
-            line-height: 1.5;
-            text-overflow: ellipsis; /* Para hindi maputol basta-basta */
+            text-overflow: ellipsis; 
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
         
         select {
@@ -141,20 +145,19 @@
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15); 
         }
 
-        /* NEW TILL SUMMARY CARDS DESIGN */
         .till-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 16px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
         .till-item {
             background: var(--surface);
-            padding: 16px;
-            border-radius: 12px;
+            padding: 20px;
+            border-radius: var(--radius);
             text-align: left;
             border: 2px solid var(--gray-100);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            box-shadow: var(--shadow);
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
@@ -162,136 +165,130 @@
             justify-content: center;
         }
         .till-item:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
             border-color: var(--primary);
             background: var(--table-hover);
         }
         .till-label {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 800;
             color: var(--gray-600);
             margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         .till-amount {
-            font-size: 22px;
+            font-size: 26px;
             font-weight: 900;
             color: var(--dark);
+            font-feature-settings: "tnum";
+            letter-spacing: -0.02em;
         }
         .till-total-card {
             background: var(--primary-gradient);
-            padding: 20px;
-            border-radius: 12px;
+            padding: 24px;
+            border-radius: var(--radius);
             text-align: center;
             color: white;
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.4);
         }
         .till-total-label {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 700;
             opacity: 0.9;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.1em;
         }
         .till-total-amount {
-            font-size: 32px;
+            font-size: 38px;
             font-weight: 900;
             margin: 0;
+            font-feature-settings: "tnum";
         }
         
-        /* CART ITEM STYLE */
         .cart-item {
-            background: var(--surface); 
+            background: var(--table-header); 
             border: 1px solid var(--gray-300); 
-            border-radius: 8px; 
-            padding: 20px; 
+            border-radius: var(--radius); 
+            padding: 24px; 
             position: relative; 
-            box-shadow: var(--shadow);
             transition: transform 0.2s;
         }
-        .cart-item:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
         
-        .opacity-50 { 
-            opacity: 0.5; 
-            pointer-events: none; 
-        }
-
         .btn { 
-            padding: 14px 22px; 
+            padding: 14px 24px; 
             border: none; 
-            border-radius: 8px; 
+            border-radius: var(--radius-sm); 
             cursor: pointer; 
             color: white; 
             font-weight: 700; 
-            font-size: 14px; 
+            font-size: 15px; 
             transition: all 0.2s ease; 
             display: inline-flex; 
             align-items: center; 
             justify-content: center; 
             gap: 8px; 
             width: 100%; 
+            letter-spacing: 0.02em;
         }
         
-        .btn:active { transform: translateY(1px); }
-        .btn-primary { background: var(--primary-gradient); }
-        .btn-primary:hover { box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); }
-        .btn-success { background: var(--secondary-gradient); }
-        .btn-success:hover { box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4); }
+        .btn:active { transform: translateY(2px); }
+        .btn-primary { background: var(--primary-gradient); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
+        .btn-primary:hover { box-shadow: 0 6px 16px rgba(79, 70, 229, 0.5); transform: translateY(-1px); }
+        .btn-success { background: var(--secondary-gradient); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+        .btn-success:hover { box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5); transform: translateY(-1px); }
         .btn-danger { background-color: var(--danger); }
         .btn-danger:hover { background-color: var(--danger-hover); }
         .btn-warning { background-color: var(--warning); color: #fff; }
         .btn-info { background-color: var(--info); }
         .btn-dark { background-color: var(--dark); color: var(--surface); border: 1px solid var(--gray-300); }
-        .btn-sm { padding: 10px 14px; font-size: 13px; width: auto; }
-        .btn-outline { background-color: transparent; border: 2px solid var(--gray-300); color: var(--gray-900); }
-        .btn-outline:hover { background-color: var(--gray-100); }
+        .btn-sm { padding: 10px 16px; font-size: 13px; width: auto; }
         
         .theme-toggle { 
-            background: var(--gray-100); 
+            background: var(--surface); 
             border: 1px solid var(--gray-300); 
-            border-radius: 20px; 
-            padding: 8px 14px; 
+            border-radius: 30px; 
+            padding: 10px 18px; 
             cursor: pointer; 
             display: flex; 
             align-items: center; 
-            gap: 6px; 
-            font-weight: bold; 
+            gap: 8px; 
+            font-weight: 800; 
             color: var(--dark); 
             transition: all 0.3s; 
+            box-shadow: var(--shadow);
         }
-        .theme-toggle:hover { background: var(--gray-300); }
+        .theme-toggle:hover { background: var(--gray-100); }
 
-        /* UPGRADED TABLE WRAPPER FOR SCROLLING */
         .table-wrapper { 
             width: 100%; 
-            max-height: 450px; 
+            max-height: 500px; 
             overflow-y: auto; 
             overflow-x: auto; 
             -webkit-overflow-scrolling: touch; 
-            border-radius: 8px; 
-            border: 1px solid var(--gray-300); 
+            border-radius: var(--radius); 
+            border: 1px solid var(--gray-100); 
             background: var(--surface); 
             position: relative;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.01);
         }
         
         table { 
             width: 100%; 
-            border-collapse: collapse; 
-            font-size: 14px; 
-            min-width: 600px; 
+            border-collapse: separate; 
+            border-spacing: 0;
+            font-size: 14.5px; 
+            min-width: 800px; 
         }
         
         th, td { 
             border-bottom: 1px solid var(--gray-100); 
-            padding: 18px 16px; 
+            padding: 20px 24px; 
             text-align: left; 
             white-space: nowrap; 
         }
@@ -301,139 +298,137 @@
             font-weight: 800; 
             color: var(--gray-600); 
             text-transform: uppercase; 
-            font-size: 11px; 
-            letter-spacing: 0.05em; 
+            font-size: 12px; 
+            letter-spacing: 0.08em; 
             position: sticky; 
             top: 0;
             z-index: 10;
         }
         
+        tbody tr { transition: background-color 0.2s; }
         tbody tr:hover { background-color: var(--table-hover); }
         .text-right { text-align: right; }
         .text-center { text-align: center; }
         
         .hidden { display: none !important; }
-        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; }
         
         .header-bar { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             background: var(--surface); 
-            padding: 24px 28px; 
+            padding: 24px 32px; 
             border-radius: var(--radius); 
-            margin-bottom: 24px; 
-            box-shadow: var(--shadow); 
-            border: 1px solid var(--gray-300); 
+            margin-bottom: 28px; 
+            box-shadow: var(--shadow-card); 
+            border: 1px solid var(--gray-100); 
             transition: all 0.3s; 
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 20px;
         }
         
-        .header-bar h2 { margin: 0; font-size: 22px; }
-        .live-clock { font-size: 14px; font-weight: 600; color: var(--gray-600); margin-top: 6px; }
-        .badge { padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+        .live-clock { font-size: 15px; font-weight: 700; color: var(--gray-600); margin-top: 6px; }
+        .badge { padding: 8px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px; letter-spacing: 0.05em; text-transform: uppercase;}
         .badge-role { background-color: #FEF3C7; color: #D97706; }
         .badge-user { background-color: #D1FAE5; color: #059669; }
 
         .nav-tabs { 
             display: flex; 
-            gap: 12px; 
+            gap: 16px; 
             background: var(--surface); 
             padding: 16px; 
             border-radius: var(--radius); 
-            margin-bottom: 24px; 
+            margin-bottom: 28px; 
             overflow-x: auto; 
-            box-shadow: var(--shadow); 
-            border: 1px solid var(--gray-300); 
+            box-shadow: var(--shadow-card); 
+            border: 1px solid var(--gray-100); 
             -webkit-overflow-scrolling: touch; 
-            transition: all 0.3s; 
         }
         
         .nav-btn { 
             flex: 1; 
-            padding: 14px 20px; 
+            padding: 16px 24px; 
             text-align: center; 
             background: transparent; 
             border: none; 
-            border-radius: 8px; 
+            border-radius: var(--radius-sm); 
             cursor: pointer; 
             white-space: nowrap; 
-            font-weight: 700; 
+            font-weight: 800; 
             color: var(--gray-600); 
-            transition: all 0.2s; 
+            transition: all 0.3s ease; 
             min-width: fit-content; 
-            font-size: 14px; 
+            font-size: 15px; 
         }
         
         .nav-btn:hover { background: var(--gray-100); color: var(--dark); }
-        .nav-btn.active { background: var(--primary-gradient); color: white; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); }
+        .nav-btn.active { background: var(--primary-gradient); color: white; box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4); transform: translateY(-2px);}
         
-        .tab-pane { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-pane { display: none; animation: fadeIn 0.4s ease; }
         .tab-pane.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .stat-box { 
             background: var(--surface); 
-            border: 1px solid var(--gray-300); 
-            border-radius: 12px; 
-            padding: 24px; 
+            border: 1px solid var(--gray-100); 
+            border-radius: var(--radius); 
+            padding: 28px; 
             position: relative; 
             overflow: hidden; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); 
-            transition: transform 0.2s; 
+            box-shadow: var(--shadow); 
+            transition: transform 0.3s; 
         }
-        .stat-box:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-        .stat-box::before { content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--primary); border-radius: 12px 0 0 12px; }
-        .stat-box h4 { margin: 0; color: var(--gray-600); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
-        .stat-box p.main-stat { margin: 12px 0 8px 0; font-size: 34px; font-weight: 800; color: var(--dark); letter-spacing: -0.02em; }
-        .stat-box .profit-text { font-size: 16px; font-weight: 700; margin: 12px 0 0 0; }
-        .stat-box .expense-text { color: var(--danger); font-size: 15px; font-weight: 600; margin: 4px 0; }
+        .stat-box:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+        .stat-box::before { content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--primary); border-radius: var(--radius) 0 0 var(--radius); }
+        .stat-box h4 { margin: 0; color: var(--gray-600); font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; }
+        .stat-box p.main-stat { margin: 16px 0 8px 0; font-size: 38px; font-weight: 900; color: var(--dark); letter-spacing: -0.03em; font-feature-settings: "tnum"; }
+        .stat-box .profit-text { font-size: 18px; font-weight: 800; margin: 16px 0 0 0; }
+        .stat-box .expense-text { color: var(--danger); font-size: 16px; font-weight: 700; margin: 6px 0; }
 
-        .top-item-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--gray-100); }
+        .top-item-row { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-bottom: 1px solid var(--gray-100); }
         .top-item-row:last-child { border-bottom: none; }
-        .top-item-name { font-weight: 700; color: var(--dark); font-size: 15px; }
-        .top-item-qty { font-size: 13px; color: var(--gray-600); font-weight: 600; margin-top: 6px; }
-        .top-item-rev { font-weight: 800; color: var(--primary); font-size: 18px; }
+        .top-item-name { font-weight: 800; color: var(--dark); font-size: 16px; }
+        .top-item-qty { font-size: 14px; color: var(--gray-600); font-weight: 600; margin-top: 6px; }
+        .top-item-rev { font-weight: 900; color: var(--primary); font-size: 20px; font-feature-settings: "tnum";}
 
         .chart-container { 
             position: relative; 
-            height: 350px; 
+            height: 380px; 
             width: 100%; 
             margin-top: 10px; 
-            padding: 20px; 
+            padding: 24px; 
             background: var(--surface); 
-            border: 1px solid var(--gray-300); 
-            border-radius: 12px; 
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); 
+            border: 1px solid var(--gray-100); 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow); 
         }
         
         /* RESPONSIVE CSS */
         @media (max-width: 768px) {
-            .container { padding: 12px; }
+            .container { padding: 16px; }
             .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; gap: 20px; }
             
-            /* DYNAMIC CART VIAL GRID FOR MOBILE */
             .vial-grid-wrapper { grid-template-columns: 1fr 1fr; }
             .vial-serial-span { grid-column: span 2; }
             
-            .header-bar { flex-direction: column; text-align: center; gap: 16px; padding: 20px; }
+            .header-bar { flex-direction: column; text-align: center; gap: 20px; padding: 24px; }
             .header-bar > div { width: 100%; display: flex; flex-direction: column; align-items: center; }
-            .nav-tabs { justify-content: flex-start; padding: 12px; border-radius: 8px; }
-            .nav-btn { flex: 0 0 auto; padding: 12px 18px; font-size: 14px; }
+            .nav-tabs { justify-content: flex-start; padding: 12px; border-radius: var(--radius); }
+            .nav-btn { flex: 0 0 auto; padding: 14px 20px; font-size: 14px; }
             .card { padding: 20px; }
-            .chart-container { height: 280px; padding: 10px; }
+            .chart-container { height: 300px; padding: 12px; }
             .till-grid { grid-template-columns: 1fr; }
         }
         
-        /* DESKTOP VIAL GRID TO PREVENT DROPDOWN CUTOFF */
+        /* DESKTOP VIAL GRID */
         @media (min-width: 769px) {
             .vial-grid-wrapper {
                 display: grid;
-                grid-template-columns: 100px 120px 1fr; /* 1fr gives all remaining space to dropdown */
-                gap: 16px;
+                grid-template-columns: 120px 150px 1fr; 
+                gap: 20px;
                 align-items: flex-end;
             }
         }
@@ -444,12 +439,12 @@
             left: 0; 
             right: 0; 
             bottom: 0; 
-            background: rgba(17, 24, 39, 0.85); 
+            background: rgba(17, 24, 39, 0.9); 
             display: flex; 
             justify-content: center; 
             align-items: center; 
             z-index: 1000; 
-            backdrop-filter: blur(5px); 
+            backdrop-filter: blur(8px); 
             padding: 20px; 
         }
         
@@ -457,23 +452,24 @@
             display:flex; 
             flex-direction:column; 
             align-items:center; 
-            gap: 15px; 
+            gap: 20px; 
         }
         
         .receipt-box { 
             background: #FFFFFF; 
-            color: #111827; 
+            color: #000000; 
             width: 100%; 
-            max-width: 400px; 
-            padding: 30px; 
-            border-radius: 0; 
+            max-width: 420px; 
+            padding: 40px; 
+            border-radius: 8px; 
             font-family: 'Courier New', Courier, monospace; 
-            font-weight: 600; 
-            box-shadow: var(--shadow-lg); 
+            font-weight: 700; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); 
+            border-top: 10px solid var(--dark);
         }
         
-        .receipt-box hr { border: 1px dashed #D1D5DB; margin: 20px 0; }
-        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; align-items: flex-start; }
+        .receipt-box hr { border: 1px dashed #9CA3AF; margin: 24px 0; }
+        .receipt-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 15px; align-items: flex-start; }
     </style>
 </head>
 <body>
@@ -519,18 +515,18 @@
 
     <!-- 1. AUTHENTICATION SCREENS -->
     <div id="loginSection" class="container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
-        <div class="card" style="max-width: 400px; padding: 40px 30px; border-radius: 20px; box-shadow: var(--shadow-lg); position:relative;">
+        <div class="card" style="max-width: 440px; padding: 48px 36px; border-radius: 24px; box-shadow: var(--shadow-lg); position:relative;">
             
-            <button class="theme-toggle" onclick="toggleTheme()" style="position:absolute; top:20px; right:20px;" id="loginThemeBtn">🌙 Dark</button>
+            <button class="theme-toggle" onclick="toggleTheme()" style="position:absolute; top:24px; right:24px;" id="loginThemeBtn">🌙 Dark</button>
             
             <div id="formLogin">
-                <div style="text-align: center; margin-bottom: 30px; margin-top:20px;">
-                    <div style="background: var(--primary-gradient); width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">🏥</div>
-                    <h2>Clinic System</h2>
-                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 500; margin: 0;">Authorized Personnel Only</p>
+                <div style="text-align: center; margin-bottom: 36px; margin-top:24px;">
+                    <div style="background: var(--primary-gradient); width: 72px; height: 72px; border-radius: 20px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 34px; box-shadow: 0 10px 20px rgba(79, 70, 229, 0.4);">🏥</div>
+                    <h2 style="font-size: 28px;">Clinic System</h2>
+                    <p style="color: var(--gray-600); font-size: 15px; font-weight: 600; margin: 4px 0 0 0;">Authorized Personnel Only</p>
                 </div>
                 
-                <div id="loginErrorMsg" class="hidden" style="background: #FEE2E2; color: #DC2626; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center; border: 1px solid #FCA5A5;"></div>
+                <div id="loginErrorMsg" class="hidden" style="background: #FEE2E2; color: #DC2626; padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 700; margin-bottom: 20px; text-align: center; border: 1.5px solid #FCA5A5;"></div>
 
                 <div class="form-group">
                     <label>Email Address</label>
@@ -541,21 +537,21 @@
                     <input type="password" id="loginPassword" placeholder="••••••••" required>
                 </div>
                 
-                <button class="btn btn-primary" id="btnLogin" style="margin-top: 10px; padding: 14px;" onclick="handleLogin()">Secure Login</button>
-                <div style="text-align: center; margin-top: 16px;">
+                <button class="btn btn-primary" id="btnLogin" style="margin-top: 12px; padding: 16px; font-size: 16px;" onclick="handleLogin()">Secure Login</button>
+                <div style="text-align: center; margin-top: 20px;">
                     <button class="btn btn-outline" onclick="toggleAuthForm('register')">Request Staff Account</button>
                 </div>
-                <div style="text-align: center; margin-top: 30px;">
-                    <a href="#" onclick="promptSystemSetup()" style="color: var(--gray-300); font-size: 11px; text-decoration: none; font-weight:600;">System Setup Configuration</a>
+                <div style="text-align: center; margin-top: 36px;">
+                    <a href="#" onclick="promptSystemSetup()" style="color: var(--gray-300); font-size: 12px; text-decoration: none; font-weight:700;">System Setup Configuration</a>
                 </div>
             </div>
 
             <div id="formRegister" class="hidden">
-                <div style="text-align: center; margin-bottom: 30px; margin-top:20px;">
-                    <h2 style="font-size: 26px;">Request Account</h2>
-                    <p style="color: var(--warning); font-size: 13px; font-weight: 600; margin: 0;">Requires Admin Approval in System</p>
+                <div style="text-align: center; margin-bottom: 36px; margin-top:24px;">
+                    <h2 style="font-size: 28px;">Request Account</h2>
+                    <p style="color: var(--warning); font-size: 14px; font-weight: 700; margin: 4px 0 0 0;">Requires Admin Approval in System</p>
                 </div>
-                <div id="regStatusMsg" class="hidden" style="padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center;"></div>
+                <div id="regStatusMsg" class="hidden" style="padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 700; margin-bottom: 20px; text-align: center;"></div>
                 <div class="form-group">
                     <label>Full Name</label>
                     <input type="text" id="regName" placeholder="Juan Dela Cruz">
@@ -568,18 +564,18 @@
                     <label>Password (Min 6)</label>
                     <input type="password" id="regPassword" placeholder="••••••••">
                 </div>
-                <button class="btn btn-warning" id="btnRegister" style="margin-top: 10px; padding: 14px; color: white; font-size: 16px;" onclick="handlePublicRegister()">Submit Request</button>
-                <div style="text-align: center; margin-top: 16px;">
+                <button class="btn btn-warning" id="btnRegister" style="margin-top: 12px; padding: 16px; color: white; font-size: 16px; font-weight: 800;" onclick="handlePublicRegister()">Submit Request</button>
+                <div style="text-align: center; margin-top: 20px;">
                     <button class="btn btn-outline" onclick="toggleAuthForm('login')">Back to Login</button>
                 </div>
             </div>
 
             <div id="formInitAdmin" class="hidden">
-                <div style="text-align: center; margin-bottom: 30px; margin-top:20px;">
-                    <h2 style="font-size: 26px;">Master Setup</h2>
-                    <p style="color: var(--info); font-size: 13px; font-weight: 600; margin: 0;">Create First Administrator Account</p>
+                <div style="text-align: center; margin-bottom: 36px; margin-top:24px;">
+                    <h2 style="font-size: 28px;">Master Setup</h2>
+                    <p style="color: var(--info); font-size: 14px; font-weight: 700; margin: 4px 0 0 0;">Create First Administrator Account</p>
                 </div>
-                <div id="initStatusMsg" class="hidden" style="padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center;"></div>
+                <div id="initStatusMsg" class="hidden" style="padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 700; margin-bottom: 20px; text-align: center;"></div>
                 <div class="form-group">
                     <label>Admin Name</label>
                     <input type="text" id="initName" placeholder="Master Admin">
@@ -592,8 +588,8 @@
                     <label>Password (Min 6)</label>
                     <input type="password" id="initPassword" placeholder="••••••••">
                 </div>
-                <button class="btn btn-dark" id="btnInitAdmin" style="margin-top: 10px; padding: 14px; font-size: 16px;" onclick="handleInitAdmin()">Create Master Admin</button>
-                <div style="text-align: center; margin-top: 16px;">
+                <button class="btn btn-dark" id="btnInitAdmin" style="margin-top: 12px; padding: 16px; font-size: 16px;" onclick="handleInitAdmin()">Create Master Admin</button>
+                <div style="text-align: center; margin-top: 20px;">
                     <button class="btn btn-outline" onclick="toggleAuthForm('login')">Cancel</button>
                 </div>
             </div>
@@ -608,12 +604,12 @@
                 <h2>Clinic Management Hub</h2>
                 <div class="live-clock" id="liveClock">Loading Date & Time...</div>
             </div>
-            <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center;">
+            <div style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center;">
                 <button class="theme-toggle" onclick="toggleTheme()" id="appThemeBtn">🌙 Dark Theme</button>
-                <span id="syncStatus" style="font-size: 13px; font-weight: 800; color: var(--secondary); margin-left: 10px;">🟢 Live Sync</span>
-                <span class="badge badge-role" id="currentUserRole" style="font-size:14px; padding: 8px 16px;">Admin</span>
-                <span class="badge badge-user" id="currentUserName" style="font-size:14px; padding: 8px 16px;">Name</span>
-                <button class="btn btn-danger btn-sm" style="margin: 0; padding: 10px 18px; font-size: 14px;" onclick="handleLogout()">Logout</button>
+                <span id="syncStatus" style="font-size: 14px; font-weight: 900; color: var(--secondary); margin-left: 8px;">🟢 Live Sync</span>
+                <span class="badge badge-role" id="currentUserRole" style="font-size:15px; padding: 10px 18px;">Admin</span>
+                <span class="badge badge-user" id="currentUserName" style="font-size:15px; padding: 10px 18px;">Name</span>
+                <button class="btn btn-danger btn-sm" style="margin: 0; padding: 12px 20px; font-size: 15px;" onclick="handleLogout()">Logout</button>
             </div>
         </div>
 
@@ -629,52 +625,52 @@
         <!-- TAB: DASHBOARD -->
         <div id="tab-dashboard" class="tab-pane active admin-only hidden">
             
-            <div class="header-bar" style="margin-bottom: 24px; padding: 24px; display: flex; justify-content: space-between; align-items: center; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); border: 1px solid var(--gray-300); flex-wrap: wrap;">
-                <h3 style="margin: 0; color: var(--primary); font-size: 20px;">📅 Dashboard Filter</h3>
-                <div style="flex:1; max-width:300px; min-width: 250px;">
-                    <input type="date" id="dashDateFilter" style="padding: 14px 18px; border: 2px solid var(--primary); border-radius: 10px; font-weight: 800; color: var(--primary); margin: 0; width: 100%; font-size:16px; background: var(--surface);" onchange="renderUI()">
+            <div class="header-bar" style="margin-bottom: 28px; padding: 28px; display: flex; justify-content: space-between; align-items: center; background: var(--surface); flex-wrap: wrap;">
+                <h3 style="margin: 0; color: var(--primary); font-size: 22px;">📅 Dashboard Filter</h3>
+                <div style="flex:1; max-width:320px; min-width: 260px;">
+                    <input type="date" id="dashDateFilter" style="padding: 16px 20px; border: 2.5px solid var(--primary); border-radius: var(--radius-sm); font-weight: 800; color: var(--primary); margin: 0; width: 100%; font-size:16px; background: var(--surface);" onchange="renderUI()">
                 </div>
             </div>
 
             <div class="grid-2">
                 <div class="card">
-                    <h3 id="lblSales" style="margin-bottom: 15px; color: var(--dark);">🛍️ Sales Analytics</h3>
-                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 24px;">Breakdown of Products vs Services.</p>
+                    <h3 id="lblSales" style="margin-bottom: 16px; color: var(--dark);">🛍️ Sales Analytics</h3>
+                    <p style="color: var(--gray-600); font-size: 15px; font-weight: 600; margin-top: -10px; margin-bottom: 24px;">Breakdown of Products vs Services.</p>
                     
                     <div class="grid-2">
-                        <div class="stat-box" style="border-left-color: var(--info); padding: 20px;">
+                        <div class="stat-box" style="border-left-color: var(--info); padding: 24px;">
                             <h4 style="color: var(--info);">📦 Products Sold</h4>
-                            <p class="main-stat" id="statProdQty" style="font-size: 32px; margin-bottom: 5px;">0</p>
-                            <p class="profit-text" id="statProdRev" style="font-size: 15px; margin:0; color: var(--info);">Rev: ₱0.00</p>
+                            <p class="main-stat" id="statProdQty" style="font-size: 34px; margin-bottom: 8px;">0</p>
+                            <p class="profit-text" id="statProdRev" style="font-size: 16px; margin:0; color: var(--info);">Rev: ₱0.00</p>
                         </div>
-                        <div class="stat-box" style="border-left-color: var(--warning); padding: 20px;">
+                        <div class="stat-box" style="border-left-color: var(--warning); padding: 24px;">
                             <h4 style="color: var(--warning);">🩺 Services Availed</h4>
-                            <p class="main-stat" id="statServQty" style="font-size: 32px; margin-bottom: 5px;">0</p>
-                            <p class="profit-text" id="statServRev" style="font-size: 15px; margin:0; color: var(--warning);">Rev: ₱0.00</p>
+                            <p class="main-stat" id="statServQty" style="font-size: 34px; margin-bottom: 8px;">0</p>
+                            <p class="profit-text" id="statServRev" style="font-size: 16px; margin:0; color: var(--warning);">Rev: ₱0.00</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3 id="lblTopItems" style="margin-bottom: 15px; color: var(--dark);">🏆 Top 5 Selling Items</h3>
-                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 20px;">Most popular items based on quantity sold.</p>
+                    <h3 id="lblTopItems" style="margin-bottom: 16px; color: var(--dark);">🏆 Top 5 Selling Items</h3>
+                    <p style="color: var(--gray-600); font-size: 15px; font-weight: 600; margin-top: -10px; margin-bottom: 24px;">Most popular items based on quantity sold.</p>
                     <div id="topItemsContainer"></div>
                 </div>
             </div>
 
             <div class="card">
-                <h3 id="lblDemographics" style="margin-bottom: 24px; color: var(--dark);">👥 Patient Demographics</h3>
+                <h3 id="lblDemographics" style="margin-bottom: 28px; color: var(--dark);">👥 Patient Demographics</h3>
                 <div class="grid-4">
-                    <div class="stat-box" style="border-left-color: var(--info); padding: 20px;"><h4>New Patient</h4><p class="main-stat" id="countNew">0</p></div>
-                    <div class="stat-box" style="border-left-color: var(--primary); padding: 20px;"><h4>Old Patient</h4><p class="main-stat" id="countOld">0</p></div>
-                    <div class="stat-box" style="border-left-color: var(--warning); padding: 20px;"><h4>PWD</h4><p class="main-stat" id="countPWD">0</p></div>
-                    <div class="stat-box" style="border-left-color: var(--secondary); padding: 20px;"><h4>Senior Citizen</h4><p class="main-stat" id="countSenior">0</p></div>
+                    <div class="stat-box" style="border-left-color: var(--info); padding: 24px;"><h4>New Patient</h4><p class="main-stat" id="countNew">0</p></div>
+                    <div class="stat-box" style="border-left-color: var(--primary); padding: 24px;"><h4>Old Patient</h4><p class="main-stat" id="countOld">0</p></div>
+                    <div class="stat-box" style="border-left-color: var(--warning); padding: 24px;"><h4>PWD</h4><p class="main-stat" id="countPWD">0</p></div>
+                    <div class="stat-box" style="border-left-color: var(--secondary); padding: 24px;"><h4>Senior Citizen</h4><p class="main-stat" id="countSenior">0</p></div>
                 </div>
             </div>
             
             <div class="card">
-                <h3 id="lblStaffPerf" style="margin-bottom: 15px; color: var(--dark);">👩‍⚕️ Staff Performance</h3>
-                <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 20px;">Revenue generated by each personnel.</p>
+                <h3 id="lblStaffPerf" style="margin-bottom: 16px; color: var(--dark);">👩‍⚕️ Staff Performance</h3>
+                <p style="color: var(--gray-600); font-size: 15px; font-weight: 600; margin-top: -10px; margin-bottom: 24px;">Revenue generated by each personnel.</p>
                 <div class="table-wrapper">
                     <table id="staffPerfTable">
                         <thead><tr><th>Staff Name</th><th>Selected Daily Rev</th><th>Selected Monthly Rev</th><th>Selected Yearly Rev</th></tr></thead>
@@ -686,32 +682,32 @@
             <div class="grid-3">
                 <div class="stat-box">
                     <h4 id="hdrDaily">Selected Date</h4><p class="main-stat" id="reportDaily">₱0.00</p><p class="expense-text" id="expDaily">Exp: ₱0.00</p>
-                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 16px 0;"><p class="profit-text" id="profitDaily">True: ₱0.00</p>
+                    <hr style="border: 0; border-top: 1.5px solid var(--gray-100); margin: 20px 0;"><p class="profit-text" id="profitDaily">True: ₱0.00</p>
                 </div>
                 <div class="stat-box">
                     <h4 id="hdrMonthly">Selected Month</h4><p class="main-stat" id="reportMonthly">₱0.00</p><p class="expense-text" id="expMonthly">Exp: ₱0.00</p>
-                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 16px 0;"><p class="profit-text" id="profitMonthly">True: ₱0.00</p>
+                    <hr style="border: 0; border-top: 1.5px solid var(--gray-100); margin: 20px 0;"><p class="profit-text" id="profitMonthly">True: ₱0.00</p>
                 </div>
                 <div class="stat-box">
                     <h4 id="hdrYearly">Selected Year</h4><p class="main-stat" id="reportYearly">₱0.00</p><p class="expense-text" id="expYearly">Exp: ₱0.00</p>
-                    <hr style="border: 0; border-top: 1px solid var(--gray-300); margin: 16px 0;"><p class="profit-text" id="profitYearly">True: ₱0.00</p>
+                    <hr style="border: 0; border-top: 1.5px solid var(--gray-100); margin: 20px 0;"><p class="profit-text" id="profitYearly">True: ₱0.00</p>
                 </div>
             </div>
             
-            <div class="card" style="margin-top: 24px;">
-                <h3 style="margin-bottom: 5px;">📈 Monthly Performance Overview</h3>
-                <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-bottom: 15px;">Visual representation based on Selected Year.</p>
+            <div class="card" style="margin-top: 28px;">
+                <h3 style="margin-bottom: 8px;">📈 Monthly Performance Overview</h3>
+                <p style="color: var(--gray-600); font-size: 15px; font-weight: 600; margin-bottom: 20px;">Visual representation based on Selected Year.</p>
                 <div class="chart-container"><canvas id="monthlyChart"></canvas></div>
             </div>
             
-            <div class="card" style="margin-top: 24px;"><button class="btn btn-warning" id="exportBtn" style="padding: 18px; font-size: 16px;" onclick="prepareExport()">⬇️ Generate Full System Report (CSV)</button></div>
+            <div class="card" style="margin-top: 28px;"><button class="btn btn-warning" id="exportBtn" style="padding: 20px; font-size: 18px;" onclick="prepareExport()">⬇️ Generate Full System Report (CSV)</button></div>
         </div>
 
         <!-- TAB: TRANSACT -->
         <div id="tab-transact" class="tab-pane">
             <div class="grid-2">
                 <div class="card">
-                    <h3 style="margin-bottom: 24px;">📋 New Transaction</h3>
+                    <h3 style="margin-bottom: 28px;">📋 New Transaction</h3>
                     
                     <div class="form-group"><label>Transaction Date (Can be backdated):</label><input type="date" id="transDate"></div>
 
@@ -720,31 +716,31 @@
                         <select id="transCategory"><option value="New">New Patient</option><option value="Old">Old Patient</option><option value="PWD">PWD</option><option value="Senior">Senior Citizen</option></select>
                     </div>
                     
-                    <div class="form-group" style="margin-top: 24px;">
-                        <label style="font-size: 15px; color: var(--primary);">Select Product(s) / Service(s):</label>
-                        <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-top: -5px; margin-bottom: 14px;">Choose an item from the dropdown and click Add.</p>
-                        <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-                            <select id="itemSelectDropdown" style="flex: 1; min-width: 250px; padding: 16px; border-radius: 8px; border: 2px solid var(--primary); font-weight: 600;"></select>
-                            <button class="btn btn-primary" style="width: auto; padding: 16px 28px; flex-shrink: 0;" onclick="addSelectedItemToCart()">➕ Add</button>
+                    <div class="form-group" style="margin-top: 28px;">
+                        <label style="font-size: 16px; color: var(--primary);">Select Product(s) / Service(s):</label>
+                        <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -6px; margin-bottom: 16px;">Choose an item from the dropdown and click Add.</p>
+                        <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+                            <select id="itemSelectDropdown" style="flex: 1; min-width: 260px; padding: 18px; border-radius: var(--radius-sm); border: 2px solid var(--primary); font-weight: 700;"></select>
+                            <button class="btn btn-primary" style="width: auto; padding: 18px 32px; flex-shrink: 0;" onclick="addSelectedItemToCart()">➕ Add</button>
                         </div>
-                        <div id="selectedItemsCart" style="margin-top: 20px; display: flex; flex-direction: column; gap: 16px;">
+                        <div id="selectedItemsCart" style="margin-top: 24px; display: flex; flex-direction: column; gap: 20px;">
                             <!-- Cart items will appear here -->
                         </div>
                     </div>
                     
-                    <div class="form-group" style="margin-top: 24px;">
+                    <div class="form-group" style="margin-top: 28px;">
                         <label>Global Discount (Applies to all selected items):</label>
                         <select id="transDiscount"><option value="0">None</option><option value="0.20">20% (Senior/PWD)</option><option value="1">100% Free</option></select>
                     </div>
                     
                     <div class="form-group"><label>Payment Method:</label><select id="transMethod"><option value="CASH">CASH</option><option value="GCASH">GCASH</option><option value="MariBANK">MariBANK</option><option value="BANK_Transfer">BANK Transfer</option></select></div>
                     
-                    <button class="btn btn-success" style="padding: 18px; margin-top: 20px; font-size:16px;" onclick="processTransaction()">✅ Process & Print Receipt</button>
+                    <button class="btn btn-success" style="padding: 20px; margin-top: 24px; font-size:18px;" onclick="processTransaction()">✅ Process & Print Receipt</button>
                 </div>
 
                 <div class="card">
-                    <h3 style="margin-bottom: 5px;">💰 Till Summary</h3>
-                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-bottom: 24px;">Automatically computes based on selected Day/Month/Year below. Click cards to filter tables.</p>
+                    <h3 style="margin-bottom: 8px;">💰 Till Summary</h3>
+                    <p style="color: var(--gray-600); font-size: 15px; font-weight: 600; margin-bottom: 28px;">Automatically computes based on selected Day/Month/Year below. Click cards to filter tables.</p>
                     
                     <div class="till-grid">
                         <div class="till-item" onclick="viewTillTransactions('CASH')">
@@ -772,43 +768,43 @@
             </div>
 
             <!-- TRANSACTION LIST IN TRANSACT TAB FOR BOTH STAFF AND ADMIN -->
-            <div class="card" style="margin-top: 24px;" id="staffTxTableSection">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+            <div class="card" style="margin-top: 28px;" id="staffTxTableSection">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px; flex-wrap: wrap; gap: 20px;">
                     <div>
                         <h3 style="margin:0;">📝 Transactions Masterlist</h3>
-                        <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-top: 6px;">Filter view by Daily, Monthly, or Yearly.</p>
+                        <p style="color: var(--gray-600); font-size: 15px; font-weight: 600; margin-top: 8px;">Filter view by Daily, Monthly, or Yearly.</p>
                     </div>
-                    <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-                        <select id="staffTxFilterType" style="padding: 12px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="toggleStaffFilters()">
+                    <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+                        <select id="staffTxFilterType" style="padding: 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--gray-300);" onchange="toggleStaffFilters()">
                             <option value="daily">Daily View</option>
                             <option value="monthly">Monthly View</option>
                             <option value="yearly">Yearly View</option>
                         </select>
-                        <input type="date" id="staffTxDateFilter" style="padding: 12px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
-                        <input type="month" id="staffTxMonthFilter" class="hidden" style="padding: 12px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
-                        <select id="staffTxYearFilter" class="hidden" style="padding: 12px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
+                        <input type="date" id="staffTxDateFilter" style="padding: 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
+                        <input type="month" id="staffTxMonthFilter" class="hidden" style="padding: 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
+                        <select id="staffTxYearFilter" class="hidden" style="padding: 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
                             <!-- Years injected by JS -->
                         </select>
 
-                        <select id="staffTxMethodFilter" style="padding: 12px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
+                        <select id="staffTxMethodFilter" style="padding: 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
                             <option value="ALL">All Methods</option>
                             <option value="CASH">CASH</option>
                             <option value="GCASH">GCASH</option>
                             <option value="MariBANK">MariBANK</option>
                             <option value="BANK_Transfer">BANK Transfer</option>
                         </select>
-                        <button class="btn btn-warning" id="btnExportStaff" style="padding: 12px 24px; font-size: 14px; width: auto;" onclick="prepareStaffExport()">⬇️ Export to Excel</button>
+                        <button class="btn btn-warning" id="btnExportStaff" style="padding: 14px 28px; font-size: 15px; width: auto;" onclick="prepareStaffExport()">⬇️ Export to Excel</button>
                     </div>
                 </div>
                 
                 <div class="table-wrapper">
                     <table id="staffTxTable">
-                        <thead><tr><th>Date</th><th>Category</th><th>Item</th><th>Qty/ML</th><th>Serial No.</th><th>Method</th><th>Revenue</th><th>Staff</th><th class="text-center">Action</th></tr></thead>
+                        <thead><tr><th>Date</th><th>Category</th><th>Item</th><th>Qty/ML</th><th>Serial No.</th><th>Method</th><th class="text-right">Revenue</th><th>Staff</th><th class="text-center">Action</th></tr></thead>
                         <tbody></tbody>
                         <tfoot>
                             <tr style="background-color: var(--table-header);">
-                                <td colspan="6" class="text-right" style="font-weight: 900; font-size: 14px; color: var(--dark);">TOTAL FILTERED REVENUE:</td>
-                                <td colspan="3" id="staffTxTotal" style="color: var(--primary); font-size: 20px; font-weight: 900;">₱0.00</td>
+                                <td colspan="6" class="text-right" style="font-weight: 900; font-size: 15px; color: var(--dark);">TOTAL FILTERED REVENUE:</td>
+                                <td colspan="3" id="staffTxTotal" style="color: var(--primary); font-size: 22px; font-weight: 900; font-feature-settings: 'tnum';">₱0.00</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -819,36 +815,36 @@
         <!-- TAB: EXPENSES -->
         <div id="tab-expenses" class="tab-pane admin-only hidden">
             <div class="card">
-                <h3 style="margin-bottom: 24px;">💸 Log Expense</h3>
-                <div class="grid-2" style="margin-bottom: 20px;">
+                <h3 style="margin-bottom: 28px;">💸 Log Expense</h3>
+                <div class="grid-2" style="margin-bottom: 24px;">
                     <div class="form-group" style="margin-bottom: 0;"><label>Expense Date (Can be backdated)</label><input type="date" id="expDate"></div>
                     <div class="form-group" style="margin-bottom: 0;"><label>Category</label><select id="expCategory"><option>Salary</option><option>Electric Bill</option><option>Clinic Supply</option><option>Miscellaneous</option></select></div>
                 </div>
-                <div class="grid-3" style="align-items: flex-end;">
+                <div class="grid-3" style="align-items: flex-end; gap: 24px;">
                     <div class="form-group" style="margin-bottom: 0;"><label>Note</label><input type="text" id="expNote" placeholder="e.g. Internet"></div>
-                    <div class="form-group" style="margin-bottom: 0;"><label>Amount</label><input type="number" id="expAmount" placeholder="0.00"></div>
-                    <button class="btn btn-danger" onclick="addExpense()" style="padding: 14px;">➖ Deduct</button>
+                    <div class="form-group" style="margin-bottom: 0;"><label>Amount (₱)</label><input type="number" id="expAmount" placeholder="0.00"></div>
+                    <button class="btn btn-danger" onclick="addExpense()" style="padding: 16px;">➖ Deduct Expense</button>
                 </div>
             </div>
             
             <div class="card">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 24px; flex-wrap: wrap; gap: 20px;">
                     <div>
                         <h3 style="margin:0;">🧾 Expense History</h3>
-                        <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-top: 6px;">Filter view by Daily, Monthly, or Yearly.</p>
+                        <p style="color: var(--gray-600); font-size: 15px; font-weight: 600; margin-top: 8px;">Filter view by Daily, Monthly, or Yearly.</p>
                     </div>
-                    <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-                        <select id="expFilterType" style="padding: 12px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="toggleExpFilters()">
+                    <div style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap;">
+                        <select id="expFilterType" style="padding: 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--gray-300);" onchange="toggleExpFilters()">
                             <option value="daily">Daily View</option>
                             <option value="monthly">Monthly View</option>
                             <option value="yearly">Yearly View</option>
                         </select>
-                        <input type="date" id="expDateFilter" style="padding: 12px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="window.renderExpenseTable()">
-                        <input type="month" id="expMonthFilter" class="hidden" style="padding: 12px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="window.renderExpenseTable()">
-                        <select id="expYearFilter" class="hidden" style="padding: 12px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="window.renderExpenseTable()">
+                        <input type="date" id="expDateFilter" style="padding: 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--gray-300);" onchange="window.renderExpenseTable()">
+                        <input type="month" id="expMonthFilter" class="hidden" style="padding: 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--gray-300);" onchange="window.renderExpenseTable()">
+                        <select id="expYearFilter" class="hidden" style="padding: 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--gray-300);" onchange="window.renderExpenseTable()">
                             <!-- Years injected by JS -->
                         </select>
-                        <button class="btn btn-warning" id="btnExportExp" style="padding: 12px 24px; font-size: 14px; width: auto;" onclick="prepareExpExport()">⬇️ Export Exp</button>
+                        <button class="btn btn-warning" id="btnExportExp" style="padding: 14px 28px; font-size: 15px; width: auto;" onclick="prepareExpExport()">⬇️ Export Expenses</button>
                     </div>
                 </div>
 
@@ -858,8 +854,8 @@
                         <tbody></tbody>
                         <tfoot>
                             <tr style="background-color: var(--table-header);">
-                                <td colspan="4" class="text-right" style="font-weight: 900; font-size: 14px; color: var(--dark);">TOTAL FILTERED EXPENSES:</td>
-                                <td colspan="2" id="expTableTotal" class="text-left" style="color: var(--danger); font-size: 20px; font-weight: 900;">₱0.00</td>
+                                <td colspan="4" class="text-right" style="font-weight: 900; font-size: 15px; color: var(--dark);">TOTAL FILTERED EXPENSES:</td>
+                                <td colspan="2" id="expTableTotal" class="text-left" style="color: var(--danger); font-size: 22px; font-weight: 900; font-feature-settings: 'tnum';">₱0.00</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -871,18 +867,18 @@
         <div id="tab-inventory" class="tab-pane">
             
             <div class="card">
-                <h3 style="margin-bottom: 15px; font-size: 22px;">📦 Products Inventory</h3>
-                <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 24px;">Main storage for Whole items and Unopened Vials.</p>
+                <h3 style="margin-bottom: 16px; font-size: 24px;">📦 Products Inventory</h3>
+                <p style="color: var(--gray-600); font-size: 15px; font-weight: 600; margin-top: -10px; margin-bottom: 28px;">Main storage for Whole items and Unopened Vials.</p>
                 <div class="table-wrapper">
                     <table id="inventoryTable">
-                        <thead><tr><th>Type</th><th>Product Name</th><th class="admin-only hidden">Cost</th><th>Selling Price (₱)</th><th class="admin-only hidden">Profit</th><th>Main Stock</th><th class="admin-only hidden text-center">Actions</th></tr></thead>
+                        <thead><tr><th>Type</th><th>Product Name</th><th class="admin-only hidden text-right">Cost</th><th class="text-right">Selling Price (₱)</th><th class="admin-only hidden text-right">Profit</th><th>Main Stock</th><th class="admin-only hidden text-center">Actions</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
             </div>
             
             <div class="card admin-only hidden">
-                <h3 style="margin-bottom: 20px; font-size: 22px;">➕ Register New Item</h3>
+                <h3 style="margin-bottom: 24px; font-size: 24px;">➕ Register New Item</h3>
                 <div class="grid-3">
                     <div class="form-group">
                         <label>Item Type</label>
@@ -903,22 +899,22 @@
                         <input type="text" id="newProdSerial" placeholder="Auto-opens 1 vial immediately">
                     </div>
                 </div>
-                <button class="btn btn-primary" style="margin-top: 16px;" onclick="addItem()">Save to Database</button>
+                <button class="btn btn-primary" style="margin-top: 20px; padding: 18px;" onclick="addItem()">Save to Database</button>
             </div>
 
             <div class="card">
-                <h3 style="margin-bottom: 15px; color: var(--primary); font-size: 22px;">🧪 Active Vials Management</h3>
-                <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 24px;">Manage serial numbers of currently opened vials.</p>
-                <div class="table-wrapper" style="margin-bottom: 24px;">
+                <h3 style="margin-bottom: 16px; color: var(--primary); font-size: 24px;">🧪 Active Vials Management</h3>
+                <p style="color: var(--gray-600); font-size: 15px; font-weight: 600; margin-top: -10px; margin-bottom: 28px;">Manage serial numbers of currently opened vials. Awtomatikong mabubura kapag na-consume na ang ML.</p>
+                <div class="table-wrapper" style="margin-bottom: 28px;">
                     <table id="activeVialsTable">
                         <thead><tr><th>Product Name</th><th>Serial Number</th><th>Used ML</th><th>Remaining ML</th><th class="text-center">Action</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
                 
-                <div class="admin-only hidden" style="background: var(--gray-100); padding: 24px; border-radius: 12px; border: 1px solid var(--gray-300);">
-                    <h4 style="margin-bottom: 16px; color: var(--primary);">➕ Manually Open a Vial (Input Serial)</h4>
-                    <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-top: -10px; margin-bottom: 20px;">Pre-open a vial to make its serial number available in the Transact Tab dropdown.</p>
+                <div class="admin-only hidden" style="background: var(--gray-100); padding: 28px; border-radius: var(--radius); border: 1.5px solid var(--gray-300);">
+                    <h4 style="margin-bottom: 18px; color: var(--primary);">➕ Manually Open a Vial (Input Serial)</h4>
+                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 24px;">Pre-open a vial to make its serial number available in the Transact Tab dropdown.</p>
                     
                     <div class="grid-3" style="align-items: flex-end;">
                         <div class="form-group" style="margin: 0;">
@@ -930,18 +926,18 @@
                             <input type="text" id="manualOpenVialSerial" placeholder="Enter Serial No.">
                         </div>
                         <div class="form-group" style="margin: 0;">
-                            <button class="btn btn-primary" style="padding: 14px;" onclick="manuallyOpenVial()">Open Vial</button>
+                            <button class="btn btn-primary" style="padding: 16px;" onclick="manuallyOpenVial()">Open Vial</button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="card">
-                <h3 style="margin-bottom: 15px; font-size: 22px;">🩺 Services Catalog</h3>
-                <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 24px;">Professional services offered.</p>
+                <h3 style="margin-bottom: 16px; font-size: 24px;">🩺 Services Catalog</h3>
+                <p style="color: var(--gray-600); font-size: 15px; font-weight: 600; margin-top: -10px; margin-bottom: 28px;">Professional services offered.</p>
                 <div class="table-wrapper">
                     <table id="servicesTable">
-                        <thead><tr><th>Service Name</th><th>Price (Fee)</th><th class="admin-only hidden text-center">Actions</th></tr></thead>
+                        <thead><tr><th>Service Name</th><th class="text-right">Price (Fee)</th><th class="admin-only hidden text-center">Actions</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -951,16 +947,16 @@
 
         <!-- TAB: HISTORY -->
         <div id="tab-history" class="tab-pane admin-only hidden">
-            <div class="header-bar" style="margin-bottom: 24px; padding: 16px 24px; border-radius: 14px;">
+            <div class="header-bar" style="margin-bottom: 28px; padding: 20px 28px; border-radius: var(--radius);">
                 <h3 style="margin: 0;">📅 Filter by Date</h3>
-                <input type="date" id="historyDateFilter" style="max-width:250px; padding: 12px;" onchange="window.renderHistory()">
+                <input type="date" id="historyDateFilter" style="max-width:280px; padding: 14px;" onchange="window.renderHistory()">
             </div>
             
             <div class="card">
-                <h3 style="margin-bottom: 24px;">📝 Transaction Logs</h3>
+                <h3 style="margin-bottom: 28px;">📝 Transaction Logs</h3>
                 <div class="table-wrapper">
                     <table id="historyTable">
-                        <thead><tr><th>Date</th><th>Type</th><th>Item</th><th>Qty/ML</th><th>Serial No.</th><th>Method</th><th>Revenue</th><th>Staff</th><th class="text-center">Action</th></tr></thead>
+                        <thead><tr><th>Date</th><th>Type</th><th>Item</th><th>Qty/ML</th><th>Serial No.</th><th>Method</th><th class="text-right">Revenue</th><th>Staff</th><th class="text-center">Action</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -971,19 +967,19 @@
         <div id="tab-accounts" class="tab-pane admin-only hidden">
             <div class="grid-2">
                 <div class="card">
-                    <h3 style="margin-bottom: 10px;">🔐 Add Auto-Approved Staff</h3>
-                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-bottom: 24px;">Accounts created here bypass manual activation.</p>
-                    <div id="accStatusMsg" class="hidden" style="padding: 14px; border-radius: 10px; font-size: 14px; font-weight: 700; margin-bottom: 20px; text-align: center;"></div>
+                    <h3 style="margin-bottom: 12px;">🔐 Add Auto-Approved Staff</h3>
+                    <p style="color: var(--gray-600); font-size: 15px; font-weight: 600; margin-bottom: 28px;">Accounts created here bypass manual activation.</p>
+                    <div id="accStatusMsg" class="hidden" style="padding: 16px; border-radius: var(--radius-sm); font-size: 15px; font-weight: 700; margin-bottom: 24px; text-align: center;"></div>
                     <div class="form-group"><label>Full Name</label><input type="text" id="newStaffName" placeholder="e.g. Ivy Santos"></div>
                     <div class="form-group"><label>Email (Username)</label><input type="email" id="newStaffEmail" placeholder="ivy@clinic.com"></div>
                     <div class="form-group"><label>Password (min 6 chars)</label><input type="password" id="newStaffPassword" placeholder="••••••••"></div>
                     <div class="form-group"><label>Assign Role</label><select id="newStaffRole"><option value="staff">Regular Staff</option><option value="admin">Administrator</option></select></div>
-                    <button class="btn btn-primary" onclick="createStaffAccount()" id="btnCreateUser" style="margin-top: 14px;">➕ Register Account</button>
+                    <button class="btn btn-primary" onclick="createStaffAccount()" id="btnCreateUser" style="margin-top: 18px; padding: 18px;">➕ Register Account</button>
                 </div>
 
                 <div class="card">
-                    <h3 style="margin-bottom: 10px;">👥 User Accounts Database</h3>
-                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-bottom: 24px;">View details, passwords, and manage access.</p>
+                    <h3 style="margin-bottom: 12px;">👥 User Accounts Database</h3>
+                    <p style="color: var(--gray-600); font-size: 15px; font-weight: 600; margin-bottom: 28px;">View details, passwords, and manage access.</p>
                     <div class="table-wrapper">
                         <table id="accountsTable">
                             <thead><tr><th>User Name</th><th>Email / Pass</th><th>Status/Role</th><th class="text-center">Actions</th></tr></thead>
@@ -994,31 +990,31 @@
             </div>
         </div>
 
-        <div style="text-align:center; padding: 40px; color: var(--gray-600); font-size: 14px; font-weight: 700;">System Created by Gelo Cutler</div>
+        <div style="text-align:center; padding: 48px; color: var(--gray-600); font-size: 15px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase;">System Created by Gelo Cutler</div>
     </div>
 
     <!-- Receipt Modal Overlay -->
     <div id="receiptModalOverlay" class="hidden">
         <div class="receipt-wrapper">
             <div class="receipt-box" id="receiptContentToDownload">
-                <h3 class="text-center" style="margin-bottom: 5px; color: #111827; font-weight: 900; font-size: 22px;">CLINIC RECEIPT</h3>
-                <p class="text-center" style="margin-top: 0; font-size: 13px; color: #4B5563; font-weight: 700;" id="rcptDate"></p>
+                <h3 class="text-center" style="margin-bottom: 6px; color: #111827; font-weight: 900; font-size: 24px;">CLINIC RECEIPT</h3>
+                <p class="text-center" style="margin-top: 0; font-size: 14px; color: #4B5563; font-weight: 700;" id="rcptDate"></p>
                 <hr>
                 <div class="receipt-row"><strong>Category:</strong> <span id="rcptCategory" style="color: #111827;"></span></div>
                 <div class="receipt-row" style="flex-direction: column;">
                     <strong>Items:</strong> 
-                    <span id="rcptItem" style="text-align: right; margin-top: 8px; line-height: 1.6; color: #111827;"></span>
+                    <span id="rcptItem" style="text-align: right; margin-top: 10px; line-height: 1.6; color: #111827;"></span>
                 </div>
-                <div class="receipt-row" style="margin-top:15px;"><strong>Payment:</strong> <span id="rcptMethod" style="color: #111827;"></span></div>
+                <div class="receipt-row" style="margin-top:20px;"><strong>Payment:</strong> <span id="rcptMethod" style="color: #111827;"></span></div>
                 <hr>
-                <div class="receipt-row" style="font-size: 20px; color: #111827; margin-top:10px;"><strong>TOTAL:</strong> <strong id="rcptTotal"></strong></div>
-                <div class="receipt-row" style="margin-top: 20px; font-size: 13px; color: #4B5563; font-weight: 700;"><strong>Processed By:</strong> <span id="rcptUser"></span></div>
+                <div class="receipt-row" style="font-size: 22px; color: #111827; margin-top:12px;"><strong>TOTAL:</strong> <strong id="rcptTotal"></strong></div>
+                <div class="receipt-row" style="margin-top: 24px; font-size: 14px; color: #4B5563; font-weight: 700;"><strong>Processed By:</strong> <span id="rcptUser"></span></div>
             </div>
             
-            <div class="grid-2 no-print" style="margin-top: 15px; gap: 12px; width: 100%; max-width: 380px;">
-                <button class="btn btn-warning" onclick="downloadReceiptJPEG()">🖼️ Download JPEG</button>
-                <button class="btn btn-info" onclick="window.print()">🖨️ Print</button>
-                <button class="btn btn-danger" style="grid-column: span 2;" onclick="closeReceipt()">✖ Close</button>
+            <div class="grid-2 no-print" style="margin-top: 16px; gap: 16px; width: 100%; max-width: 420px;">
+                <button class="btn btn-warning" onclick="downloadReceiptJPEG()" style="padding: 16px;">🖼️ Download JPEG</button>
+                <button class="btn btn-info" onclick="window.print()" style="padding: 16px;">🖨️ Print</button>
+                <button class="btn btn-danger" style="grid-column: span 2; padding: 16px;" onclick="closeReceipt()">✖ Close</button>
             </div>
         </div>
     </div>
@@ -1026,7 +1022,22 @@
     <!-- JAVASCRIPT LOGIC -->
     <script>
         // ==========================================
-        // 0. THEME SWITCHER LOGIC
+        // 0. FORMATTERS & GLOBAL HELPERS
+        // ==========================================
+        window.formatMoney = function(num) {
+            return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        };
+        
+        window.formatML = function(num) {
+            return Number(num).toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 2 });
+        };
+        
+        window.formatQty = function(num) {
+            return Number(num).toLocaleString('en-US');
+        };
+
+        // ==========================================
+        // THEME SWITCHER LOGIC
         // ==========================================
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
@@ -1039,7 +1050,7 @@
         }
 
         function updateThemeButtons(theme) {
-            let txt = theme === 'dark' ? '☀️ Bright Theme' : '🌙 Black Theme';
+            let txt = theme === 'dark' ? '☀️ Bright Theme' : '🌙 Dark Theme';
             if(document.getElementById('loginThemeBtn')) {
                 document.getElementById('loginThemeBtn').innerText = txt;
             }
@@ -1064,8 +1075,8 @@
             let yrFilters = [document.getElementById('staffTxYearFilter'), document.getElementById('expYearFilter')];
             yrFilters.forEach(select => {
                 if(select) {
-                    for(let y = currentYear; y >= currentYear - 5; y--) {
-                        select.innerHTML += `<option value="${y}">${y}</option>`;
+                    for(let y = currentYear + 1; y >= currentYear - 5; y--) {
+                        select.innerHTML += `<option value="${y}" ${y === currentYear ? 'selected' : ''}>${y}</option>`;
                     }
                 }
             });
@@ -1077,7 +1088,6 @@
         let inventory = []; 
         let activeVials = []; 
         let services = []; 
-        let finance = { CASH: 0, GCASH: 0, MariBANK: 0, BANK_Transfer: 0 }; // Legacy global finance
         let txHistory = []; 
         let expHistory = [];
         
@@ -1179,7 +1189,7 @@
                 status.innerText = "Error: " + error.message; 
                 status.style.background = "#FEE2E2"; 
                 status.style.color = "#DC2626"; 
-                status.style.border = "1px solid #FCA5A5"; 
+                status.style.border = "1.5px solid #FCA5A5"; 
                 status.classList.remove('hidden'); 
             }
             
@@ -1200,7 +1210,6 @@
                     inventory = data.inventory || []; 
                     activeVials = data.activeVials || []; 
                     services = data.services || []; 
-                    finance = data.finance || { CASH: 0, GCASH: 0, MariBANK: 0, BANK_Transfer: 0 };
                     txHistory = data.txHistory || []; 
                     expHistory = data.expHistory || []; 
                     renderUI(); 
@@ -1219,7 +1228,7 @@
         async function pushLiveClinicData() { 
             try { 
                 const docRef = window.doc(window.firebaseDB, "clinicData", "main"); 
-                await window.setDoc(docRef, { inventory, activeVials, services, finance, txHistory, expHistory }); 
+                await window.setDoc(docRef, { inventory, activeVials, services, txHistory, expHistory }); 
             } catch (e) { 
                 console.error("Error writing: ", e); 
             } 
@@ -1263,7 +1272,7 @@
                     window.signOut(window.firebaseAuth); 
                 }
             } catch (error) { 
-                err.innerText = "Login Failed."; 
+                err.innerText = "Login Failed. Check credentials."; 
                 err.classList.remove('hidden'); 
             }
             
@@ -1327,7 +1336,7 @@
             let status = document.getElementById('regStatusMsg');
             
             if(!name || !email || pass.length < 6) {
-                return alert("Fill fields.");
+                return alert("Fill fields. Password min 6 chars.");
             }
             
             btn.innerText = "Submitting..."; 
@@ -1350,7 +1359,7 @@
                 status.innerText = "Request Sent! Admin needs to approve."; 
                 status.style.background = "#FEF3C7"; 
                 status.style.color = "#D97706"; 
-                status.style.border = "1px solid #FCD34D"; 
+                status.style.border = "1.5px solid #FCD34D"; 
                 status.classList.remove('hidden');
                 
                 document.getElementById('regName').value = ''; 
@@ -1360,7 +1369,7 @@
                 status.innerText = "Error: " + error.message; 
                 status.style.background = "#FEE2E2"; 
                 status.style.color = "#DC2626"; 
-                status.style.border = "1px solid #FCA5A5"; 
+                status.style.border = "1.5px solid #FCA5A5"; 
                 status.classList.remove('hidden'); 
             }
             
@@ -1377,7 +1386,7 @@
             let status = document.getElementById('accStatusMsg');
             
             if(!name || !email || pass.length < 6) {
-                return alert("Fill all fields.");
+                return alert("Fill all fields. Password min 6 chars.");
             }
             
             btn.innerText = "Processing..."; 
@@ -1401,7 +1410,7 @@
                 status.innerText = `Success! Account created.`; 
                 status.style.background = "#D1FAE5"; 
                 status.style.color = "#059669"; 
-                status.style.border = "1px solid #34D399"; 
+                status.style.border = "1.5px solid #34D399"; 
                 status.classList.remove('hidden');
                 
                 document.getElementById('newStaffName').value = ''; 
@@ -1413,7 +1422,7 @@
                 status.innerText = "Error: " + error.message; 
                 status.style.background = "#FEE2E2"; 
                 status.style.color = "#DC2626"; 
-                status.style.border = "1px solid #FCA5A5"; 
+                status.style.border = "1.5px solid #FCA5A5"; 
                 status.classList.remove('hidden'); 
             }
             
@@ -1439,18 +1448,18 @@
                         
                     let actions = '';
                     if(d.status === 'pending') {
-                        actions += `<button class="btn btn-sm btn-success" style="margin-right:4px;" onclick="window.approveUser('${uid}')">Approve</button>`;
+                        actions += `<button class="btn btn-sm btn-success" style="margin-right:6px;" onclick="window.approveUser('${uid}')">Approve</button>`;
                     }
                     if(currentUser.uid !== uid) {
                         actions += `<button class="btn btn-sm btn-danger" onclick="window.deleteUser('${uid}')">Delete</button>`; 
                     } else {
-                        actions += `<span style="font-size:11px; color:gray;">(You)</span>`;
+                        actions += `<span style="font-size:12px; color:gray; font-weight:700;">(You)</span>`;
                     }
                     
                     tbody.innerHTML += `<tr>
                         <td><strong>${d.name}</strong><br><span style="font-size:11px; color:gray;">${d.createdAt ? d.createdAt.split('T')[0] : ''}</span></td>
-                        <td>${d.email}<br><span style="font-size:11px; color:var(--primary); font-weight:700;">Pass: ${d.initialPassword || 'Hidden'}</span></td>
-                        <td>${statBadge} <span style="font-size:12px; margin-left:4px;">${d.role === 'admin' ? `Admin` : `Staff`}</span></td>
+                        <td>${d.email}<br><span style="font-size:11px; color:var(--primary); font-weight:800;">Pass: ${d.initialPassword || 'Hidden'}</span></td>
+                        <td>${statBadge} <span style="font-size:13px; margin-left:6px; font-weight:600;">${d.role === 'admin' ? `Admin` : `Staff`}</span></td>
                         <td class="text-center">${actions}</td>
                     </tr>`;
                 });
@@ -1484,7 +1493,7 @@
         }
 
         // ==========================================
-        // 6. CORE UI RENDERING
+        // 6. CORE UI RENDERING & LOGIC
         // ==========================================
         window.toggleNewItemFields = function() {
             let type = document.getElementById('newItemType').value;
@@ -1543,7 +1552,6 @@
             if(confirm(`Are you sure you want to delete Active Vial SN-${serial}? Remaining ML will be lost and will NOT be returned to stock.`)) {
                 activeVials = activeVials.filter(v => !(v.serial === serial && v.productId === productId));
                 pushLiveClinicData();
-                alert("Active vial deleted successfully.");
             }
         }
 
@@ -1593,8 +1601,9 @@
                 
                 if (activeForThis.length > 0) {
                     activeForThis.forEach(v => { 
-                        let rem = v.maxML - v.usedML; 
-                        serialOptions += `<option value="${v.serial}">Use SN-${v.serial} (${rem.toFixed(1)} ML left)</option>`; 
+                        let rem = (v.maxML - v.usedML);
+                        // Make sure we format remaining properly
+                        serialOptions += `<option value="${v.serial}">Use SN-${v.serial} (${formatML(rem)} ML left)</option>`; 
                     });
                     if (i.stock > 0) serialOptions += `<option value="NEW">+ Open New Vial</option>`;
                 } else {
@@ -1604,10 +1613,9 @@
                     }
                 }
 
-                // Updated to vial-grid-wrapper for explicitly assigning more width to the Serial select
                 cart.innerHTML += `
-                    <div class="cart-item" data-type="vial" data-id="${i.id}" style="border-left: 4px solid var(--primary);">
-                        <div style="font-weight: 800; color: var(--dark); margin-bottom: 12px; padding-right: 20px;">${i.name} <span style="font-size: 12px; color: var(--gray-600); font-weight: 600;">(Vial)</span></div>
+                    <div class="cart-item" data-type="vial" data-id="${i.id}" style="border-left: 5px solid var(--primary);">
+                        <div style="font-weight: 800; color: var(--dark); margin-bottom: 16px; padding-right: 30px; font-size: 16px;">${i.name} <span style="font-size: 13px; color: var(--gray-600); font-weight: 700;">(Vial)</span></div>
                         <div class="vial-grid-wrapper">
                             <div class="form-group" style="margin: 0;">
                                 <label>ML Used:</label>
@@ -1625,29 +1633,29 @@
                                 <input type="text" class="vial-new-serial" placeholder="Type New SN" style="padding: 14px; margin-top: 10px; display: ${defaultIsNew ? 'block' : 'none'};">
                             </div>
                         </div>
-                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 22px; font-weight: bold;">×</button>
+                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 26px; font-weight: bold;">×</button>
                     </div>`;
             } else if (type === 'whole') {
                 let i = inventory.find(x => x.id === id);
                 cart.innerHTML += `
-                    <div class="cart-item" data-type="whole" data-id="${i.id}" style="border-left: 4px solid var(--secondary);">
-                        <div style="font-weight: 800; color: var(--dark); margin-bottom: 12px; padding-right: 20px;">${i.name} <span style="font-size: 12px; color: var(--gray-600); font-weight: 600;">(₱${i.price})</span></div>
-                        <div class="form-group" style="margin: 0; width: 100%; max-width: 200px;">
+                    <div class="cart-item" data-type="whole" data-id="${i.id}" style="border-left: 5px solid var(--secondary);">
+                        <div style="font-weight: 800; color: var(--dark); margin-bottom: 16px; padding-right: 30px; font-size: 16px;">${i.name} <span style="font-size: 13px; color: var(--gray-600); font-weight: 700;">(₱${formatMoney(i.price)})</span></div>
+                        <div class="form-group" style="margin: 0; width: 100%; max-width: 220px;">
                             <label>Quantity:</label>
                             <input type="number" class="item-qty" value="1" min="1" max="${i.stock}" style="padding: 14px;">
                         </div>
-                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 22px; font-weight: bold;">×</button>
+                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 26px; font-weight: bold;">×</button>
                     </div>`;
             } else if (type === 'serv') {
                 let s = services.find(x => x.id === id);
                 cart.innerHTML += `
-                    <div class="cart-item" data-type="serv" data-id="${s.id}" style="border-left: 4px solid var(--warning);">
-                        <div style="font-weight: 800; color: var(--dark); margin-bottom: 12px; padding-right: 20px;">${s.name} <span style="font-size: 12px; color: var(--gray-600); font-weight: 600;">(Fee: ₱${s.price})</span></div>
-                        <div class="form-group" style="margin: 0; width: 100%; max-width: 200px;">
+                    <div class="cart-item" data-type="serv" data-id="${s.id}" style="border-left: 5px solid var(--warning);">
+                        <div style="font-weight: 800; color: var(--dark); margin-bottom: 16px; padding-right: 30px; font-size: 16px;">${s.name} <span style="font-size: 13px; color: var(--gray-600); font-weight: 700;">(Fee: ₱${formatMoney(s.price)})</span></div>
+                        <div class="form-group" style="margin: 0; width: 100%; max-width: 220px;">
                             <label>Sessions/Qty:</label>
                             <input type="number" class="item-qty" value="1" min="1" style="padding: 14px;">
                         </div>
-                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 22px; font-weight: bold;">×</button>
+                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 26px; font-weight: bold;">×</button>
                     </div>`;
             }
             sel.selectedIndex = 0;
@@ -1682,11 +1690,11 @@
             let elBank = document.getElementById('fin-BANK_Transfer');
             let elTotal = document.getElementById('fin-TOTAL');
 
-            if(elCASH) elCASH.innerText = '₱' + till.CASH.toFixed(2);
-            if(elGCASH) elGCASH.innerText = '₱' + till.GCASH.toFixed(2);
-            if(elMari) elMari.innerText = '₱' + till.MariBANK.toFixed(2);
-            if(elBank) elBank.innerText = '₱' + till.BANK_Transfer.toFixed(2);
-            if(elTotal) elTotal.innerText = '₱' + total.toFixed(2);
+            if(elCASH) elCASH.innerText = '₱' + formatMoney(till.CASH);
+            if(elGCASH) elGCASH.innerText = '₱' + formatMoney(till.GCASH);
+            if(elMari) elMari.innerText = '₱' + formatMoney(till.MariBANK);
+            if(elBank) elBank.innerText = '₱' + formatMoney(till.BANK_Transfer);
+            if(elTotal) elTotal.innerText = '₱' + formatMoney(total);
         }
 
         // RENDER MASTERLIST SA TRANSACT
@@ -1716,30 +1724,29 @@
             
             filteredTx.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(t => {
                 let badgeStr = t.isService ? 'Service' : (t.isVial ? 'Vial' : 'Product');
-                let displayQty = t.isVial ? `${t.qty} ML` : `${t.qty} Pcs`;
+                let displayQty = t.isVial ? `${formatML(t.qty)} ML` : `${formatQty(t.qty)} Pcs`;
                 totalRev += t.amount;
                 
                 stfTb.innerHTML += `<tr>
-                    <td>${t.date.split('T')[0]}</td>
-                    <td><span class="badge" style="background:#E0E7FF;color:#4338CA;">${t.category}</span></td>
-                    <td><strong>${t.item}</strong> <span style="font-size:11px; color:gray;">(${badgeStr})</span></td>
-                    <td>${displayQty}</td>
-                    <td>${t.serial || 'N/A'}</td>
-                    <td>${t.method.replace('_', ' ')}</td>
-                    <td style="font-weight:800; color:var(--primary);">₱${t.amount.toFixed(2)}</td>
+                    <td><span style="font-weight:700;">${t.date.split('T')[0]}</span></td>
+                    <td><span class="badge" style="background:#EEF2FF;color:#3730A3;">${t.category}</span></td>
+                    <td><strong>${t.item}</strong> <span style="font-size:12px; color:gray;">(${badgeStr})</span></td>
+                    <td style="font-weight:700;">${displayQty}</td>
+                    <td style="font-family: monospace;">${t.serial || 'N/A'}</td>
+                    <td><span class="badge" style="background:var(--gray-100); color:var(--dark);">${t.method.replace('_', ' ')}</span></td>
+                    <td class="text-right" style="font-weight:900; color:var(--primary); font-feature-settings: 'tnum';">₱${formatMoney(t.amount)}</td>
                     <td>${t.processedBy}</td>
                     <td class="text-center">
-                        <button class="btn btn-sm btn-info" onclick="window.delTx(${t.id})" style="margin-right:4px;" title="Revert back to stock & till">🔙</button>
+                        <button class="btn btn-sm btn-info" onclick="window.delTx(${t.id})" style="margin-right:6px;" title="Revert back to stock & till">🔙</button>
                         <button class="btn btn-sm btn-danger" onclick="window.removeTx(${t.id})" title="Delete log ONLY">🗑️</button>
                     </td>
                 </tr>`;
             });
             
             if(totalEl) {
-                totalEl.innerText = '₱' + totalRev.toFixed(2);
+                totalEl.innerText = '₱' + formatMoney(totalRev);
             }
 
-            // Also update the Till Summary UI based on the selected date
             window.updateTillSummary();
         }
 
@@ -1767,11 +1774,11 @@
             filteredExp.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(e => {
                 totalExp += e.amount;
                 exb.innerHTML += `<tr>
-                    <td>${e.date.split('T')[0]}</td>
-                    <td>${e.category}</td>
-                    <td>${e.note}</td>
+                    <td><span style="font-weight:700;">${e.date.split('T')[0]}</span></td>
+                    <td><span class="badge" style="background:var(--gray-100); color:var(--dark);">${e.category}</span></td>
+                    <td style="font-weight:600;">${e.note}</td>
                     <td>${e.user}</td>
-                    <td class="text-right" style="color:var(--danger); font-weight:800;">₱${e.amount.toFixed(2)}</td>
+                    <td class="text-right" style="color:var(--danger); font-weight:900; font-feature-settings: 'tnum';">₱${formatMoney(e.amount)}</td>
                     <td class="text-center">
                         <button class="btn btn-sm btn-danger" onclick="window.delExp(${e.id})">🗑️ Delete</button>
                     </td>
@@ -1779,7 +1786,7 @@
             });
             
             if(totalEl) {
-                totalEl.innerText = '₱' + totalExp.toFixed(2);
+                totalEl.innerText = '₱' + formatMoney(totalExp);
             }
         }
 
@@ -1795,7 +1802,7 @@
                     og.label = '🧪 Vials (Fractional Use)';
                     inventory.filter(i => i.type === 'vial').forEach(i => {
                         let disabled = (i.stock <= 0 && activeVials.filter(v => v.productId === i.id).length === 0) ? 'disabled' : '';
-                        og.innerHTML += `<option value="vial_${i.id}" ${disabled}>${i.name} (Capacity: ${i.mlPerVial}ML | ₱${i.price})</option>`;
+                        og.innerHTML += `<option value="vial_${i.id}" ${disabled}>${i.name} (Capacity: ${formatML(i.mlPerVial)}ML | ₱${formatMoney(i.price)})</option>`;
                     });
                     sel.appendChild(og);
                 }
@@ -1806,7 +1813,7 @@
                     og.label = '📦 Whole Products';
                     inventory.filter(i => i.type !== 'vial').forEach(i => {
                         let disabled = (i.stock <= 0) ? 'disabled' : '';
-                        og.innerHTML += `<option value="whole_${i.id}" ${disabled}>${i.name} (Stock: ${i.stock} | ₱${i.price})</option>`;
+                        og.innerHTML += `<option value="whole_${i.id}" ${disabled}>${i.name} (Stock: ${formatQty(i.stock)} | ₱${formatMoney(i.price)})</option>`;
                     });
                     sel.appendChild(og);
                 }
@@ -1815,7 +1822,7 @@
                     let og = document.createElement('optgroup');
                     og.label = '🩺 Services';
                     services.forEach(s => {
-                        og.innerHTML += `<option value="serv_${s.id}">${s.name} (Fee: ₱${s.price})</option>`;
+                        og.innerHTML += `<option value="serv_${s.id}">${s.name} (Fee: ₱${formatMoney(s.price)})</option>`;
                     });
                     sel.appendChild(og);
                 }
@@ -1826,7 +1833,7 @@
             if (manualVialSel) {
                 manualVialSel.innerHTML = '';
                 inventory.filter(i => i.type === 'vial').forEach(i => {
-                    manualVialSel.innerHTML += `<option value="${i.id}">${i.name} (Stock: ${i.stock})</option>`;
+                    manualVialSel.innerHTML += `<option value="${i.id}">${i.name} (Stock: ${formatQty(i.stock)})</option>`;
                 });
             }
 
@@ -1839,10 +1846,10 @@
                     invTb.innerHTML += `<tr>
                         <td><span class="badge" style="background:var(--primary); color:white; margin:0;">${badgeTxt}</span></td>
                         <td><strong>${i.name}</strong></td>
-                        <td class="admin-only ${currentUser.role==='admin'?'':'hidden'}">₱${i.cost}</td>
-                        <td style="color:var(--primary); font-weight:800;">₱${i.price}</td>
-                        <td class="admin-only ${currentUser.role==='admin'?'':'hidden'}" style="color:var(--secondary); font-weight:800;">₱${i.price - (i.type==='vial'?(i.cost/i.mlPerVial):i.cost)}</td>
-                        <td><span class="badge badge-user" style="font-size:13px; padding:8px 12px;">${i.stock} ${i.type==='vial'?'Vials':'Pcs'}</span></td>
+                        <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-right">₱${formatMoney(i.cost)}</td>
+                        <td class="text-right" style="color:var(--primary); font-weight:900; font-feature-settings: 'tnum';">₱${formatMoney(i.price)}</td>
+                        <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-right" style="color:var(--secondary); font-weight:900; font-feature-settings: 'tnum';">₱${formatMoney(i.price - (i.type==='vial'?(i.cost/i.mlPerVial):i.cost))}</td>
+                        <td><span class="badge badge-user" style="font-size:14px; padding:10px 14px;">${formatQty(i.stock)} ${i.type==='vial'?'Vials':'Pcs'}</span></td>
                         <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-center">
                             <button class="btn btn-sm btn-info" onclick="window.addStock(${i.id})">➕</button>
                             <button class="btn btn-sm btn-warning" onclick="window.editProduct(${i.id})">✏️</button>
@@ -1856,16 +1863,16 @@
             if(actVialTb) {
                 actVialTb.innerHTML = '';
                 if(activeVials.length === 0) {
-                    actVialTb.innerHTML = '<tr><td colspan="5" class="text-center">No currently opened vials.</td></tr>';
+                    actVialTb.innerHTML = '<tr><td colspan="5" class="text-center" style="padding: 40px; color: var(--gray-600); font-weight:600;">No currently opened vials.</td></tr>';
                 } else {
                     activeVials.forEach(v => {
                         let pName = inventory.find(i => i.id === v.productId)?.name || 'Unknown';
                         let remaining = v.maxML - v.usedML;
                         actVialTb.innerHTML += `<tr>
                             <td><strong>${pName}</strong></td>
-                            <td style="color:var(--primary); font-weight:800; font-size:16px;">${v.serial}</td>
-                            <td style="color:var(--warning); font-weight:bold;">${v.usedML} ML</td>
-                            <td style="color:var(--secondary); font-weight:900; font-size:16px;">${remaining.toFixed(1)} ML</td>
+                            <td style="color:var(--primary); font-weight:800; font-size:16px; font-family: monospace;">${v.serial}</td>
+                            <td style="color:var(--warning); font-weight:900;">${formatML(v.usedML)} ML</td>
+                            <td style="color:var(--secondary); font-weight:900; font-size:18px;">${formatML(remaining)} ML</td>
                             <td class="text-center"><button class="btn btn-sm btn-danger" onclick="window.deleteActiveVial('${v.serial}', ${v.productId})">🗑️ Delete</button></td>
                         </tr>`;
                     });
@@ -1879,7 +1886,7 @@
                 services.forEach(s => {
                     srvTb.innerHTML += `<tr>
                         <td><strong>${s.name}</strong></td>
-                        <td style="color:var(--primary); font-weight:800;">₱${s.price}</td>
+                        <td class="text-right" style="color:var(--primary); font-weight:900; font-feature-settings: 'tnum';">₱${formatMoney(s.price)}</td>
                         <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-center">
                             <button class="btn btn-sm btn-warning" onclick="window.editService(${s.id})">✏️</button>
                             <button class="btn btn-sm btn-danger" onclick="window.deleteService(${s.id})">🗑️</button>
@@ -1887,7 +1894,6 @@
                 });
             }
 
-            // Update Tables that handle dynamic filtering
             window.renderStaffTxTable();
             window.renderExpenseTable();
 
@@ -1936,8 +1942,9 @@
                         serial = serialSel;
                         let v = activeVials.find(v => v.serial === serial && v.productId === id);
                         if (v) { 
-                            let remaining = v.maxML - v.usedML; 
-                            if (mlUsed > remaining) return alert(`Serial ${serial} only has ${remaining.toFixed(1)} ML left.`); 
+                            // Fix precision for validation
+                            let remaining = Math.round((v.maxML - v.usedML) * 100) / 100;
+                            if (mlUsed > remaining) return alert(`Serial ${serial} only has ${formatML(remaining)} ML left.`); 
                         }
                     }
                     
@@ -1971,7 +1978,6 @@
                 if (op.type === 'vial') {
                     let itemAmt = op.manualPrice * (1 - disc); 
                     totalAmt += itemAmt; 
-                    finance[method] += itemAmt;
                     
                     let costPerMl = op.ref.cost / op.ref.mlPerVial;
                     let totalCost = costPerMl * op.mlUsed;
@@ -1983,7 +1989,8 @@
                         activeVials.push(v); 
                     }
                     
-                    v.usedML += op.mlUsed;
+                    // Fixed floating precision issue during deduction
+                    v.usedML = Math.round((v.usedML + op.mlUsed) * 100) / 100;
                     
                     if(v.usedML >= v.maxML) { 
                         activeVials = activeVials.filter(av => !(av.serial === op.serial && av.productId === op.ref.id)); 
@@ -2003,13 +2010,12 @@
                         processedBy: currentUser.name 
                     }); 
                     
-                    receiptItemsHTML.push(`<strong>${op.ref.name}</strong> (${op.mlUsed} ML) <br><span style="font-size:11px; color:#4F46E5;">[SN: ${op.serial}]</span><br>₱${itemAmt.toFixed(2)}`);
+                    receiptItemsHTML.push(`<strong>${op.ref.name}</strong> (${formatML(op.mlUsed)} ML) <br><span style="font-size:12px; color:#4F46E5;">[SN: ${op.serial}]</span><br>₱${formatMoney(itemAmt)}`);
 
                 } else if (op.type === 'whole') {
                     op.ref.stock -= op.qty; 
                     let itemAmt = (op.ref.price * op.qty) * (1 - disc); 
                     totalAmt += itemAmt; 
-                    finance[method] += itemAmt;
                     
                     txHistory.push({ 
                         id: Date.now() + Math.random(), 
@@ -2024,12 +2030,11 @@
                         processedBy: currentUser.name 
                     }); 
                     
-                    receiptItemsHTML.push(`<strong>${op.ref.name}</strong> (x${op.qty})<br>₱${itemAmt.toFixed(2)}`);
+                    receiptItemsHTML.push(`<strong>${op.ref.name}</strong> (x${formatQty(op.qty)})<br>₱${formatMoney(itemAmt)}`);
 
                 } else if (op.type === 'serv') {
                     let itemAmt = (op.ref.price * op.qty) * (1 - disc); 
                     totalAmt += itemAmt; 
-                    finance[method] += itemAmt;
                     
                     txHistory.push({ 
                         id: Date.now() + Math.random(), 
@@ -2044,7 +2049,7 @@
                         processedBy: currentUser.name 
                     }); 
                     
-                    receiptItemsHTML.push(`<strong>${op.ref.name}</strong> (x${op.qty})<br>₱${itemAmt.toFixed(2)}`);
+                    receiptItemsHTML.push(`<strong>${op.ref.name}</strong> (x${formatQty(op.qty)})<br>₱${formatMoney(itemAmt)}`);
                 }
             });
 
@@ -2059,7 +2064,7 @@
             document.getElementById('rcptCategory').innerText = cat; 
             document.getElementById('rcptItem').innerHTML = receiptItemsHTML.join('<br><br>'); 
             document.getElementById('rcptMethod').innerText = method; 
-            document.getElementById('rcptTotal').innerText = '₱' + totalAmt.toFixed(2); 
+            document.getElementById('rcptTotal').innerText = '₱' + formatMoney(totalAmt); 
             document.getElementById('rcptUser').innerText = currentUser.name; 
             
             document.getElementById('receiptModalOverlay').classList.remove('hidden');
@@ -2120,22 +2125,22 @@
             
             filteredTx.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(t => {
                 let badgeStr = t.isService ? 'Service' : (t.isVial ? 'Vial' : 'Product');
-                let displayQty = t.isVial ? `${t.qty} ML` : `${t.qty} Pcs`;
+                let displayQty = t.isVial ? `${formatML(t.qty)} ML` : `${formatQty(t.qty)} Pcs`;
                 
                 txb.innerHTML += `<tr>
-                    <td>${t.date.split('T')[0]}</td>
+                    <td><span style="font-weight:700;">${t.date.split('T')[0]}</span></td>
                     <td>
-                        <span class="badge" style="background:#E0E7FF;color:#4338CA;">${t.category}</span> 
-                        <span class="badge" style="background:var(--gray-300); color:var(--dark); margin-left:4px;">${badgeStr}</span>
+                        <span class="badge" style="background:#EEF2FF;color:#3730A3;">${t.category}</span> 
+                        <span class="badge" style="background:var(--gray-100); color:var(--dark); margin-left:6px;">${badgeStr}</span>
                     </td>
-                    <td>${t.item}</td>
-                    <td>${displayQty}</td>
-                    <td>${t.serial || 'N/A'}</td>
-                    <td>${t.method.replace('_', ' ')}</td>
-                    <td style="font-weight:800; color:var(--primary);">₱${t.amount.toFixed(2)}</td>
+                    <td><strong>${t.item}</strong></td>
+                    <td style="font-weight:700;">${displayQty}</td>
+                    <td style="font-family: monospace;">${t.serial || 'N/A'}</td>
+                    <td><span class="badge" style="background:var(--gray-100); color:var(--dark);">${t.method.replace('_', ' ')}</span></td>
+                    <td class="text-right" style="font-weight:900; color:var(--primary); font-feature-settings: 'tnum';">₱${formatMoney(t.amount)}</td>
                     <td>${t.processedBy}</td>
-                    <td class="text-center" style="min-width:160px;">
-                        <button class="btn btn-sm btn-info" onclick="window.delTx(${t.id})" style="margin-right:4px;" title="Revert back to stock & till">🔙 Revert</button>
+                    <td class="text-center" style="min-width:180px;">
+                        <button class="btn btn-sm btn-info" onclick="window.delTx(${t.id})" style="margin-right:6px;" title="Revert back to stock & till">🔙 Revert</button>
                         <button class="btn btn-sm btn-danger" onclick="window.removeTx(${t.id})" title="Delete log ONLY">🗑️ Delete</button>
                     </td>
                 </tr>`;
@@ -2148,10 +2153,10 @@
         function updateProfitDisplay(elementId, netValue) {
             let el = document.getElementById(elementId);
             if (netValue < 0) { 
-                el.innerText = 'Loss: -₱' + Math.abs(netValue).toFixed(2); 
+                el.innerText = 'Loss: -₱' + formatMoney(Math.abs(netValue)); 
                 el.style.color = 'var(--danger)'; 
             } else { 
-                el.innerText = 'True: ₱' + netValue.toFixed(2); 
+                el.innerText = 'True: ₱' + formatMoney(netValue); 
                 el.style.color = 'var(--secondary)'; 
             }
         }
@@ -2260,10 +2265,10 @@
                 }
             });
 
-            document.getElementById('statProdQty').innerText = prodQty; 
-            document.getElementById('statProdRev').innerText = 'Rev: ₱' + prodRev.toFixed(2);
-            document.getElementById('statServQty').innerText = servQty; 
-            document.getElementById('statServRev').innerText = 'Rev: ₱' + servRev.toFixed(2);
+            document.getElementById('statProdQty').innerText = formatQty(prodQty); 
+            document.getElementById('statProdRev').innerText = 'Rev: ₱' + formatMoney(prodRev);
+            document.getElementById('statServQty').innerText = formatQty(servQty); 
+            document.getElementById('statServRev').innerText = 'Rev: ₱' + formatMoney(servRev);
 
             let topContainer = document.getElementById('topItemsContainer'); 
             topContainer.innerHTML = '';
@@ -2275,16 +2280,16 @@
             })).sort((a, b) => b.qty - a.qty); 
             
             if(sortedItems.length === 0) {
-                topContainer.innerHTML = '<p style="color: var(--gray-600); font-size: 13px; text-align: center; margin-top: 30px;">No sales recorded.</p>';
+                topContainer.innerHTML = '<p style="color: var(--gray-600); font-size: 14px; text-align: center; margin-top: 40px; font-weight:600;">No sales recorded.</p>';
             } else { 
                 sortedItems.slice(0, 5).forEach(item => { 
                     topContainer.innerHTML += `
                         <div class="top-item-row">
                             <div>
                                 <div class="top-item-name">${item.name}</div>
-                                <div class="top-item-qty">Sold/Availed Count: ${item.qty}</div>
+                                <div class="top-item-qty">Sold/Availed Count: ${formatQty(item.qty)}</div>
                             </div>
-                            <div class="top-item-rev">₱${item.rev.toFixed(2)}</div>
+                            <div class="top-item-rev">₱${formatMoney(item.rev)}</div>
                         </div>`; 
                 }); 
             }
@@ -2293,33 +2298,33 @@
             stBody.innerHTML = '';
             
             if(Object.keys(staffStats).length === 0) {
-                stBody.innerHTML = '<tr><td colspan="4" class="text-center">No staff transactions recorded.</td></tr>';
+                stBody.innerHTML = '<tr><td colspan="4" class="text-center" style="font-weight:600;">No staff transactions recorded.</td></tr>';
             } else {
                 for(let staff in staffStats) {
                     stBody.innerHTML += `<tr>
                         <td><strong>${staff}</strong></td>
-                        <td style="color:var(--primary); font-weight:bold;">₱${staffStats[staff].d.toFixed(2)}</td>
-                        <td style="color:var(--info);">₱${staffStats[staff].m.toFixed(2)}</td>
-                        <td style="color:var(--warning);">₱${staffStats[staff].y.toFixed(2)}</td>
+                        <td style="color:var(--primary); font-weight:900; font-feature-settings: 'tnum';">₱${formatMoney(staffStats[staff].d)}</td>
+                        <td style="color:var(--info); font-weight:800; font-feature-settings: 'tnum';">₱${formatMoney(staffStats[staff].m)}</td>
+                        <td style="color:var(--warning); font-weight:800; font-feature-settings: 'tnum';">₱${formatMoney(staffStats[staff].y)}</td>
                     </tr>`;
                 }
             }
 
-            document.getElementById('countNew').innerText = catsDaily.New; 
-            document.getElementById('countOld').innerText = catsDaily.Old; 
-            document.getElementById('countPWD').innerText = catsDaily.PWD; 
-            document.getElementById('countSenior').innerText = catsDaily.Senior;
+            document.getElementById('countNew').innerText = formatQty(catsDaily.New); 
+            document.getElementById('countOld').innerText = formatQty(catsDaily.Old); 
+            document.getElementById('countPWD').innerText = formatQty(catsDaily.PWD); 
+            document.getElementById('countSenior').innerText = formatQty(catsDaily.Senior);
             
-            document.getElementById('reportDaily').innerText = '₱' + dr.toFixed(2); 
-            document.getElementById('expDaily').innerText = 'Exp: ₱' + de.toFixed(2); 
+            document.getElementById('reportDaily').innerText = '₱' + formatMoney(dr); 
+            document.getElementById('expDaily').innerText = 'Exp: ₱' + formatMoney(de); 
             updateProfitDisplay('profitDaily', dp - de);
             
-            document.getElementById('reportMonthly').innerText = '₱' + mr.toFixed(2); 
-            document.getElementById('expMonthly').innerText = 'Exp: ₱' + me.toFixed(2); 
+            document.getElementById('reportMonthly').innerText = '₱' + formatMoney(mr); 
+            document.getElementById('expMonthly').innerText = 'Exp: ₱' + formatMoney(me); 
             updateProfitDisplay('profitMonthly', mp - me);
             
-            document.getElementById('reportYearly').innerText = '₱' + yr.toFixed(2); 
-            document.getElementById('expYearly').innerText = 'Exp: ₱' + ye.toFixed(2); 
+            document.getElementById('reportYearly').innerText = '₱' + formatMoney(yr); 
+            document.getElementById('expYearly').innerText = 'Exp: ₱' + formatMoney(ye); 
             updateProfitDisplay('profitYearly', yp - ye);
             
             for(let key in chartData) {
@@ -2357,17 +2362,19 @@
                     responsive: true, 
                     maintainAspectRatio: false, 
                     scales: { 
-                        x: { ticks: { color: tickColor } },
-                        y: { beginAtZero: true, ticks: { color: tickColor, callback: v => '₱' + v } } 
+                        x: { ticks: { color: tickColor, font: { family: 'Inter', weight: 600 } } },
+                        y: { beginAtZero: true, ticks: { color: tickColor, font: { family: 'Inter', weight: 600 }, callback: v => '₱' + formatMoney(v) } } 
                     }, 
                     plugins: { 
-                        legend: { labels: { color: tickColor } },
+                        legend: { labels: { color: tickColor, font: { family: 'Inter', weight: 700 } } },
                         tooltip: { 
+                            titleFont: { family: 'Inter', size: 14 },
+                            bodyFont: { family: 'Inter', size: 14, weight: 'bold' },
                             callbacks: { 
                                 label: function(c) { 
                                     let l = c.dataset.label || ''; 
                                     if(l) l += ': '; 
-                                    if(c.parsed.y !== null) l += '₱' + c.parsed.y.toFixed(2); 
+                                    if(c.parsed.y !== null) l += '₱' + formatMoney(c.parsed.y); 
                                     return l; 
                                 } 
                             } 
@@ -2471,50 +2478,6 @@
                 pushLiveClinicData(); 
             } 
         }
-        
-        // REVERT - Binabalik ang pera at ang binawas na stock
-        window.delTx = function(id) { 
-            if(confirm('Revert transaction? Revenue will be deducted and ML/Stock will be restored.')) { 
-                let x = txHistory.find(t => t.id === id); 
-                
-                if (x.isVial) {
-                    let p = inventory.find(i => i.name === x.item);
-                    if(p) {
-                        let vial = activeVials.find(v => v.serial === x.serial && v.productId === p.id);
-                        if(vial) {
-                            vial.usedML -= x.qty;
-                            if(vial.usedML < 0) vial.usedML = 0;
-                        } else {
-                            p.stock += 1;
-                            activeVials.push({ serial: x.serial, productId: p.id, usedML: p.mlPerVial - x.qty, maxML: p.mlPerVial });
-                        }
-                    }
-                } else if (!x.isService) {
-                    let p = inventory.find(i => i.name === x.item); 
-                    if(p) {
-                        p.stock += x.qty; 
-                    }
-                }
-                
-                txHistory = txHistory.filter(t => t.id !== id); 
-                pushLiveClinicData(); 
-            } 
-        }
-
-        // DELETE - Binubura lang sa logs, considered SOLD, walang binabalik sa stock/till
-        window.removeTx = function(id) {
-            if(confirm('Delete this log permanently? (Item is considered SOLD, stock will NOT be returned)')) {
-                txHistory = txHistory.filter(t => t.id !== id);
-                pushLiveClinicData();
-            }
-        }
-
-        window.delExp = function(id) { 
-            if(confirm('Delete expense?')) { 
-                expHistory = expHistory.filter(e => e.id !== id); 
-                pushLiveClinicData(); 
-            } 
-        }
 
         // ==========================================
         // 9. CSV EXPORTS (ADMIN & STAFF)
@@ -2544,16 +2507,9 @@
         }
 
         function generateBlob() {
-            let csv = "--- CLINIC SYSTEM FULL REPORT ---\n\n1. PAYMENT TILL SUMMARY\nMethod,Amount\n"; 
-            let totalTill = 0;
+            let csv = "--- CLINIC SYSTEM FULL REPORT ---\n\n"; 
             
-            for(let key in finance) { 
-                csv += `${key.replace('_', ' ')},${finance[key]}\n`; 
-                totalTill += finance[key]; 
-            } 
-            csv += `TOTAL TILL,${totalTill}\n\n`;
-            
-            csv += "2. PATIENT DEMOGRAPHICS (All-Time)\nCategory,Total Visits\n";
+            csv += "1. PATIENT DEMOGRAPHICS (All-Time)\nCategory,Total Visits\n";
             let cats = { 'New': 0, 'Old': 0, 'PWD': 0, 'Senior': 0 }; 
             let timestamps = new Set();
             
@@ -2568,22 +2524,22 @@
                 csv += `${k},${cats[k]}\n`; 
             }
             
-            csv += "\n3. INVENTORY (Products & Vials)\nProduct Name,Type,Cost,SRP,Main Stock,ML per Vial\n";
+            csv += "\n2. INVENTORY (Products & Vials)\nProduct Name,Type,Cost,SRP,Main Stock,ML per Vial\n";
             inventory.forEach(item => { 
                 csv += `${item.name},${item.type},${item.cost},${item.price},${item.stock},${item.type==='vial'?item.mlPerVial:'N/A'}\n`; 
             });
             
-            csv += "\n4. SERVICES CATALOG\nService Name,Fee\n";
+            csv += "\n3. SERVICES CATALOG\nService Name,Fee\n";
             services.forEach(item => { 
                 csv += `${item.name},${item.price}\n`; 
             });
             
-            csv += "\n5. EXPENSES LOG\nDate,Category,Note,Amount,Logged By\n";
+            csv += "\n4. EXPENSES LOG\nDate,Category,Note,Amount,Logged By\n";
             expHistory.forEach(exp => { 
                 csv += `${exp.date.split('T')[0]},${exp.category},${exp.note},${exp.amount},${exp.user}\n`; 
             });
             
-            csv += "\n6. TRANSACTION HISTORY\nDate,Category,Type,Item,Quantity/ML,Serial,Payment Method,Total Cost,Total Revenue,Processed By\n";
+            csv += "\n5. TRANSACTION HISTORY\nDate,Category,Type,Item,Quantity/ML,Serial,Payment Method,Total Cost,Total Revenue,Processed By\n";
             txHistory.forEach(tx => { 
                 csv += `${tx.date.split('T')[0]},${tx.category || 'N/A'},${tx.isService ? 'Service':(tx.isVial?'Vial':'Whole')},${tx.item},${tx.qty},${tx.serial||'N/A'},${tx.method.replace('_', ' ')},${tx.totalCost || 0},${tx.amount},${tx.processedBy}\n`; 
             });
@@ -2636,7 +2592,6 @@
             let csv = "--- CLINIC TRANSACTION MASTERLIST ---\n\n"; 
             csv += "Date,Category,Type,Item,Quantity/ML,Serial,Payment Method,Revenue,Processed By\n";
             
-            // Apply current date/month/year filter
             let filterType = document.getElementById('staffTxFilterType').value;
             let matchStr = "";
             if (filterType === 'daily') matchStr = document.getElementById('staffTxDateFilter').value;
@@ -2704,7 +2659,6 @@
             let csv = "--- CLINIC EXPENSE REPORT ---\n\n"; 
             csv += "Date,Category,Note,User,Amount\n";
             
-            // Apply current date/month/year filter
             let filterType = document.getElementById('expFilterType').value;
             let matchStr = "";
             if (filterType === 'daily') matchStr = document.getElementById('expDateFilter').value;
@@ -2736,7 +2690,7 @@
             document.body.removeChild(link);
             
             let btn = document.getElementById('btnExportExp'); 
-            btn.innerText = '⬇️ Export Exp'; 
+            btn.innerText = '⬇️ Export Expenses'; 
             btn.classList.replace('btn-success', 'btn-warning'); 
             btn.onclick = prepareExpExport;
         }
