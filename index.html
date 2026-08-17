@@ -660,21 +660,21 @@
 
                 <div class="card">
                     <h3 style="margin-bottom: 5px;">💰 Till Summary</h3>
-                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-bottom: 24px;">Current cash & digital footprint.</p>
+                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-bottom: 24px;">Click an amount to filter Masterlist transactions.</p>
                     <div class="table-wrapper">
                         <table>
-                            <tr><td>💵 CASH</td><td class="text-right" id="fin-CASH" style="font-weight: 800; font-size: 16px;">₱0.00</td></tr>
-                            <tr><td>📱 GCASH</td><td class="text-right" id="fin-GCASH" style="font-weight: 800; font-size: 16px;">₱0.00</td></tr>
-                            <tr><td>🏦 MariBANK</td><td class="text-right" id="fin-MariBANK" style="font-weight: 800; font-size: 16px;">₱0.00</td></tr>
-                            <tr><td>💻 BANK Transfer</td><td class="text-right" id="fin-BANK_Transfer" style="font-weight: 800; font-size: 16px;">₱0.00</td></tr>
-                            <tr style="background-color: var(--table-header);"><td style="font-weight: 900; font-size: 16px; color: var(--dark);">TOTAL REVENUE</td><td class="text-right" id="fin-TOTAL" style="color: var(--primary); font-size: 22px; font-weight: 900;">₱0.00</td></tr>
+                            <tr><td>💵 CASH</td><td class="text-right"><a href="javascript:void(0)" onclick="viewTillTransactions('CASH')" id="fin-CASH" style="font-weight: 800; font-size: 16px; color: var(--primary); text-decoration: underline;">₱0.00</a></td></tr>
+                            <tr><td>📱 GCASH</td><td class="text-right"><a href="javascript:void(0)" onclick="viewTillTransactions('GCASH')" id="fin-GCASH" style="font-weight: 800; font-size: 16px; color: var(--primary); text-decoration: underline;">₱0.00</a></td></tr>
+                            <tr><td>🏦 MariBANK</td><td class="text-right"><a href="javascript:void(0)" onclick="viewTillTransactions('MariBANK')" id="fin-MariBANK" style="font-weight: 800; font-size: 16px; color: var(--primary); text-decoration: underline;">₱0.00</a></td></tr>
+                            <tr><td>💻 BANK Transfer</td><td class="text-right"><a href="javascript:void(0)" onclick="viewTillTransactions('BANK_Transfer')" id="fin-BANK_Transfer" style="font-weight: 800; font-size: 16px; color: var(--primary); text-decoration: underline;">₱0.00</a></td></tr>
+                            <tr style="background-color: var(--table-header);"><td style="font-weight: 900; font-size: 16px; color: var(--dark);">TOTAL REVENUE</td><td class="text-right" id="fin-TOTAL" style="color: var(--dark); font-size: 22px; font-weight: 900;">₱0.00</td></tr>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- NEW: TRANSACTION LIST IN TRANSACT TAB FOR BOTH STAFF AND ADMIN WITH FILTER & TOTAL -->
-            <div class="card" style="margin-top: 24px;">
+            <!-- TRANSACTION LIST IN TRANSACT TAB FOR BOTH STAFF AND ADMIN -->
+            <div class="card" style="margin-top: 24px;" id="staffTxTableSection">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                     <div>
                         <h3 style="margin:0;">📝 Transactions Masterlist</h3>
@@ -682,6 +682,13 @@
                     </div>
                     <div style="display: flex; gap: 10px; align-items: center;">
                         <input type="date" id="staffTxDateFilter" style="padding: 10px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
+                        <select id="staffTxMethodFilter" style="padding: 10px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
+                            <option value="ALL">All Methods</option>
+                            <option value="CASH">CASH</option>
+                            <option value="GCASH">GCASH</option>
+                            <option value="MariBANK">MariBANK</option>
+                            <option value="BANK_Transfer">BANK Transfer</option>
+                        </select>
                         <button class="btn btn-warning btn-sm" id="btnExportStaff" style="padding: 10px 20px; font-size: 14px;" onclick="prepareStaffExport()">⬇️ Export to Excel</button>
                     </div>
                 </div>
@@ -735,7 +742,7 @@
                 <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 24px;">Main storage for Whole items and Unopened Vials.</p>
                 <div class="table-wrapper">
                     <table id="inventoryTable">
-                        <thead><tr><th>Type</th><th>Product Name</th><th class="admin-only hidden">Cost</th><th>SRP</th><th class="admin-only hidden">Profit</th><th>Main Stock</th><th class="admin-only hidden text-center">Actions</th></tr></thead>
+                        <thead><tr><th>Type</th><th>Product Name</th><th class="admin-only hidden">Cost</th><th>Selling Price (₱)</th><th class="admin-only hidden">Profit</th><th>Main Stock</th><th class="admin-only hidden text-center">Actions</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -771,7 +778,7 @@
                 <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-top: -10px; margin-bottom: 24px;">Manage serial numbers of currently opened vials.</p>
                 <div class="table-wrapper" style="margin-bottom: 24px;">
                     <table id="activeVialsTable">
-                        <thead><tr><th>Product Name</th><th>Serial Number</th><th>Used ML</th><th>Remaining ML</th></tr></thead>
+                        <thead><tr><th>Product Name</th><th>Serial Number</th><th>Used ML</th><th>Remaining ML</th><th class="text-center">Action</th></tr></thead>
                         <tbody></tbody>
                     </table>
                 </div>
@@ -1339,7 +1346,7 @@
                 document.getElementById('mlField').classList.remove('hidden'); 
                 document.getElementById('serialField').classList.remove('hidden'); 
                 document.getElementById('lblCost').innerText = 'Cost per Vial (₱)'; 
-                document.getElementById('lblPrice').innerText = 'SRP per ML (₱)';
+                document.getElementById('lblPrice').innerText = 'Selling Price (₱)';
             } else {
                 document.getElementById('costField').classList.remove('hidden'); 
                 document.getElementById('stockField').classList.remove('hidden'); 
@@ -1377,6 +1384,23 @@
             document.getElementById('manualOpenVialSerial').value = '';
         }
 
+        window.deleteActiveVial = function(serial, productId) {
+            if(confirm(`Are you sure you want to delete Active Vial SN-${serial}? Remaining ML will be lost and will NOT be returned to stock.`)) {
+                activeVials = activeVials.filter(v => !(v.serial === serial && v.productId === productId));
+                pushLiveClinicData();
+                alert("Active vial deleted successfully.");
+            }
+        }
+
+        window.viewTillTransactions = function(method) {
+            let methodSelect = document.getElementById('staffTxMethodFilter');
+            if(methodSelect) {
+                methodSelect.value = method;
+                window.renderStaffTxTable();
+                document.getElementById('staffTxTableSection').scrollIntoView({behavior: "smooth", block: "start"});
+            }
+        }
+
         window.addSelectedItemToCart = function() {
             let sel = document.getElementById('itemSelectDropdown');
             let val = sel.value;
@@ -1409,17 +1433,21 @@
                 cart.innerHTML += `
                     <div class="cart-item" data-type="vial" data-id="${i.id}" style="border-left: 4px solid var(--primary);">
                         <div style="font-weight: 800; color: var(--dark); margin-bottom: 12px; padding-right: 20px;">${i.name} <span style="font-size: 12px; color: var(--gray-600); font-weight: 600;">(Vial)</span></div>
-                        <div class="grid-2" style="gap: 12px;">
+                        <div class="grid-3" style="gap: 12px; align-items: end;">
                             <div class="form-group" style="margin: 0;">
                                 <label>ML Used:</label>
                                 <input type="number" class="vial-ml" value="1" min="0.1" step="0.1" style="padding: 10px;">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label>Price (₱):</label>
+                                <input type="number" class="vial-price" value="${i.price}" style="padding: 10px;">
                             </div>
                             <div class="form-group" style="margin: 0;">
                                 <label>Select Serial:</label>
                                 <select class="vial-serial-sel" onchange="this.nextElementSibling.style.display = (this.value === 'NEW') ? 'block' : 'none'" style="padding: 10px;">
                                     ${serialOptions}
                                 </select>
-                                <input type="text" class="vial-new-serial" placeholder="Type New SN (e.g. SN-123)" style="padding: 10px; margin-top: 8px; display: ${defaultIsNew ? 'block' : 'none'};">
+                                <input type="text" class="vial-new-serial" placeholder="Type New SN" style="padding: 10px; margin-top: 8px; display: ${defaultIsNew ? 'block' : 'none'};">
                             </div>
                         </div>
                         <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 12px; right: 12px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px; font-weight: bold;">×</button>
@@ -1454,6 +1482,7 @@
             let stfTb = document.querySelector('#staffTxTable tbody');
             let totalEl = document.getElementById('staffTxTotal');
             let dateFilter = document.getElementById('staffTxDateFilter').value;
+            let methodFilter = document.getElementById('staffTxMethodFilter').value;
             
             stfTb.innerHTML = '';
             let totalRev = 0;
@@ -1461,6 +1490,9 @@
             let filteredTx = [...txHistory];
             if(dateFilter) {
                 filteredTx = filteredTx.filter(t => t.date.startsWith(dateFilter));
+            }
+            if(methodFilter && methodFilter !== 'ALL') {
+                filteredTx = filteredTx.filter(t => t.method === methodFilter);
             }
             
             filteredTx.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(t => {
@@ -1497,7 +1529,7 @@
                     og.label = '🧪 Vials (Fractional Use)';
                     inventory.filter(i => i.type === 'vial').forEach(i => {
                         let disabled = (i.stock <= 0 && activeVials.filter(v => v.productId === i.id).length === 0) ? 'disabled' : '';
-                        og.innerHTML += `<option value="vial_${i.id}" ${disabled}>${i.name} (Capacity: ${i.mlPerVial}ML | ₱${i.price}/ML)</option>`;
+                        og.innerHTML += `<option value="vial_${i.id}" ${disabled}>${i.name} (Capacity: ${i.mlPerVial}ML | ₱${i.price})</option>`;
                     });
                     sel.appendChild(og);
                 }
@@ -1525,71 +1557,79 @@
 
             // Populate Manual Open Vial Dropdown
             let manualVialSel = document.getElementById('manualOpenVialSelect');
-            manualVialSel.innerHTML = '';
-            inventory.filter(i => i.type === 'vial').forEach(i => {
-                manualVialSel.innerHTML += `<option value="${i.id}">${i.name} (Stock: ${i.stock})</option>`;
-            });
+            if (manualVialSel) {
+                manualVialSel.innerHTML = '';
+                inventory.filter(i => i.type === 'vial').forEach(i => {
+                    manualVialSel.innerHTML += `<option value="${i.id}">${i.name} (Stock: ${i.stock})</option>`;
+                });
+            }
 
             // Render Inventory Table
             let invTb = document.querySelector('#inventoryTable tbody'); 
-            invTb.innerHTML = '';
-            
-            inventory.forEach(i => {
-                let badgeTxt = i.type === 'vial' ? '🧪 Vial' : '📦 Whole';
-                invTb.innerHTML += `<tr>
-                    <td><span class="badge" style="background:var(--primary); color:white; margin:0;">${badgeTxt}</span></td>
-                    <td><strong>${i.name}</strong></td>
-                    <td class="admin-only ${currentUser.role==='admin'?'':'hidden'}">₱${i.cost}</td>
-                    <td style="color:var(--primary); font-weight:800;">₱${i.price} ${i.type==='vial'?'/ ML':''}</td>
-                    <td class="admin-only ${currentUser.role==='admin'?'':'hidden'}" style="color:var(--secondary); font-weight:800;">₱${i.price - (i.type==='vial'?(i.cost/i.mlPerVial):i.cost)}</td>
-                    <td><span class="badge badge-user" style="font-size:13px; padding:8px 12px;">${i.stock} ${i.type==='vial'?'Vials':'Pcs'}</span></td>
-                    <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-center">
-                        <button class="btn btn-sm btn-info" onclick="window.addStock(${i.id})">➕</button>
-                        <button class="btn btn-sm btn-warning" onclick="window.editProduct(${i.id})">✏️</button>
-                        <button class="btn btn-sm btn-danger" onclick="window.deleteProduct(${i.id})">🗑️</button>
-                    </td></tr>`;
-            });
+            if(invTb) {
+                invTb.innerHTML = '';
+                inventory.forEach(i => {
+                    let badgeTxt = i.type === 'vial' ? '🧪 Vial' : '📦 Whole';
+                    invTb.innerHTML += `<tr>
+                        <td><span class="badge" style="background:var(--primary); color:white; margin:0;">${badgeTxt}</span></td>
+                        <td><strong>${i.name}</strong></td>
+                        <td class="admin-only ${currentUser.role==='admin'?'':'hidden'}">₱${i.cost}</td>
+                        <td style="color:var(--primary); font-weight:800;">₱${i.price}</td>
+                        <td class="admin-only ${currentUser.role==='admin'?'':'hidden'}" style="color:var(--secondary); font-weight:800;">₱${i.price - (i.type==='vial'?(i.cost/i.mlPerVial):i.cost)}</td>
+                        <td><span class="badge badge-user" style="font-size:13px; padding:8px 12px;">${i.stock} ${i.type==='vial'?'Vials':'Pcs'}</span></td>
+                        <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-center">
+                            <button class="btn btn-sm btn-info" onclick="window.addStock(${i.id})">➕</button>
+                            <button class="btn btn-sm btn-warning" onclick="window.editProduct(${i.id})">✏️</button>
+                            <button class="btn btn-sm btn-danger" onclick="window.deleteProduct(${i.id})">🗑️</button>
+                        </td></tr>`;
+                });
+            }
             
             // Render Active Vials Table
             let actVialTb = document.querySelector('#activeVialsTable tbody'); 
-            actVialTb.innerHTML = '';
-            
-            if(activeVials.length === 0) {
-                actVialTb.innerHTML = '<tr><td colspan="4" class="text-center">No currently opened vials.</td></tr>';
-            } else {
-                activeVials.forEach(v => {
-                    let pName = inventory.find(i => i.id === v.productId)?.name || 'Unknown';
-                    let remaining = v.maxML - v.usedML;
-                    actVialTb.innerHTML += `<tr>
-                        <td><strong>${pName}</strong></td>
-                        <td style="color:var(--primary); font-weight:800; font-size:16px;">${v.serial}</td>
-                        <td style="color:var(--warning); font-weight:bold;">${v.usedML} ML</td>
-                        <td style="color:var(--secondary); font-weight:900; font-size:16px;">${remaining.toFixed(1)} ML</td>
-                    </tr>`;
-                });
+            if(actVialTb) {
+                actVialTb.innerHTML = '';
+                if(activeVials.length === 0) {
+                    actVialTb.innerHTML = '<tr><td colspan="5" class="text-center">No currently opened vials.</td></tr>';
+                } else {
+                    activeVials.forEach(v => {
+                        let pName = inventory.find(i => i.id === v.productId)?.name || 'Unknown';
+                        let remaining = v.maxML - v.usedML;
+                        actVialTb.innerHTML += `<tr>
+                            <td><strong>${pName}</strong></td>
+                            <td style="color:var(--primary); font-weight:800; font-size:16px;">${v.serial}</td>
+                            <td style="color:var(--warning); font-weight:bold;">${v.usedML} ML</td>
+                            <td style="color:var(--secondary); font-weight:900; font-size:16px;">${remaining.toFixed(1)} ML</td>
+                            <td class="text-center"><button class="btn btn-sm btn-danger" onclick="window.deleteActiveVial('${v.serial}', ${v.productId})">🗑️ Delete</button></td>
+                        </tr>`;
+                    });
+                }
             }
 
             // Render Services Table
             let srvTb = document.querySelector('#servicesTable tbody'); 
-            srvTb.innerHTML = '';
-            
-            services.forEach(s => {
-                srvTb.innerHTML += `<tr>
-                    <td><strong>${s.name}</strong></td>
-                    <td style="color:var(--primary); font-weight:800;">₱${s.price}</td>
-                    <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-center">
-                        <button class="btn btn-sm btn-warning" onclick="window.editService(${s.id})">✏️</button>
-                        <button class="btn btn-sm btn-danger" onclick="window.deleteService(${s.id})">🗑️</button>
-                    </td></tr>`;
-            });
+            if(srvTb) {
+                srvTb.innerHTML = '';
+                services.forEach(s => {
+                    srvTb.innerHTML += `<tr>
+                        <td><strong>${s.name}</strong></td>
+                        <td style="color:var(--primary); font-weight:800;">₱${s.price}</td>
+                        <td class="admin-only ${currentUser.role==='admin'?'':'hidden'} text-center">
+                            <button class="btn btn-sm btn-warning" onclick="window.editService(${s.id})">✏️</button>
+                            <button class="btn btn-sm btn-danger" onclick="window.deleteService(${s.id})">🗑️</button>
+                        </td></tr>`;
+                });
+            }
 
             // Till
             let tot = 0; 
             for(let k in finance){ 
-                document.getElementById(`fin-${k}`).innerText='₱'+finance[k].toFixed(2); 
+                let el = document.getElementById(`fin-${k}`);
+                if (el) el.innerText = '₱'+finance[k].toFixed(2); 
                 tot+=finance[k]; 
             }
-            document.getElementById('fin-TOTAL').innerText = '₱'+tot.toFixed(2);
+            let totEl = document.getElementById('fin-TOTAL');
+            if (totEl) totEl.innerText = '₱'+tot.toFixed(2);
 
             // Render the transaction masterlist in Transact Tab
             window.renderStaffTxTable();
@@ -1621,6 +1661,7 @@
                 if (typeStr === 'vial') {
                     let p = inventory.find(i => i.id === id);
                     let mlUsed = parseFloat(itemEl.querySelector('.vial-ml').value);
+                    let manualPrice = parseFloat(itemEl.querySelector('.vial-price').value);
                     let serialSel = itemEl.querySelector('.vial-serial-sel').value;
                     let serial = '';
                     
@@ -1644,7 +1685,9 @@
                     }
                     
                     if(isNaN(mlUsed) || mlUsed <= 0) return alert(`Invalid ML for ${p.name}`);
-                    txOperations.push({ type: 'vial', ref: p, mlUsed: mlUsed, serial: serial });
+                    if(isNaN(manualPrice) || manualPrice < 0) return alert(`Invalid price input for ${p.name}`);
+                    
+                    txOperations.push({ type: 'vial', ref: p, mlUsed: mlUsed, serial: serial, manualPrice: manualPrice });
                     
                 } else if (typeStr === 'whole') {
                     let p = inventory.find(i => i.id === id);
@@ -1669,7 +1712,8 @@
 
             txOperations.forEach(op => {
                 if (op.type === 'vial') {
-                    let itemAmt = (op.ref.price * op.mlUsed) * (1 - disc); 
+                    // Ginagamit na lang ang Manual Price kaysa i-multiply ang ML Used sa presyo
+                    let itemAmt = op.manualPrice * (1 - disc); 
                     totalAmt += itemAmt; 
                     finance[method] += itemAmt;
                     
@@ -1810,6 +1854,7 @@
         window.renderHistory = function() {
             let txb = document.querySelector('#historyTable tbody'); 
             let dateFilter = document.getElementById('historyDateFilter').value;
+            if(!txb) return;
             txb.innerHTML = '';
             
             let filteredTx = [...txHistory];
@@ -1841,6 +1886,7 @@
             });
             
             let exb = document.querySelector('#expenseTable tbody'); 
+            if(!exb) return;
             exb.innerHTML = '';
             
             [...expHistory].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(e => {
@@ -2354,9 +2400,13 @@
             
             // Apply current date filter
             let dateFilter = document.getElementById('staffTxDateFilter').value;
+            let methodFilter = document.getElementById('staffTxMethodFilter').value;
             let filteredTx = [...txHistory];
             if(dateFilter) {
                 filteredTx = filteredTx.filter(t => t.date.startsWith(dateFilter));
+            }
+            if(methodFilter && methodFilter !== 'ALL') {
+                filteredTx = filteredTx.filter(t => t.method === methodFilter);
             }
             
             filteredTx.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(tx => { 
