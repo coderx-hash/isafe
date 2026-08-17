@@ -139,130 +139,19 @@
             box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15); 
         }
         
-        .product-list { 
-            max-height: 450px; 
-            overflow-y: auto; 
+        /* CART ITEM STYLE */
+        .cart-item {
+            background: var(--surface); 
             border: 1px solid var(--gray-300); 
             border-radius: 8px; 
-            background: var(--surface); 
-        }
-        
-        .list-header { 
-            background: var(--table-header); 
-            padding: 10px 16px; 
-            font-size: 12px; 
-            font-weight: 800; 
-            color: var(--primary); 
-            letter-spacing: 0.1em; 
-            text-transform: uppercase; 
-            border-bottom: 1px solid var(--gray-300); 
-            border-top: 1px solid var(--gray-300); 
-            position: sticky; 
-            top: 0; 
-            z-index: 1; 
-        }
-        
-        .list-header:first-child { 
-            border-top: none; 
-        }
-        
-        .product-item { 
-            display: flex; 
-            flex-direction: column; 
             padding: 16px; 
-            border-bottom: 1px solid var(--gray-100); 
-            transition: background 0.2s; 
-            margin: 0; 
-            cursor: pointer; 
+            position: relative; 
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
         }
-        
-        .product-item:last-child { 
-            border-bottom: none; 
-        }
-        
-        .product-item:hover { 
-            background: var(--table-hover); 
-        }
-        
-        .item-left { 
-            display: flex; 
-            align-items: center; 
-            width: 100%; 
-            justify-content: space-between;
-        }
-        
-        .item-left input[type="checkbox"] { 
-            width: 22px; 
-            height: 22px; 
-            margin-right: 14px; 
-            cursor: pointer; 
-            accent-color: var(--primary); 
-        }
-        
-        .product-info { 
-            display: flex; 
-            flex-direction: column; 
-            flex: 1; 
-        }
-        
-        .product-name { 
-            font-weight: 800; 
-            color: var(--dark); 
-            font-size: 15px; 
-        }
-        
-        .product-meta { 
-            font-size: 12px; 
-            color: var(--gray-600); 
-            font-weight: 600; 
-            margin-top: 4px;
-        }
-        
-        .item-inputs { 
-            background: var(--gray-100); 
-            padding: 16px; 
-            border-radius: 12px; 
-            border: 2px solid var(--primary); 
-            margin-top: 12px; 
-            width: calc(100% - 36px); 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-            margin-left: 36px; 
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05); 
-        }
-        
-        .item-inputs label { 
-            color: var(--primary); 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            letter-spacing: 0.05em; 
-            font-size: 11px; 
-        }
-        
-        .inline-qty-input { 
-            width: 100px !important; 
-            padding: 12px !important; 
-            text-align: center; 
-            font-weight: 800 !important; 
-            font-size: 16px !important; 
-            border-color: var(--primary) !important; 
-            color: var(--primary) !important;
-        }
-        
-        .inline-serial-input { 
-            flex: 1 !important; 
-            padding: 12px !important; 
-            font-weight: 800 !important; 
-            font-size: 14px !important; 
-            border-color: var(--primary) !important;
-        }
-        
-        .inline-qty-input:disabled, .inline-serial-input:disabled { 
-            background: var(--gray-100); 
-            opacity: 0.5; 
-            border: 1px dashed var(--gray-300) !important; 
-            color: var(--gray-600) !important;
+        .cart-item:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
         
         .opacity-50 { 
@@ -455,7 +344,6 @@
             .nav-tabs { justify-content: flex-start; padding: 8px; border-radius: 8px; }
             .nav-btn { flex: 0 0 auto; padding: 10px 16px; font-size: 13px; }
             .card { padding: 16px; }
-            .item-inputs { margin-left: 0; width: 100%; }
             .chart-container { height: 280px; padding: 10px; }
         }
 
@@ -743,10 +631,13 @@
                     
                     <div class="form-group" style="margin-top: 24px;">
                         <label style="font-size: 15px; color: var(--primary);">Select Product(s) / Service(s):</label>
-                        <p style="color: var(--gray-600); font-size: 12px; font-weight: 600; margin-top: -5px; margin-bottom: 12px;">Check the box to expand and specify Quantity or Serial Number.</p>
-                        
-                        <div class="product-list" id="transProductList">
-                            <!-- Populated Automatically via renderUI -->
+                        <p style="color: var(--gray-600); font-size: 12px; font-weight: 600; margin-top: -5px; margin-bottom: 12px;">Choose an item from the dropdown and click Add.</p>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <select id="itemSelectDropdown" style="flex: 1; padding: 14px; border-radius: 8px; border: 2px solid var(--primary); font-weight: 600;"></select>
+                            <button class="btn btn-primary" style="width: auto; padding: 14px 24px;" onclick="addSelectedItemToCart()">➕ Add</button>
+                        </div>
+                        <div id="selectedItemsCart" style="margin-top: 16px; display: flex; flex-direction: column; gap: 12px;">
+                            <!-- Cart items will appear here -->
                         </div>
                     </div>
                     
@@ -1421,50 +1312,6 @@
             }
         }
 
-        window.toggleInputs = function(checkbox, type, id) {
-            let wrapper = checkbox.closest('.product-item-wrapper');
-            let body = wrapper.querySelector('.item-body');
-            
-            if(checkbox.checked) {
-                body.classList.remove('hidden');
-            } else {
-                body.classList.add('hidden');
-                
-                if (type === 'prod_vial') {
-                    document.getElementById(`ml_vial_${id}`).value = 1;
-                    
-                    let selObj = document.getElementById(`select_serial_vial_${id}`);
-                    if(selObj && selObj.options.length > 0) {
-                        selObj.selectedIndex = 0;
-                    }
-                    
-                    let newSerObj = document.getElementById(`new_serial_container_${id}`);
-                    if(newSerObj) { 
-                        if(selObj && selObj.value === 'NEW') {
-                            newSerObj.style.display = 'block'; 
-                        } else if (!selObj) {
-                            newSerObj.style.display = 'block'; 
-                        } else {
-                            newSerObj.style.display = 'none'; 
-                        }
-                    }
-                } else {
-                    document.getElementById(`qty_${type.split('_')[1]}_${id}`).value = 1;
-                }
-            }
-        }
-
-        window.handleSerialSelect = function(id) {
-            let sel = document.getElementById(`select_serial_vial_${id}`).value;
-            let container = document.getElementById(`new_serial_container_${id}`);
-            
-            if(sel === 'NEW') {
-                container.style.display = 'block'; 
-            } else {
-                container.style.display = 'none';
-            }
-        }
-
         window.manuallyOpenVial = function() {
             let pId = parseInt(document.getElementById('manualOpenVialSelect').value);
             let serial = document.getElementById('manualOpenVialSerial').value.trim().toUpperCase();
@@ -1492,107 +1339,115 @@
             document.getElementById('manualOpenVialSerial').value = '';
         }
 
-        function renderUI() {
-            let pl = document.getElementById('transProductList'); 
-            pl.innerHTML = '';
-            
-            let hasWhole = inventory.some(i => i.type !== 'vial');
-            let hasVials = inventory.some(i => i.type === 'vial');
-            
-            if(hasVials) {
-                pl.innerHTML += `<div class="list-header">🧪 Vials (Fractional Use)</div>`;
-                inventory.filter(i => i.type === 'vial').forEach(i => {
-                    let activeForThis = activeVials.filter(v => v.productId === i.id);
-                    let disabled = (i.stock <= 0 && activeForThis.length === 0) ? 'disabled' : '';
-                    let opacityClass = disabled ? 'opacity-50' : '';
-                    let serialOptions = ''; 
-                    let defaultIsNew = false;
-                    
-                    if (activeForThis.length > 0) {
-                        activeForThis.forEach(v => { 
-                            let rem = v.maxML - v.usedML; 
-                            serialOptions += `<option value="${v.serial}">Use SN-${v.serial} (${rem.toFixed(1)} ML left)</option>`; 
-                        });
-                        if (i.stock > 0) {
-                            serialOptions += `<option value="NEW">+ Open New Vial</option>`;
-                        }
-                    } else {
-                        if (i.stock > 0) { 
-                            serialOptions = `<option value="NEW">+ Open New Vial</option>`; 
-                            defaultIsNew = true; 
-                        }
+        window.addSelectedItemToCart = function() {
+            let sel = document.getElementById('itemSelectDropdown');
+            let val = sel.value;
+            if(!val) return alert('Please select an item first.');
+
+            let parts = val.split('_');
+            let type = parts[0];
+            let id = parseInt(parts[1]);
+            let cart = document.getElementById('selectedItemsCart');
+
+            if(type === 'vial') {
+                let i = inventory.find(x => x.id === id);
+                let activeForThis = activeVials.filter(v => v.productId === i.id);
+                let serialOptions = '';
+                let defaultIsNew = false;
+                
+                if (activeForThis.length > 0) {
+                    activeForThis.forEach(v => { 
+                        let rem = v.maxML - v.usedML; 
+                        serialOptions += `<option value="${v.serial}">Use SN-${v.serial} (${rem.toFixed(1)} ML left)</option>`; 
+                    });
+                    if (i.stock > 0) serialOptions += `<option value="NEW">+ Open New Vial</option>`;
+                } else {
+                    if (i.stock > 0) { 
+                        serialOptions = `<option value="NEW">+ Open New Vial</option>`; 
+                        defaultIsNew = true; 
                     }
+                }
 
-                    pl.innerHTML += `
-                        <div class="product-item-wrapper ${opacityClass}">
-                            <label class="product-item-header">
-                                <input type="checkbox" name="selectedItems" value="prod_vial_${i.id}" ${disabled} onchange="window.toggleInputs(this, 'prod_vial', ${i.id})">
-                                <div class="product-info">
-                                    <span class="product-name">${i.name}</span>
-                                    <span class="product-meta" style="color:var(--primary);">Capacity: ${i.mlPerVial} ML per Vial</span>
-                                    <span class="product-meta">₱${i.price.toFixed(2)}/ML | Main Stock: ${i.stock} vials</span>
-                                </div>
-                            </label>
-                            <div class="item-body hidden" id="inputs_vial_${i.id}">
-                                <div class="responsive-input-grid">
-                                    <div class="form-group" style="margin:0;">
-                                        <label>ML Used:</label>
-                                        <input type="number" id="ml_vial_${i.id}" class="spacious-input" value="1" min="0.1" step="0.1">
-                                    </div>
-                                    <div class="form-group" style="margin:0;">
-                                        <label>Select Serial:</label>
-                                        <select id="select_serial_vial_${i.id}" class="spacious-input" onchange="window.handleSerialSelect(${i.id})">
-                                            ${serialOptions}
-                                        </select>
-                                    </div>
-                                    <div class="form-group" id="new_serial_container_${i.id}" style="display:${defaultIsNew ? 'block' : 'none'}; margin:0;">
-                                        <label style="color:var(--primary);">Type New Serial:</label>
-                                        <input type="text" id="new_serial_vial_${i.id}" class="spacious-input" placeholder="e.g. SN-10293">
-                                    </div>
-                                </div>
+                cart.innerHTML += `
+                    <div class="cart-item" data-type="vial" data-id="${i.id}" style="border-left: 4px solid var(--primary);">
+                        <div style="font-weight: 800; color: var(--dark); margin-bottom: 12px; padding-right: 20px;">${i.name} <span style="font-size: 12px; color: var(--gray-600); font-weight: 600;">(Vial)</span></div>
+                        <div class="grid-2" style="gap: 12px;">
+                            <div class="form-group" style="margin: 0;">
+                                <label>ML Used:</label>
+                                <input type="number" class="vial-ml" value="1" min="0.1" step="0.1" style="padding: 10px;">
                             </div>
-                        </div>`;
-                });
+                            <div class="form-group" style="margin: 0;">
+                                <label>Select Serial:</label>
+                                <select class="vial-serial-sel" onchange="this.nextElementSibling.style.display = (this.value === 'NEW') ? 'block' : 'none'" style="padding: 10px;">
+                                    ${serialOptions}
+                                </select>
+                                <input type="text" class="vial-new-serial" placeholder="Type New SN (e.g. SN-123)" style="padding: 10px; margin-top: 8px; display: ${defaultIsNew ? 'block' : 'none'};">
+                            </div>
+                        </div>
+                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 12px; right: 12px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px; font-weight: bold;">×</button>
+                    </div>`;
+            } else if (type === 'whole') {
+                let i = inventory.find(x => x.id === id);
+                cart.innerHTML += `
+                    <div class="cart-item" data-type="whole" data-id="${i.id}" style="border-left: 4px solid var(--secondary);">
+                        <div style="font-weight: 800; color: var(--dark); margin-bottom: 12px; padding-right: 20px;">${i.name} <span style="font-size: 12px; color: var(--gray-600); font-weight: 600;">(₱${i.price})</span></div>
+                        <div class="form-group" style="margin: 0; width: 150px;">
+                            <label>Quantity:</label>
+                            <input type="number" class="item-qty" value="1" min="1" max="${i.stock}" style="padding: 10px;">
+                        </div>
+                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 12px; right: 12px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px; font-weight: bold;">×</button>
+                    </div>`;
+            } else if (type === 'serv') {
+                let s = services.find(x => x.id === id);
+                cart.innerHTML += `
+                    <div class="cart-item" data-type="serv" data-id="${s.id}" style="border-left: 4px solid var(--warning);">
+                        <div style="font-weight: 800; color: var(--dark); margin-bottom: 12px; padding-right: 20px;">${s.name} <span style="font-size: 12px; color: var(--gray-600); font-weight: 600;">(Fee: ₱${s.price})</span></div>
+                        <div class="form-group" style="margin: 0; width: 150px;">
+                            <label>Sessions/Qty:</label>
+                            <input type="number" class="item-qty" value="1" min="1" style="padding: 10px;">
+                        </div>
+                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 12px; right: 12px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px; font-weight: bold;">×</button>
+                    </div>`;
             }
+            sel.selectedIndex = 0;
+        }
 
-            if(hasWhole) {
-                pl.innerHTML += `<div class="list-header">📦 Whole Products</div>`;
-                inventory.filter(i => i.type !== 'vial').forEach(i => {
-                    let disabled = (i.stock <= 0) ? 'disabled' : ''; 
-                    let opacityClass = disabled ? 'opacity-50' : '';
-                    pl.innerHTML += `
-                        <div class="product-item-wrapper ${opacityClass}">
-                            <label class="product-item-header">
-                                <input type="checkbox" name="selectedItems" value="prod_whole_${i.id}" ${disabled} onchange="window.toggleInputs(this, 'prod_whole', ${i.id})">
-                                <div class="product-info"><span class="product-name">${i.name}</span><span class="product-meta">₱${i.price.toFixed(2)} | Stock: ${i.stock}</span></div>
-                            </label>
-                            <div class="item-body hidden" id="inputs_whole_${i.id}">
-                                <div class="form-group" style="margin:0;">
-                                    <label>Quantity:</label>
-                                    <input type="number" id="qty_whole_${i.id}" class="spacious-input" value="1" min="1">
-                                </div>
-                            </div>
-                        </div>`;
-                });
-            }
-            
-            if(services.length > 0) {
-                pl.innerHTML += `<div class="list-header">🩺 Services</div>`;
-                services.forEach(s => {
-                    pl.innerHTML += `
-                        <div class="product-item-wrapper">
-                            <label class="product-item-header">
-                                <input type="checkbox" name="selectedItems" value="serv_${s.id}" onchange="window.toggleInputs(this, 'serv', ${s.id})">
-                                <div class="product-info"><span class="product-name">${s.name}</span><span class="product-meta">Fee: ₱${s.price.toFixed(2)}</span></div>
-                            </label>
-                            <div class="item-body hidden" id="inputs_serv_${s.id}">
-                                <div class="form-group" style="margin:0;">
-                                    <label>Quantity / Session:</label>
-                                    <input type="number" id="qty_serv_${s.id}" class="spacious-input" value="1" min="1">
-                                </div>
-                            </div>
-                        </div>`;
-                });
+        function renderUI() {
+            // Update Transaction Dropdown
+            let sel = document.getElementById('itemSelectDropdown');
+            if(sel) {
+                sel.innerHTML = '<option value="" disabled selected>-- Select Item to Add --</option>';
+
+                let hasVials = inventory.some(i => i.type === 'vial');
+                if(hasVials) {
+                    let og = document.createElement('optgroup');
+                    og.label = '🧪 Vials (Fractional Use)';
+                    inventory.filter(i => i.type === 'vial').forEach(i => {
+                        let disabled = (i.stock <= 0 && activeVials.filter(v => v.productId === i.id).length === 0) ? 'disabled' : '';
+                        og.innerHTML += `<option value="vial_${i.id}" ${disabled}>${i.name} (Capacity: ${i.mlPerVial}ML | ₱${i.price}/ML)</option>`;
+                    });
+                    sel.appendChild(og);
+                }
+
+                let hasWhole = inventory.some(i => i.type !== 'vial');
+                if(hasWhole) {
+                    let og = document.createElement('optgroup');
+                    og.label = '📦 Whole Products';
+                    inventory.filter(i => i.type !== 'vial').forEach(i => {
+                        let disabled = (i.stock <= 0) ? 'disabled' : '';
+                        og.innerHTML += `<option value="whole_${i.id}" ${disabled}>${i.name} (Stock: ${i.stock} | ₱${i.price})</option>`;
+                    });
+                    sel.appendChild(og);
+                }
+
+                if(services.length > 0) {
+                    let og = document.createElement('optgroup');
+                    og.label = '🩺 Services';
+                    services.forEach(s => {
+                        og.innerHTML += `<option value="serv_${s.id}">${s.name} (Fee: ₱${s.price})</option>`;
+                    });
+                    sel.appendChild(og);
+                }
             }
 
             // Populate Manual Open Vial Dropdown
@@ -1670,10 +1525,9 @@
         }
 
         window.processTransaction = function() {
-            let checkboxes = document.querySelectorAll('input[name="selectedItems"]:checked');
-            
-            if(checkboxes.length === 0) {
-                return alert('Select at least one product or service.');
+            let cartItems = document.querySelectorAll('.cart-item');
+            if(cartItems.length === 0) {
+                return alert('Add at least one product or service to the cart.');
             }
 
             let rawDate = document.getElementById('transDate').value;
@@ -1684,69 +1538,49 @@
             let txOperations = [];
 
             // VALIDATION PHASE
-            for(let cb of checkboxes) {
-                let parts = cb.value.split('_'); 
-                
-                if (parts[0] === 'prod') {
-                    let typeStr = parts[1]; 
-                    let id = parseInt(parts[2]); 
+            for(let itemEl of cartItems) {
+                let typeStr = itemEl.getAttribute('data-type');
+                let id = parseInt(itemEl.getAttribute('data-id'));
+
+                if (typeStr === 'vial') {
                     let p = inventory.find(i => i.id === id);
+                    let mlUsed = parseFloat(itemEl.querySelector('.vial-ml').value);
+                    let serialSel = itemEl.querySelector('.vial-serial-sel').value;
+                    let serial = '';
                     
-                    if (typeStr === 'vial') {
-                        let mlUsed = parseFloat(document.getElementById(`ml_vial_${id}`).value);
-                        let serialSel = document.getElementById(`select_serial_vial_${id}`).value;
-                        let serial = '';
+                    if (serialSel === 'NEW') {
+                        serial = itemEl.querySelector('.vial-new-serial').value.trim().toUpperCase();
+                        if(!serial) return alert(`Please enter the New Serial Number for ${p.name}`);
                         
-                        if (serialSel === 'NEW') {
-                            serial = document.getElementById(`new_serial_vial_${id}`).value.trim().toUpperCase();
-                            if(!serial) {
-                                return alert(`Please enter the New Serial Number for ${p.name}`);
-                            }
-                            
-                            let existingVial = activeVials.find(v => v.serial === serial && v.productId === id);
-                            if(existingVial) {
-                                return alert(`Serial number ${serial} is already actively opened! Select it from dropdown.`);
-                            }
-                            
-                            if(p.stock <= 0) {
-                                return alert(`No main stock left to open a new vial for ${p.name}.`);
-                            }
-                            if (mlUsed > p.mlPerVial) {
-                                return alert(`Input ML (${mlUsed}) exceeds the capacity of a new vial (${p.mlPerVial} ML).`);
-                            }
-                        } else {
-                            serial = serialSel;
-                            let v = activeVials.find(v => v.serial === serial && v.productId === id);
-                            if (v) { 
-                                let remaining = v.maxML - v.usedML; 
-                                if (mlUsed > remaining) {
-                                    return alert(`Serial ${serial} only has ${remaining.toFixed(1)} ML left.`); 
-                                }
-                            }
-                        }
+                        let existingVial = activeVials.find(v => v.serial === serial && v.productId === id);
+                        if(existingVial) return alert(`Serial number ${serial} is already actively opened! Select it from dropdown.`);
                         
-                        if(isNaN(mlUsed) || mlUsed <= 0) {
-                            return alert(`Invalid ML for ${p.name}`);
-                        }
+                        if(p.stock <= 0) return alert(`No main stock left to open a new vial for ${p.name}.`);
+                        if (mlUsed > p.mlPerVial) return alert(`Input ML (${mlUsed}) exceeds the capacity of a new vial (${p.mlPerVial} ML).`);
                         
-                        txOperations.push({ type: 'vial', ref: p, mlUsed: mlUsed, serial: serial });
-                        
-                    } else if (typeStr === 'whole') {
-                        let qty = parseInt(document.getElementById(`qty_whole_${id}`).value);
-                        if(isNaN(qty) || qty <= 0) {
-                            return alert(`Invalid qty for ${p.name}`);
+                    } else {
+                        serial = serialSel;
+                        let v = activeVials.find(v => v.serial === serial && v.productId === id);
+                        if (v) { 
+                            let remaining = v.maxML - v.usedML; 
+                            if (mlUsed > remaining) return alert(`Serial ${serial} only has ${remaining.toFixed(1)} ML left.`); 
                         }
-                        if(p.stock < qty) {
-                            return alert(`Not enough stock for ${p.name}. Available: ${p.stock}`);
-                        }
-                        txOperations.push({ type: 'whole', ref: p, qty: qty });
                     }
-                } else if (parts[0] === 'serv') {
-                    let s = services.find(i => i.id === parseInt(parts[1])); 
-                    let qty = parseInt(document.getElementById(`qty_serv_${s.id}`).value);
-                    if(isNaN(qty) || qty <= 0) {
-                        return alert(`Invalid qty for ${s.name}`);
-                    }
+                    
+                    if(isNaN(mlUsed) || mlUsed <= 0) return alert(`Invalid ML for ${p.name}`);
+                    txOperations.push({ type: 'vial', ref: p, mlUsed: mlUsed, serial: serial });
+                    
+                } else if (typeStr === 'whole') {
+                    let p = inventory.find(i => i.id === id);
+                    let qty = parseInt(itemEl.querySelector('.item-qty').value);
+                    if(isNaN(qty) || qty <= 0) return alert(`Invalid qty for ${p.name}`);
+                    if(p.stock < qty) return alert(`Not enough stock for ${p.name}. Available: ${p.stock}`);
+                    txOperations.push({ type: 'whole', ref: p, qty: qty });
+                    
+                } else if (typeStr === 'serv') {
+                    let s = services.find(i => i.id === id); 
+                    let qty = parseInt(itemEl.querySelector('.item-qty').value);
+                    if(isNaN(qty) || qty <= 0) return alert(`Invalid qty for ${s.name}`);
                     txOperations.push({ type: 'serv', ref: s, qty: qty });
                 }
             }
@@ -1840,10 +1674,8 @@
 
             pushLiveClinicData(); 
             
-            checkboxes.forEach(cb => { 
-                cb.checked = false; 
-                window.toggleInputs(cb, cb.value.replace(`_${cb.value.split('_')[2]}`, ''), cb.value.split('_')[2]); 
-            }); 
+            document.getElementById('selectedItemsCart').innerHTML = '';
+            document.getElementById('itemSelectDropdown').selectedIndex = 0;
             
             document.getElementById('rcptDate').innerText = new Date(finalDate).toLocaleString('en-US', { 
                 weekday:'short', year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' 
@@ -2198,7 +2030,6 @@
                 let finalStock = s;
                 let newId = Date.now();
                 
-                // Process the auto-open if an initial serial was provided
                 if (initialSerial) {
                     if (s <= 0) return alert('Cannot open a vial with 0 initial stock.');
                     finalStock -= 1;
