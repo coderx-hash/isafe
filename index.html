@@ -204,13 +204,17 @@
         }
         .theme-toggle:hover { background: var(--gray-300); }
 
+        /* UPGRADED TABLE WRAPPER FOR SCROLLING */
         .table-wrapper { 
             width: 100%; 
+            max-height: 450px; 
+            overflow-y: auto; 
             overflow-x: auto; 
             -webkit-overflow-scrolling: touch; 
             border-radius: 8px; 
             border: 1px solid var(--gray-300); 
             background: var(--surface); 
+            position: relative;
         }
         
         table { 
@@ -234,6 +238,9 @@
             text-transform: uppercase; 
             font-size: 11px; 
             letter-spacing: 0.05em; 
+            position: sticky; 
+            top: 0;
+            z-index: 10;
         }
         
         tbody tr:hover { background-color: var(--table-hover); }
@@ -665,6 +672,33 @@
                     </div>
                 </div>
             </div>
+
+            <!-- NEW: TRANSACTION LIST IN TRANSACT TAB FOR BOTH STAFF AND ADMIN WITH FILTER & TOTAL -->
+            <div class="card" style="margin-top: 24px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                    <div>
+                        <h3 style="margin:0;">📝 Transactions Masterlist</h3>
+                        <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-top: 4px;">All transactions visible to staff and admin.</p>
+                    </div>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="date" id="staffTxDateFilter" style="padding: 10px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
+                        <button class="btn btn-warning btn-sm" id="btnExportStaff" style="padding: 10px 20px; font-size: 14px;" onclick="prepareStaffExport()">⬇️ Export to Excel</button>
+                    </div>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table id="staffTxTable">
+                        <thead><tr><th>Date</th><th>Category</th><th>Item</th><th>Qty/ML</th><th>Serial No.</th><th>Method</th><th>Revenue</th><th>Staff</th></tr></thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr style="background-color: var(--table-header);">
+                                <td colspan="6" class="text-right" style="font-weight: 900; font-size: 14px; color: var(--dark);">TOTAL FILTERED REVENUE:</td>
+                                <td colspan="2" id="staffTxTotal" style="color: var(--primary); font-size: 18px; font-weight: 900;">₱0.00</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
         </div>
 
         <!-- TAB: EXPENSES -->
@@ -684,7 +718,7 @@
             
             <div class="card">
                 <h3 style="margin-bottom: 20px;">🧾 Expense History</h3>
-                <div class="table-wrapper" style="max-height: 450px;">
+                <div class="table-wrapper">
                     <table id="expenseTable">
                         <thead><tr><th>Date</th><th>Category</th><th>Note</th><th>By</th><th class="text-right">Amount</th><th class="text-center">Action</th></tr></thead>
                         <tbody></tbody>
@@ -724,7 +758,6 @@
                     <div class="form-group" id="stockField"><label>Initial Stock (Vials / Pcs)</label><input type="number" id="newProdStock"></div>
                     <div class="form-group hidden" id="mlField"><label>Total Capacity (ML per Vial)</label><input type="number" id="newProdML"></div>
                     
-                    <!-- NEW: INITIAL SERIAL NUMBER (Only active for Vials) -->
                     <div class="form-group hidden" id="serialField">
                         <label>Initial Serial No. (Optional)</label>
                         <input type="text" id="newProdSerial" placeholder="Auto-opens 1 vial immediately">
@@ -778,9 +811,14 @@
 
         <!-- TAB: HISTORY -->
         <div id="tab-history" class="tab-pane admin-only hidden">
+            <div class="header-bar" style="margin-bottom: 24px; padding: 16px; border-radius: 14px;">
+                <h3 style="margin: 0;">📅 Filter by Date</h3>
+                <input type="date" id="historyDateFilter" style="max-width:250px; padding: 10px;" onchange="window.renderHistory()">
+            </div>
+            
             <div class="card">
                 <h3 style="margin-bottom: 24px;">📝 Transaction Logs</h3>
-                <div class="table-wrapper" style="max-height: 600px;">
+                <div class="table-wrapper">
                     <table id="historyTable">
                         <thead><tr><th>Date</th><th>Type</th><th>Item</th><th>Qty/ML</th><th>Serial No.</th><th>Method</th><th>Revenue</th><th>Staff</th><th class="text-center">Action</th></tr></thead>
                         <tbody></tbody>
@@ -806,7 +844,7 @@
                 <div class="card">
                     <h3 style="margin-bottom: 10px;">👥 User Accounts Database</h3>
                     <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-bottom: 24px;">View details, passwords, and manage access.</p>
-                    <div class="table-wrapper" style="max-height: 500px;">
+                    <div class="table-wrapper">
                         <table id="accountsTable">
                             <thead><tr><th>User Name</th><th>Email / Pass</th><th>Status/Role</th><th class="text-center">Actions</th></tr></thead>
                             <tbody><tr><td colspan="4" class="text-center">Loading accounts...</td></tr></tbody>
@@ -1412,6 +1450,41 @@
             sel.selectedIndex = 0;
         }
 
+        window.renderStaffTxTable = function() {
+            let stfTb = document.querySelector('#staffTxTable tbody');
+            let totalEl = document.getElementById('staffTxTotal');
+            let dateFilter = document.getElementById('staffTxDateFilter').value;
+            
+            stfTb.innerHTML = '';
+            let totalRev = 0;
+            
+            let filteredTx = [...txHistory];
+            if(dateFilter) {
+                filteredTx = filteredTx.filter(t => t.date.startsWith(dateFilter));
+            }
+            
+            filteredTx.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(t => {
+                let badgeStr = t.isService ? 'Service' : (t.isVial ? 'Vial' : 'Product');
+                let displayQty = t.isVial ? `${t.qty} ML` : `${t.qty} Pcs`;
+                totalRev += t.amount;
+                
+                stfTb.innerHTML += `<tr>
+                    <td>${t.date.split('T')[0]}</td>
+                    <td><span class="badge" style="background:#E0E7FF;color:#4338CA;">${t.category}</span></td>
+                    <td><strong>${t.item}</strong> <span style="font-size:11px; color:gray;">(${badgeStr})</span></td>
+                    <td>${displayQty}</td>
+                    <td>${t.serial || 'N/A'}</td>
+                    <td>${t.method.replace('_', ' ')}</td>
+                    <td style="font-weight:800; color:var(--primary);">₱${t.amount.toFixed(2)}</td>
+                    <td>${t.processedBy}</td>
+                </tr>`;
+            });
+            
+            if(totalEl) {
+                totalEl.innerText = '₱' + totalRev.toFixed(2);
+            }
+        }
+
         function renderUI() {
             // Update Transaction Dropdown
             let sel = document.getElementById('itemSelectDropdown');
@@ -1517,6 +1590,9 @@
                 tot+=finance[k]; 
             }
             document.getElementById('fin-TOTAL').innerText = '₱'+tot.toFixed(2);
+
+            // Render the transaction masterlist in Transact Tab
+            window.renderStaffTxTable();
 
             if(currentUser.role === 'admin') { 
                 window.calculateReports(); 
@@ -1733,9 +1809,15 @@
 
         window.renderHistory = function() {
             let txb = document.querySelector('#historyTable tbody'); 
+            let dateFilter = document.getElementById('historyDateFilter').value;
             txb.innerHTML = '';
             
-            [...txHistory].sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(t => {
+            let filteredTx = [...txHistory];
+            if(dateFilter) {
+                filteredTx = filteredTx.filter(t => t.date.startsWith(dateFilter));
+            }
+            
+            filteredTx.sort((a, b) => new Date(b.date) - new Date(a.date)).forEach(t => {
                 let badgeStr = t.isService ? 'Service' : (t.isVial ? 'Vial' : 'Product');
                 let displayQty = t.isVial ? `${t.qty} ML` : `${t.qty} Pcs`;
                 
@@ -1748,11 +1830,12 @@
                     <td>${t.item}</td>
                     <td>${displayQty}</td>
                     <td>${t.serial || 'N/A'}</td>
-                    <td>${t.method}</td>
+                    <td>${t.method.replace('_', ' ')}</td>
                     <td style="font-weight:800; color:var(--primary);">₱${t.amount.toFixed(2)}</td>
                     <td>${t.processedBy}</td>
-                    <td class="text-center">
-                        <button class="btn btn-sm btn-danger" onclick="window.delTx(${t.id})">Revert</button>
+                    <td class="text-center" style="min-width:160px;">
+                        <button class="btn btn-sm btn-info" onclick="window.delTx(${t.id})" style="margin-right:4px;" title="Revert back to stock & till">🔙 Revert</button>
+                        <button class="btn btn-sm btn-danger" onclick="window.removeTx(${t.id})" title="Delete log ONLY (Stock stays deducted)">🗑️ Delete</button>
                     </td>
                 </tr>`;
             });
@@ -2104,8 +2187,9 @@
             } 
         }
         
+        // REVERT - Binabalik ang pera at ang binawas na stock
         window.delTx = function(id) { 
-            if(confirm('Revert? Revenue will be deducted and ML/Stock will be restored.')) { 
+            if(confirm('Revert transaction? Revenue will be deducted and ML/Stock will be restored.')) { 
                 let x = txHistory.find(t => t.id === id); 
                 finance[x.method] -= x.amount; 
                 
@@ -2133,6 +2217,14 @@
             } 
         }
 
+        // DELETE - Binubura lang sa logs, considered SOLD, walang binabalik sa stock/till
+        window.removeTx = function(id) {
+            if(confirm('Delete this log permanently? (Item is considered SOLD, stock will NOT be returned)')) {
+                txHistory = txHistory.filter(t => t.id !== id);
+                pushLiveClinicData();
+            }
+        }
+
         window.delExp = function(id) { 
             if(confirm('Delete expense?')) { 
                 expHistory = expHistory.filter(e => e.id !== id); 
@@ -2140,8 +2232,12 @@
             } 
         }
 
-        // CSV Export
+        // ==========================================
+        // 9. CSV EXPORTS (ADMIN & STAFF)
+        // ==========================================
         let currentBlobUrl = null;
+        
+        // --- Admin Full Export ---
         window.prepareExport = function() {
             let btn = document.getElementById('exportBtn'); 
             btn.disabled = true; 
@@ -2228,6 +2324,66 @@
             btn.classList.replace('btn-success', 'btn-warning'); 
             btn.onclick = prepareExport;
         }
+
+        // --- Staff Transaction Export ---
+        let staffBlobUrl = null;
+        window.prepareStaffExport = function() {
+            let btn = document.getElementById('btnExportStaff'); 
+            btn.disabled = true; 
+            let counter = 3; 
+            btn.innerText = `⏳ Preparing... ${counter}`;
+            
+            let interval = setInterval(() => { 
+                counter--; 
+                if (counter > 0) {
+                    btn.innerText = `⏳ Preparing... ${counter}`; 
+                } else { 
+                    clearInterval(interval); 
+                    generateStaffBlob(); 
+                    btn.innerText = '✅ Click Here to Download'; 
+                    btn.classList.replace('btn-warning', 'btn-success'); 
+                    btn.disabled = false; 
+                    btn.onclick = triggerStaffDownload; 
+                } 
+            }, 1000);
+        }
+
+        function generateStaffBlob() {
+            let csv = "--- CLINIC TRANSACTION MASTERLIST ---\n\n"; 
+            csv += "Date,Category,Type,Item,Quantity/ML,Serial,Payment Method,Revenue,Processed By\n";
+            
+            // Apply current date filter
+            let dateFilter = document.getElementById('staffTxDateFilter').value;
+            let filteredTx = [...txHistory];
+            if(dateFilter) {
+                filteredTx = filteredTx.filter(t => t.date.startsWith(dateFilter));
+            }
+            
+            filteredTx.sort((a,b) => new Date(b.date) - new Date(a.date)).forEach(tx => { 
+                csv += `${tx.date.split('T')[0]},${tx.category || 'N/A'},${tx.isService ? 'Service':(tx.isVial?'Vial':'Whole')},${tx.item},${tx.qty},${tx.serial||'N/A'},${tx.method.replace('_', ' ')},${tx.amount},${tx.processedBy}\n`; 
+            });
+
+            let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            if(staffBlobUrl) {
+                URL.revokeObjectURL(staffBlobUrl); 
+            }
+            staffBlobUrl = URL.createObjectURL(blob);
+        }
+
+        window.triggerStaffDownload = function() {
+            let link = document.createElement("a"); 
+            link.href = staffBlobUrl; 
+            link.download = "Transactions_List.csv"; 
+            document.body.appendChild(link); 
+            link.click(); 
+            document.body.removeChild(link);
+            
+            let btn = document.getElementById('btnExportStaff'); 
+            btn.innerText = '⬇️ Export to Excel'; 
+            btn.classList.replace('btn-success', 'btn-warning'); 
+            btn.onclick = prepareStaffExport;
+        }
+
     </script>
 </body>
 </html>
