@@ -98,21 +98,21 @@
         }
         
         .form-group { 
-            margin-bottom: 16px; 
+            margin-bottom: 20px; /* Enhanced Spacing */
             width: 100%; 
         }
         
         label { 
             display: block; 
-            font-size: 13px; 
+            font-size: 13.5px; 
             font-weight: 600; 
             color: var(--gray-900); 
-            margin-bottom: 6px; 
+            margin-bottom: 8px; 
         }
         
         input:not([type="checkbox"]), select { 
             width: 100%; 
-            padding: 12px 16px; 
+            padding: 14px 16px; /* Bigger padding for better readability & touch target */
             border: 1px solid var(--gray-300); 
             border-radius: 8px; 
             background-color: var(--gray-100); 
@@ -122,14 +122,15 @@
             transition: all 0.2s ease; 
             font-family: 'Inter', sans-serif; 
             appearance: none; 
+            line-height: 1.5;
         }
         
         select {
             background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236B7280%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
             background-repeat: no-repeat; 
-            background-position: right 12px top 50%; 
-            background-size: 12px auto; 
-            padding-right: 40px;
+            background-position: right 14px top 50%; 
+            background-size: 14px auto; 
+            padding-right: 44px;
         }
         
         input:focus:not([type="checkbox"]), select:focus { 
@@ -144,7 +145,7 @@
             background: var(--surface); 
             border: 1px solid var(--gray-300); 
             border-radius: 8px; 
-            padding: 16px; 
+            padding: 20px; 
             position: relative; 
             box-shadow: var(--shadow);
             transition: transform 0.2s;
@@ -160,7 +161,7 @@
         }
 
         .btn { 
-            padding: 12px 20px; 
+            padding: 14px 22px; /* Bigger buttons */
             border: none; 
             border-radius: 8px; 
             cursor: pointer; 
@@ -185,7 +186,7 @@
         .btn-warning { background-color: var(--warning); color: #fff; }
         .btn-info { background-color: var(--info); }
         .btn-dark { background-color: var(--dark); color: var(--surface); border: 1px solid var(--gray-300); }
-        .btn-sm { padding: 8px 12px; font-size: 12px; width: auto; }
+        .btn-sm { padding: 10px 14px; font-size: 13px; width: auto; }
         .btn-outline { background-color: transparent; border: 2px solid var(--gray-300); color: var(--gray-900); }
         .btn-outline:hover { background-color: var(--gray-100); }
         
@@ -193,7 +194,7 @@
             background: var(--gray-100); 
             border: 1px solid var(--gray-300); 
             border-radius: 20px; 
-            padding: 6px 12px; 
+            padding: 8px 14px; 
             cursor: pointer; 
             display: flex; 
             align-items: center; 
@@ -226,7 +227,7 @@
         
         th, td { 
             border-bottom: 1px solid var(--gray-100); 
-            padding: 16px; 
+            padding: 18px 16px; /* Spaced out table rows */
             text-align: left; 
             white-space: nowrap; 
         }
@@ -248,26 +249,28 @@
         .text-center { text-align: center; }
         
         .hidden { display: none !important; }
-        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
         
         .header-bar { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
             background: var(--surface); 
-            padding: 20px 24px; 
+            padding: 24px 28px; 
             border-radius: var(--radius); 
             margin-bottom: 24px; 
             box-shadow: var(--shadow); 
             border: 1px solid var(--gray-300); 
             transition: all 0.3s; 
+            flex-wrap: wrap;
+            gap: 16px;
         }
         
-        .header-bar h2 { margin: 0; font-size: 20px; }
-        .live-clock { font-size: 13px; font-weight: 600; color: var(--gray-600); margin-top: 4px; }
-        .badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+        .header-bar h2 { margin: 0; font-size: 22px; }
+        .live-clock { font-size: 14px; font-weight: 600; color: var(--gray-600); margin-top: 6px; }
+        .badge { padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
         .badge-role { background-color: #FEF3C7; color: #D97706; }
         .badge-user { background-color: #D1FAE5; color: #059669; }
 
@@ -275,7 +278,7 @@
             display: flex; 
             gap: 12px; 
             background: var(--surface); 
-            padding: 12px; 
+            padding: 16px; 
             border-radius: var(--radius); 
             margin-bottom: 24px; 
             overflow-x: auto; 
@@ -287,7 +290,7 @@
         
         .nav-btn { 
             flex: 1; 
-            padding: 12px 20px; 
+            padding: 14px 20px; 
             text-align: center; 
             background: transparent; 
             border: none; 
@@ -320,16 +323,16 @@
         }
         .stat-box:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
         .stat-box::before { content: ''; position: absolute; top: 0; left: 0; width: 6px; height: 100%; background: var(--primary); border-radius: 12px 0 0 12px; }
-        .stat-box h4 { margin: 0; color: var(--gray-600); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
-        .stat-box p.main-stat { margin: 12px 0 8px 0; font-size: 32px; font-weight: 800; color: var(--dark); letter-spacing: -0.02em; }
+        .stat-box h4 { margin: 0; color: var(--gray-600); font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
+        .stat-box p.main-stat { margin: 12px 0 8px 0; font-size: 34px; font-weight: 800; color: var(--dark); letter-spacing: -0.02em; }
         .stat-box .profit-text { font-size: 16px; font-weight: 700; margin: 12px 0 0 0; }
         .stat-box .expense-text { color: var(--danger); font-size: 15px; font-weight: 600; margin: 4px 0; }
 
-        .top-item-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--gray-100); }
+        .top-item-row { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--gray-100); }
         .top-item-row:last-child { border-bottom: none; }
-        .top-item-name { font-weight: 700; color: var(--dark); font-size: 14px; }
-        .top-item-qty { font-size: 12px; color: var(--gray-600); font-weight: 600; margin-top: 4px; }
-        .top-item-rev { font-weight: 800; color: var(--primary); font-size: 16px; }
+        .top-item-name { font-weight: 700; color: var(--dark); font-size: 15px; }
+        .top-item-qty { font-size: 13px; color: var(--gray-600); font-weight: 600; margin-top: 6px; }
+        .top-item-rev { font-weight: 800; color: var(--primary); font-size: 18px; }
 
         .chart-container { 
             position: relative; 
@@ -345,12 +348,12 @@
         
         @media (max-width: 768px) {
             .container { padding: 12px; }
-            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; gap: 16px; }
-            .header-bar { flex-direction: column; text-align: center; gap: 16px; padding: 16px; }
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; gap: 20px; }
+            .header-bar { flex-direction: column; text-align: center; gap: 16px; padding: 20px; }
             .header-bar > div { width: 100%; display: flex; flex-direction: column; align-items: center; }
-            .nav-tabs { justify-content: flex-start; padding: 8px; border-radius: 8px; }
-            .nav-btn { flex: 0 0 auto; padding: 10px 16px; font-size: 13px; }
-            .card { padding: 16px; }
+            .nav-tabs { justify-content: flex-start; padding: 12px; border-radius: 8px; }
+            .nav-btn { flex: 0 0 auto; padding: 12px 18px; font-size: 14px; }
+            .card { padding: 20px; }
             .chart-container { height: 280px; padding: 10px; }
         }
 
@@ -529,7 +532,7 @@
                 <span id="syncStatus" style="font-size: 13px; font-weight: 800; color: var(--secondary); margin-left: 10px;">🟢 Live Sync</span>
                 <span class="badge badge-role" id="currentUserRole" style="font-size:14px; padding: 8px 16px;">Admin</span>
                 <span class="badge badge-user" id="currentUserName" style="font-size:14px; padding: 8px 16px;">Name</span>
-                <button class="btn btn-danger btn-sm" style="margin: 0; padding: 8px 16px; font-size: 14px;" onclick="handleLogout()">Logout</button>
+                <button class="btn btn-danger btn-sm" style="margin: 0; padding: 10px 18px; font-size: 14px;" onclick="handleLogout()">Logout</button>
             </div>
         </div>
 
@@ -545,9 +548,9 @@
         <!-- TAB: DASHBOARD -->
         <div id="tab-dashboard" class="tab-pane active admin-only hidden">
             
-            <div class="header-bar" style="margin-bottom: 24px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); border: 1px solid var(--gray-300);">
+            <div class="header-bar" style="margin-bottom: 24px; padding: 24px; display: flex; justify-content: space-between; align-items: center; border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); border: 1px solid var(--gray-300); flex-wrap: wrap;">
                 <h3 style="margin: 0; color: var(--primary); font-size: 20px;">📅 Dashboard Filter</h3>
-                <div style="flex:1; max-width:300px; margin-left:20px;">
+                <div style="flex:1; max-width:300px; min-width: 250px;">
                     <input type="date" id="dashDateFilter" style="padding: 14px 18px; border: 2px solid var(--primary); border-radius: 10px; font-weight: 800; color: var(--primary); margin: 0; width: 100%; font-size:16px; background: var(--surface);" onchange="renderUI()">
                 </div>
             </div>
@@ -638,12 +641,12 @@
                     
                     <div class="form-group" style="margin-top: 24px;">
                         <label style="font-size: 15px; color: var(--primary);">Select Product(s) / Service(s):</label>
-                        <p style="color: var(--gray-600); font-size: 12px; font-weight: 600; margin-top: -5px; margin-bottom: 12px;">Choose an item from the dropdown and click Add.</p>
-                        <div style="display: flex; gap: 10px; align-items: center;">
-                            <select id="itemSelectDropdown" style="flex: 1; padding: 14px; border-radius: 8px; border: 2px solid var(--primary); font-weight: 600;"></select>
-                            <button class="btn btn-primary" style="width: auto; padding: 14px 24px;" onclick="addSelectedItemToCart()">➕ Add</button>
+                        <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-top: -5px; margin-bottom: 14px;">Choose an item from the dropdown and click Add.</p>
+                        <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                            <select id="itemSelectDropdown" style="flex: 1; min-width: 250px; padding: 16px; border-radius: 8px; border: 2px solid var(--primary); font-weight: 600;"></select>
+                            <button class="btn btn-primary" style="width: auto; padding: 16px 28px; flex-shrink: 0;" onclick="addSelectedItemToCart()">➕ Add</button>
                         </div>
-                        <div id="selectedItemsCart" style="margin-top: 16px; display: flex; flex-direction: column; gap: 12px;">
+                        <div id="selectedItemsCart" style="margin-top: 20px; display: flex; flex-direction: column; gap: 16px;">
                             <!-- Cart items will appear here -->
                         </div>
                     </div>
@@ -655,19 +658,19 @@
                     
                     <div class="form-group"><label>Payment Method:</label><select id="transMethod"><option value="CASH">CASH</option><option value="GCASH">GCASH</option><option value="MariBANK">MariBANK</option><option value="BANK_Transfer">BANK Transfer</option></select></div>
                     
-                    <button class="btn btn-success" style="padding: 18px; margin-top: 14px; font-size:16px;" onclick="processTransaction()">✅ Process & Print Receipt</button>
+                    <button class="btn btn-success" style="padding: 18px; margin-top: 20px; font-size:16px;" onclick="processTransaction()">✅ Process & Print Receipt</button>
                 </div>
 
                 <div class="card">
                     <h3 style="margin-bottom: 5px;">💰 Till Summary</h3>
-                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-bottom: 24px;">Click an amount to filter Masterlist transactions.</p>
+                    <p style="color: var(--gray-600); font-size: 14px; font-weight: 600; margin-bottom: 24px;">Depende ang summary sa napiling Petsa. Click ang amount para ma-filter din sa ibaba.</p>
                     <div class="table-wrapper">
                         <table>
-                            <tr><td>💵 CASH</td><td class="text-right"><a href="javascript:void(0)" onclick="viewTillTransactions('CASH')" id="fin-CASH" style="font-weight: 800; font-size: 16px; color: var(--primary); text-decoration: underline;">₱0.00</a></td></tr>
-                            <tr><td>📱 GCASH</td><td class="text-right"><a href="javascript:void(0)" onclick="viewTillTransactions('GCASH')" id="fin-GCASH" style="font-weight: 800; font-size: 16px; color: var(--primary); text-decoration: underline;">₱0.00</a></td></tr>
-                            <tr><td>🏦 MariBANK</td><td class="text-right"><a href="javascript:void(0)" onclick="viewTillTransactions('MariBANK')" id="fin-MariBANK" style="font-weight: 800; font-size: 16px; color: var(--primary); text-decoration: underline;">₱0.00</a></td></tr>
-                            <tr><td>💻 BANK Transfer</td><td class="text-right"><a href="javascript:void(0)" onclick="viewTillTransactions('BANK_Transfer')" id="fin-BANK_Transfer" style="font-weight: 800; font-size: 16px; color: var(--primary); text-decoration: underline;">₱0.00</a></td></tr>
-                            <tr style="background-color: var(--table-header);"><td style="font-weight: 900; font-size: 16px; color: var(--dark);">TOTAL REVENUE</td><td class="text-right" id="fin-TOTAL" style="color: var(--dark); font-size: 22px; font-weight: 900;">₱0.00</td></tr>
+                            <tr><td>💵 CASH</td><td class="text-right"><a href="javascript:void(0)" onclick="viewTillTransactions('CASH')" id="fin-CASH" style="font-weight: 800; font-size: 18px; color: var(--primary); text-decoration: underline;">₱0.00</a></td></tr>
+                            <tr><td>📱 GCASH</td><td class="text-right"><a href="javascript:void(0)" onclick="viewTillTransactions('GCASH')" id="fin-GCASH" style="font-weight: 800; font-size: 18px; color: var(--primary); text-decoration: underline;">₱0.00</a></td></tr>
+                            <tr><td>🏦 MariBANK</td><td class="text-right"><a href="javascript:void(0)" onclick="viewTillTransactions('MariBANK')" id="fin-MariBANK" style="font-weight: 800; font-size: 18px; color: var(--primary); text-decoration: underline;">₱0.00</a></td></tr>
+                            <tr><td>💻 BANK Transfer</td><td class="text-right"><a href="javascript:void(0)" onclick="viewTillTransactions('BANK_Transfer')" id="fin-BANK_Transfer" style="font-weight: 800; font-size: 18px; color: var(--primary); text-decoration: underline;">₱0.00</a></td></tr>
+                            <tr style="background-color: var(--table-header);"><td style="font-weight: 900; font-size: 16px; color: var(--dark);">TOTAL FOR SELECTED DATE</td><td class="text-right" id="fin-TOTAL" style="color: var(--dark); font-size: 24px; font-weight: 900;">₱0.00</td></tr>
                         </table>
                     </div>
                 </div>
@@ -675,21 +678,21 @@
 
             <!-- TRANSACTION LIST IN TRANSACT TAB FOR BOTH STAFF AND ADMIN -->
             <div class="card" style="margin-top: 24px;" id="staffTxTableSection">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
                     <div>
                         <h3 style="margin:0;">📝 Transactions Masterlist</h3>
-                        <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-top: 4px;">All transactions visible to staff and admin.</p>
+                        <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-top: 6px;">All transactions visible to staff and admin.</p>
                     </div>
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <input type="date" id="staffTxDateFilter" style="padding: 10px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
-                        <select id="staffTxMethodFilter" style="padding: 10px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
+                    <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                        <input type="date" id="staffTxDateFilter" style="padding: 12px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
+                        <select id="staffTxMethodFilter" style="padding: 12px; border-radius: 8px; border: 1px solid var(--gray-300);" onchange="window.renderStaffTxTable()">
                             <option value="ALL">All Methods</option>
                             <option value="CASH">CASH</option>
                             <option value="GCASH">GCASH</option>
                             <option value="MariBANK">MariBANK</option>
                             <option value="BANK_Transfer">BANK Transfer</option>
                         </select>
-                        <button class="btn btn-warning btn-sm" id="btnExportStaff" style="padding: 10px 20px; font-size: 14px;" onclick="prepareStaffExport()">⬇️ Export to Excel</button>
+                        <button class="btn btn-warning" id="btnExportStaff" style="padding: 12px 24px; font-size: 14px; width: auto;" onclick="prepareStaffExport()">⬇️ Export to Excel</button>
                     </div>
                 </div>
                 
@@ -700,7 +703,7 @@
                         <tfoot>
                             <tr style="background-color: var(--table-header);">
                                 <td colspan="6" class="text-right" style="font-weight: 900; font-size: 14px; color: var(--dark);">TOTAL FILTERED REVENUE:</td>
-                                <td colspan="2" id="staffTxTotal" style="color: var(--primary); font-size: 18px; font-weight: 900;">₱0.00</td>
+                                <td colspan="2" id="staffTxTotal" style="color: var(--primary); font-size: 20px; font-weight: 900;">₱0.00</td>
                             </tr>
                         </tfoot>
                     </table>
@@ -787,7 +790,7 @@
                     <h4 style="margin-bottom: 16px; color: var(--primary);">➕ Manually Open a Vial (Input Serial)</h4>
                     <p style="color: var(--gray-600); font-size: 13px; font-weight: 600; margin-top: -10px; margin-bottom: 20px;">Pre-open a vial to make its serial number available in the Transact Tab dropdown.</p>
                     
-                    <div class="grid-3">
+                    <div class="grid-3" style="align-items: flex-end;">
                         <div class="form-group" style="margin: 0;">
                             <label>Select Vial Product</label>
                             <select id="manualOpenVialSelect"></select>
@@ -796,8 +799,8 @@
                             <label>Serial Number</label>
                             <input type="text" id="manualOpenVialSerial" placeholder="Enter Serial No.">
                         </div>
-                        <div class="form-group" style="display:flex; align-items:flex-end; margin: 0;">
-                            <button class="btn btn-primary" onclick="manuallyOpenVial()">Open Vial</button>
+                        <div class="form-group" style="margin: 0;">
+                            <button class="btn btn-primary" style="padding: 14px;" onclick="manuallyOpenVial()">Open Vial</button>
                         </div>
                     </div>
                 </div>
@@ -818,9 +821,9 @@
 
         <!-- TAB: HISTORY -->
         <div id="tab-history" class="tab-pane admin-only hidden">
-            <div class="header-bar" style="margin-bottom: 24px; padding: 16px; border-radius: 14px;">
+            <div class="header-bar" style="margin-bottom: 24px; padding: 16px 24px; border-radius: 14px;">
                 <h3 style="margin: 0;">📅 Filter by Date</h3>
-                <input type="date" id="historyDateFilter" style="max-width:250px; padding: 10px;" onchange="window.renderHistory()">
+                <input type="date" id="historyDateFilter" style="max-width:250px; padding: 12px;" onchange="window.renderHistory()">
             </div>
             
             <div class="card">
@@ -931,7 +934,7 @@
         let inventory = []; 
         let activeVials = []; 
         let services = []; 
-        let finance = { CASH: 0, GCASH: 0, MariBANK: 0, BANK_Transfer: 0 }; 
+        let finance = { CASH: 0, GCASH: 0, MariBANK: 0, BANK_Transfer: 0 }; // Legacy global finance, till works on dynamic tx calculation
         let txHistory = []; 
         let expHistory = [];
         
@@ -1143,6 +1146,9 @@
             document.getElementById('dashDateFilter').value = todayDate; 
             document.getElementById('transDate').value = todayDate; 
             document.getElementById('expDate').value = todayDate;
+            
+            // Set default date filter for Till & Masterlist
+            document.getElementById('staffTxDateFilter').value = todayDate;
             
             listenToClinicData(); 
             
@@ -1433,49 +1439,82 @@
                 cart.innerHTML += `
                     <div class="cart-item" data-type="vial" data-id="${i.id}" style="border-left: 4px solid var(--primary);">
                         <div style="font-weight: 800; color: var(--dark); margin-bottom: 12px; padding-right: 20px;">${i.name} <span style="font-size: 12px; color: var(--gray-600); font-weight: 600;">(Vial)</span></div>
-                        <div class="grid-3" style="gap: 12px; align-items: end;">
+                        <div class="grid-3" style="gap: 16px; align-items: flex-end;">
                             <div class="form-group" style="margin: 0;">
                                 <label>ML Used:</label>
-                                <input type="number" class="vial-ml" value="1" min="0.1" step="0.1" style="padding: 10px;">
+                                <input type="number" class="vial-ml" value="1" min="0.1" step="0.1" style="padding: 14px;">
                             </div>
                             <div class="form-group" style="margin: 0;">
                                 <label>Price (₱):</label>
-                                <input type="number" class="vial-price" value="${i.price}" style="padding: 10px;">
+                                <input type="number" class="vial-price" value="${i.price}" style="padding: 14px;">
                             </div>
                             <div class="form-group" style="margin: 0;">
                                 <label>Select Serial:</label>
-                                <select class="vial-serial-sel" onchange="this.nextElementSibling.style.display = (this.value === 'NEW') ? 'block' : 'none'" style="padding: 10px;">
+                                <select class="vial-serial-sel" onchange="this.nextElementSibling.style.display = (this.value === 'NEW') ? 'block' : 'none'" style="padding: 14px;">
                                     ${serialOptions}
                                 </select>
-                                <input type="text" class="vial-new-serial" placeholder="Type New SN" style="padding: 10px; margin-top: 8px; display: ${defaultIsNew ? 'block' : 'none'};">
+                                <input type="text" class="vial-new-serial" placeholder="Type New SN" style="padding: 14px; margin-top: 10px; display: ${defaultIsNew ? 'block' : 'none'};">
                             </div>
                         </div>
-                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 12px; right: 12px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px; font-weight: bold;">×</button>
+                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 22px; font-weight: bold;">×</button>
                     </div>`;
             } else if (type === 'whole') {
                 let i = inventory.find(x => x.id === id);
                 cart.innerHTML += `
                     <div class="cart-item" data-type="whole" data-id="${i.id}" style="border-left: 4px solid var(--secondary);">
                         <div style="font-weight: 800; color: var(--dark); margin-bottom: 12px; padding-right: 20px;">${i.name} <span style="font-size: 12px; color: var(--gray-600); font-weight: 600;">(₱${i.price})</span></div>
-                        <div class="form-group" style="margin: 0; width: 150px;">
+                        <div class="form-group" style="margin: 0; width: 100%; max-width: 200px;">
                             <label>Quantity:</label>
-                            <input type="number" class="item-qty" value="1" min="1" max="${i.stock}" style="padding: 10px;">
+                            <input type="number" class="item-qty" value="1" min="1" max="${i.stock}" style="padding: 14px;">
                         </div>
-                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 12px; right: 12px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px; font-weight: bold;">×</button>
+                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 22px; font-weight: bold;">×</button>
                     </div>`;
             } else if (type === 'serv') {
                 let s = services.find(x => x.id === id);
                 cart.innerHTML += `
                     <div class="cart-item" data-type="serv" data-id="${s.id}" style="border-left: 4px solid var(--warning);">
                         <div style="font-weight: 800; color: var(--dark); margin-bottom: 12px; padding-right: 20px;">${s.name} <span style="font-size: 12px; color: var(--gray-600); font-weight: 600;">(Fee: ₱${s.price})</span></div>
-                        <div class="form-group" style="margin: 0; width: 150px;">
+                        <div class="form-group" style="margin: 0; width: 100%; max-width: 200px;">
                             <label>Sessions/Qty:</label>
-                            <input type="number" class="item-qty" value="1" min="1" style="padding: 10px;">
+                            <input type="number" class="item-qty" value="1" min="1" style="padding: 14px;">
                         </div>
-                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 12px; right: 12px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 18px; font-weight: bold;">×</button>
+                        <button onclick="this.closest('.cart-item').remove()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--danger); cursor: pointer; font-size: 22px; font-weight: bold;">×</button>
                     </div>`;
             }
             sel.selectedIndex = 0;
+        }
+
+        // TILL SUMMARY DYNAMIC CALCULATION
+        window.updateTillSummary = function() {
+            let dateFilter = document.getElementById('staffTxDateFilter').value;
+            if (!dateFilter) {
+                dateFilter = getLocalISODate().split('T')[0];
+                document.getElementById('staffTxDateFilter').value = dateFilter;
+            }
+
+            let till = { CASH: 0, GCASH: 0, MariBANK: 0, BANK_Transfer: 0 };
+            let total = 0;
+
+            txHistory.forEach(tx => {
+                if(tx.date.startsWith(dateFilter)) {
+                    if(till[tx.method] !== undefined) {
+                        till[tx.method] += tx.amount;
+                    }
+                    total += tx.amount;
+                }
+            });
+
+            let elCASH = document.getElementById('fin-CASH');
+            let elGCASH = document.getElementById('fin-GCASH');
+            let elMari = document.getElementById('fin-MariBANK');
+            let elBank = document.getElementById('fin-BANK_Transfer');
+            let elTotal = document.getElementById('fin-TOTAL');
+
+            if(elCASH) elCASH.innerText = '₱' + till.CASH.toFixed(2);
+            if(elGCASH) elGCASH.innerText = '₱' + till.GCASH.toFixed(2);
+            if(elMari) elMari.innerText = '₱' + till.MariBANK.toFixed(2);
+            if(elBank) elBank.innerText = '₱' + till.BANK_Transfer.toFixed(2);
+            if(elTotal) elTotal.innerText = '₱' + total.toFixed(2);
         }
 
         window.renderStaffTxTable = function() {
@@ -1484,6 +1523,7 @@
             let dateFilter = document.getElementById('staffTxDateFilter').value;
             let methodFilter = document.getElementById('staffTxMethodFilter').value;
             
+            if(!stfTb) return;
             stfTb.innerHTML = '';
             let totalRev = 0;
             
@@ -1515,6 +1555,9 @@
             if(totalEl) {
                 totalEl.innerText = '₱' + totalRev.toFixed(2);
             }
+
+            // Also update the Till Summary UI based on the selected date
+            window.updateTillSummary();
         }
 
         function renderUI() {
@@ -1621,17 +1664,7 @@
                 });
             }
 
-            // Till
-            let tot = 0; 
-            for(let k in finance){ 
-                let el = document.getElementById(`fin-${k}`);
-                if (el) el.innerText = '₱'+finance[k].toFixed(2); 
-                tot+=finance[k]; 
-            }
-            let totEl = document.getElementById('fin-TOTAL');
-            if (totEl) totEl.innerText = '₱'+tot.toFixed(2);
-
-            // Render the transaction masterlist in Transact Tab
+            // Update Masterlist and Till
             window.renderStaffTxTable();
 
             if(currentUser.role === 'admin') { 
@@ -1712,10 +1745,9 @@
 
             txOperations.forEach(op => {
                 if (op.type === 'vial') {
-                    // Ginagamit na lang ang Manual Price kaysa i-multiply ang ML Used sa presyo
                     let itemAmt = op.manualPrice * (1 - disc); 
                     totalAmt += itemAmt; 
-                    finance[method] += itemAmt;
+                    finance[method] += itemAmt; // Keep updating legacy finance obj just in case
                     
                     let costPerMl = op.ref.cost / op.ref.mlPerVial;
                     let totalCost = costPerMl * op.mlUsed;
