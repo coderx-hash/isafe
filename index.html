@@ -2148,7 +2148,57 @@
         }
 
         // ==========================================
-        // 7. ANALYTICS & DASHBOARD
+        // 7. DELETE & REVERT LOGICS (Newly added)
+        // ==========================================
+        window.removeTx = function(id) {
+            if(confirm('Are you sure you want to permanently DELETE this transaction log ONLY? (Hindi ibabalik ang stock o ML)')) {
+                txHistory = txHistory.filter(t => t.id !== id);
+                pushLiveClinicData();
+            }
+        }
+
+        window.delTx = function(id) {
+            if(confirm('Are you sure you want to REVERT this transaction? (Ibabalik ang stock/ML at buburahin ang log)')) {
+                let tx = txHistory.find(t => t.id === id);
+                if(tx) {
+                    if (tx.isService) {
+                        // Walang stock na ibabalik para sa service
+                    } else if (tx.isVial) {
+                        let p = inventory.find(i => i.name === tx.item && i.type === 'vial');
+                        if(p) {
+                            let v = activeVials.find(av => av.serial === tx.serial && av.productId === p.id);
+                            if(v) {
+                                v.usedML = Math.round((v.usedML - tx.qty) * 100) / 100;
+                            } else {
+                                activeVials.push({
+                                    serial: tx.serial,
+                                    productId: p.id,
+                                    usedML: Math.round((p.mlPerVial - tx.qty) * 100) / 100,
+                                    maxML: p.mlPerVial
+                                });
+                            }
+                        }
+                    } else {
+                        let p = inventory.find(i => i.name === tx.item && i.type === 'whole');
+                        if(p) {
+                            p.stock += tx.qty;
+                        }
+                    }
+                    txHistory = txHistory.filter(t => t.id !== id);
+                    pushLiveClinicData();
+                }
+            }
+        }
+
+        window.delExp = function(id) {
+            if(confirm('Are you sure you want to delete this expense record?')) {
+                expHistory = expHistory.filter(e => e.id !== id);
+                pushLiveClinicData();
+            }
+        }
+
+        // ==========================================
+        // 8. ANALYTICS & DASHBOARD
         // ==========================================
         function updateProfitDisplay(elementId, netValue) {
             let el = document.getElementById(elementId);
@@ -2385,7 +2435,7 @@
         }
 
         // ==========================================
-        // 8. DATA MANAGEMENT
+        // 9. DATA MANAGEMENT
         // ==========================================
         window.addItem = function() {
             let type = document.getElementById('newItemType').value;
@@ -2480,7 +2530,7 @@
         }
 
         // ==========================================
-        // 9. CSV EXPORTS (ADMIN & STAFF)
+        // 10. CSV EXPORTS (ADMIN & STAFF)
         // ==========================================
         let currentBlobUrl = null;
         
